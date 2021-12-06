@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/_favorite_border.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/arrow_back.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/ic_baseline_play_circle_outline_24.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/next_button.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/previous_button.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/_favorite_border.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/arrow_back.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/favorite.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/ic_baseline_pause_circle_outline_24.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/ic_baseline_play_circle_outline_24.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/library.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/more_vert_24.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/music.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/next_button.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/previous_button.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/round_border.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/search_icon.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/shuffle.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen.xml" value="0.25" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen2.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_al_songs.xml" value="0.19583333333333333" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favourite.xml" value="0.22083333333333333" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_library.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.20677083333333332" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_song_list.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/music_view.xml" value="0.33" />
+        <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/MusicplayerIcon.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.12395833333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/music_player_icon.xml" value="0.22592592592592592" />
+        <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/music_player_icon_round.xml" value="0.22592592592592592" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectPlainTextFileTypeManager">
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/service/MusicService.kt" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>

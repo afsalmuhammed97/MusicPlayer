@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+      android:background="@color/back_ground"
+     android:id="@+id/musicItem"
+    android:paddingTop="8dp"
+    android:layout_marginBottom="2dp">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageMv"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+
+        app:shapeAppearanceOverlay="@style/Rounded_corner" />
+<!--    android:src="@mipmap/music_player_icon"-->
+<!--    android:paddingVertical="5dp"-->
+    <TextView
+        android:id="@+id/songs_nameMv"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginStart="18dp"
+
+        android:layout_marginEnd="-13dp"
+        android:layout_toStartOf="@id/song_duration"
+        android:layout_toEndOf="@id/imageMv"
+        android:gravity="center_vertical"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:text="@string/song_name"
+        android:textColor="@color/white"
+        android:textSize="18sp" />
+
+    <TextView
+        android:id="@+id/song_album"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="-7dp"
+        android:layout_toStartOf="@id/song_duration"
+        android:layout_toEndOf="@id/imageMv"
+        android:gravity="center_vertical"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:text="@string/song_name"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/song_duration"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:gravity="center"
+        android:text="@string/song_start"
+        android:textColor="@color/white"
+        android:textSize="14sp" />
+
+
+
+
+</RelativeLayout>

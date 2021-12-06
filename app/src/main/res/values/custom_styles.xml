@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Rounded_corner">
+        <item name="cornerSize">8dp</item>
+    </style>
+    <style name="dpRed" >
+        <item name="color">@color/red</item>
+    </style>
+    <style name="CustomTabStyle" parent="">
+
+    </style>
+
+</resources>
