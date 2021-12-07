@@ -23,62 +23,68 @@ import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 
-//,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener
-class MusicServices :Service(),MediaPlayer.OnCompletionListener{
-    var currentIndex =0
-    var songPosionSe=0
-    var isPlaying  =false
+//,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener
+class MusicServices :Service(),MediaPlayer.OnCompletionListener {
+    var currentIndex = 0
+    var songPosionSe = 0
+    val intervell = 1000
+    var isPlaying = false
+    lateinit var seekBar: SeekBar
 
     // var serviceMusicList= mutableListOf<Music>()
-    private lateinit var mediaPlayer: MediaPlayer
+    lateinit var mediaPlayer: MediaPlayer
 
 
+    lateinit var mediaSession: MediaSessionCompat
+    private var mybinder = Mybinder()
+    var musiclistSe =
+        arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
 
-    lateinit var mediaSession:MediaSessionCompat
-    private var mybinder=Mybinder()
-    var  musiclistSe=  arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
+    override fun onBind(intent: Intent?): IBinder {
+        mediaSession = MediaSessionCompat(baseContext, "My Music")
+        return mybinder
+    }
 
-       override fun onBind(intent: Intent?): IBinder {
-           mediaSession = MediaSessionCompat(baseContext, "My Music")
-           return mybinder}
-
-    inner class  Mybinder:Binder(){
+    inner class Mybinder : Binder() {
 
         fun currentService(): MusicServices {
 
-            return  this@MusicServices }}
+            return this@MusicServices
+        }
+    }
 
     override fun onCreate() {
         super.onCreate()
-
-        mediaPlayer=MediaPlayer()
-      //  initMediaPlayer()         this is do not call here
+        mediaPlayer = MediaPlayer()
+        seekBar = SeekBar(this)
     }
 
-    fun playSong(){
+
+    fun playSong() {
 
 
         try {
-         //   mediaPlayer=MediaPlayer()
+            //   mediaPlayer=MediaPlayer()
             EventBus.getDefault().post(musiclistSe[currentIndex])
             mediaPlayer.reset()
             mediaPlayer.setDataSource(musiclistSe[currentIndex].path)
-            Log.i("Music"," music list is ok")
+            Log.i("Music", " music list is ok")
             mediaPlayer.prepare()
             mediaPlayer.start()
-           isPlaying =true
+            isPlaying = true
 
-        }catch (e :Exception){ return }
+        } catch (e: Exception) {
+            return
+        }
 
 
     }
 
 
-
-    fun initMediaPlayer(){
-       Log.i("MSG","init player invoked")
-        Toast.makeText(this,"player inited",Toast.LENGTH_SHORT).show()
-        mediaPlayer= MediaPlayer()
+    fun initMediaPlayer() {
+        Log.i("MSG", "init player invoked")
+        Toast.makeText(this, "player inited", Toast.LENGTH_SHORT).show()
+        //  mediaPlayer= MediaPlayer()
         mediaPlayer.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mediaPlayer.setOnCompletionListener(this)
@@ -86,65 +92,97 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener{
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        ++currentIndex
-           playSong()
+        Log.i("Tag","complete listener called")
+//        mp!!.reset()
+//        mp.setDataSource(musiclistSe[ ++currentIndex].path)
+//        mp.prepare()
+//        mp.start()
+        mp?.stop()
+        mp?.release()
 
-        TODO("Not yet implemented")//nextSong
+        mp?.setDataSource(musiclistSe[ ++currentIndex].path)
+        mp?.prepare()
+        mp?.start()
+
+
     }
 
+//    override fun onPrepared(mp: MediaPlayer?) {
+//
+//        mp!!.start()
+//        val duration = mp.duration
+//        //     musicServices!!.seekBar.max=duration
+//        seekBar.max = (duration / 1000)
+//        seekBar.postDelayed(progressRunner, intervell.toLong())
+//        Log.i("Tag","seekbar Runner called")
+//
+//    }
+
+//    private val progressRunner = object : Runnable {
+//        override fun run() {
+//            seekBar.progress = mediaPlayer.currentPosition
+//            if (mediaPlayer.isPlaying) {
+//                seekBar.postDelayed(this, intervell.toLong())
+//            }
+//        }
+//    }
 
 
-
-    fun playPauseMusic(isPlay:Boolean){
-        if( isPlay){
+    fun playPauseMusic(isPlay: Boolean) {
+        if (isPlay) {
 
             playSong()
 
-        }else{
+        } else {
 
             mediaPlayer.pause()
-           isPlaying=false
+            isPlaying = false
 
         }
     }
-    fun  playMusic (){
+
+    fun playMusic() {
         playSong()
 
     }
-    fun pauseMusic(){
+
+    fun pauseMusic() {
         mediaPlayer.pause()
 
     }
 
-     fun  nextPreviousSong(increment: Boolean){
-        if (increment){
-            setSongPosition(increment= true)
+    fun nextPreviousSong(increment: Boolean) {
+        if (increment) {
+            setSongPosition(increment = true)
             mediaPlayer.reset()
-           playSong()
+            playSong()
 
-        }else{
-            setSongPosition(increment=false)
-                  mediaPlayer.reset()
-                playSong()
+        } else {
+            setSongPosition(increment = false)
+            mediaPlayer.reset()
+            playSong()
         }
 
     }
 
-    fun setSongPosition(increment: Boolean){
-        if(increment){
+    fun setSongPosition(increment: Boolean) {
+        if (increment) {
 
-            if(musiclistSe.size-1==currentIndex){ currentIndex=0 }
-            else
-                ++currentIndex }
+            if (musiclistSe.size - 1 == currentIndex) {
+                currentIndex = 0
+            } else
+                ++currentIndex
+        } else {
 
-        else{
-
-            if (currentIndex==0){ currentIndex= musiclistSe.size-1 }
-            else
-                --currentIndex }
+            if (currentIndex == 0) {
+                currentIndex = musiclistSe.size - 1
+            } else
+                --currentIndex
+        }
 
     }
 
+}
 
 //    fun playSong(isPlay:Boolean){
 //
@@ -222,7 +260,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener{
 
 
 
-}
+
 
 
 
