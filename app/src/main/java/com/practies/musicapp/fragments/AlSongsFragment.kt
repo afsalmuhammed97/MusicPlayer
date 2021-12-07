@@ -55,15 +55,9 @@ private  lateinit var adapter:MusicAdapter
 
        // requireActivity().startService(Intent(context,MusicServices::class.java))
 
-        Toast.makeText(context,"service started ",Toast.LENGTH_SHORT).show()
+       // Toast.makeText(context,"service started ",Toast.LENGTH_SHORT).show()
 
 
-        //  servicesIntent=Intent(context,MusicServices::class.java)
-
-//
-          // musicServices?.startService(servicesIntent)
-
-        // Toast.makeText(context,"service started ",Toast.LENGTH_SHORT).show()
 
 
 
@@ -71,6 +65,7 @@ private  lateinit var adapter:MusicAdapter
 
 
     override fun onDestroy() {
+
 
         super.onDestroy()
     }
@@ -98,6 +93,7 @@ private  lateinit var adapter:MusicAdapter
                // songPosition=position
                 musicServices!!.currentIndex=position
                 musicServices!!.musiclistSe=musiclist
+                musicServices!!.initMediaPlayer()
                 musicServices!!.playSong()
                 Log.i("TAG",musicServices?.musiclistSe.toString())
                 val intent=Intent(context,PlayScreenActivity::class.java)

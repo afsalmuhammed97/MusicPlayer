@@ -7,6 +7,8 @@ object Constants {
 
     const val  CHANNEL_ID="channel1"
      const val MUSIC_NOTIFICATION_ID= 122
+           const val PLAY=1
+           const val PAUSE=2
 
 
 }

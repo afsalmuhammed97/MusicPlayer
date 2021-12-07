@@ -37,7 +37,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/song_image_play" />
+        app:layout_constraintTop_toBottomOf="@+id/song_image_play"
+        />
 
     <TextView
         android:id="@+id/song_start"

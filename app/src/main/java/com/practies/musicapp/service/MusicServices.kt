@@ -16,6 +16,7 @@ import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
+import android.widget.Toast
 import com.practies.musicapp.Music
 import com.practies.musicapp.formatDuration
 import org.greenrobot.eventbus.EventBus
@@ -24,11 +25,11 @@ import java.io.File
 
 //,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener
 class MusicServices :Service(),MediaPlayer.OnCompletionListener{
-     var songPosition=3
     var currentIndex =0
     var songPosionSe=0
-    var isPlaying=false
-   // var serviceMusicList= mutableListOf<Music>()
+    var isPlaying  =false
+
+    // var serviceMusicList= mutableListOf<Music>()
     private lateinit var mediaPlayer: MediaPlayer
 
 
@@ -42,27 +43,30 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener{
            return mybinder}
 
     inner class  Mybinder:Binder(){
+
         fun currentService(): MusicServices {
+
             return  this@MusicServices }}
 
     override fun onCreate() {
         super.onCreate()
-        initMediaPlayer()
 
+        mediaPlayer=MediaPlayer()
+      //  initMediaPlayer()         this is do not call here
     }
 
     fun playSong(){
 
+
         try {
-            mediaPlayer=MediaPlayer()
+         //   mediaPlayer=MediaPlayer()
+            EventBus.getDefault().post(musiclistSe[currentIndex])
             mediaPlayer.reset()
             mediaPlayer.setDataSource(musiclistSe[currentIndex].path)
             Log.i("Music"," music list is ok")
             mediaPlayer.prepare()
             mediaPlayer.start()
-           // EventBus.getDefault().post(musiclistSe[currentIndex])
-            isPlaying =true
-            //  binding.playPauseButton.setImageResource(R.drawable.ic_baseline_pause_circle_outline_24)
+           isPlaying =true
 
         }catch (e :Exception){ return }
 
@@ -72,6 +76,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener{
 
 
     fun initMediaPlayer(){
+       Log.i("MSG","init player invoked")
+        Toast.makeText(this,"player inited",Toast.LENGTH_SHORT).show()
         mediaPlayer= MediaPlayer()
         mediaPlayer.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
@@ -80,25 +86,51 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener{
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        //++currentIndex
-
+        ++currentIndex
+           playSong()
 
         TODO("Not yet implemented")//nextSong
     }
 
-    private  fun  nextPreviousSong(increment: Boolean){
+
+
+
+    fun playPauseMusic(isPlay:Boolean){
+        if( isPlay){
+
+            playSong()
+
+        }else{
+
+            mediaPlayer.pause()
+           isPlaying=false
+
+        }
+    }
+    fun  playMusic (){
+        playSong()
+
+    }
+    fun pauseMusic(){
+        mediaPlayer.pause()
+
+    }
+
+     fun  nextPreviousSong(increment: Boolean){
         if (increment){
             setSongPosition(increment= true)
-
+            mediaPlayer.reset()
+           playSong()
 
         }else{
             setSongPosition(increment=false)
-
+                  mediaPlayer.reset()
+                playSong()
         }
 
     }
 
-    private fun setSongPosition(increment: Boolean){
+    fun setSongPosition(increment: Boolean){
         if(increment){
 
             if(musiclistSe.size-1==currentIndex){ currentIndex=0 }
@@ -112,6 +144,18 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener{
                 --currentIndex }
 
     }
+
+
+//    fun playSong(isPlay:Boolean){
+//
+//        if (isPlay){
+//            mediaPlayer.pause()
+//            isPlaying =false
+//        }else
+//           // mediaPlayer.start()
+//        isPlaying=true
+//        playSong()
+//    }
 
 
 //    override fun onPrepared(mp: MediaPlayer?) {
