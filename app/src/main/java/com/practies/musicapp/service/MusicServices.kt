@@ -9,6 +9,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
 import android.provider.MediaStore
@@ -17,21 +18,25 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import com.practies.musicapp.Music
 import com.practies.musicapp.formatDuration
+import com.practies.musicapp.interfaces.OnSongComplete
 import org.greenrobot.eventbus.EventBus
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 
 //,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener
-class MusicServices :Service(),MediaPlayer.OnCompletionListener {
+class MusicServices :Service(),MediaPlayer.OnCompletionListener ,MediaPlayer.OnPreparedListener {
     var currentIndex = 0
     var songPosionSe = 0
     val intervell = 1000
     var isPlaying = false
+    lateinit var startPoint:TextView
+    lateinit var entPoint:TextView
     lateinit var seekBar: SeekBar
-
-    // var serviceMusicList= mutableListOf<Music>()
+    lateinit var onSongComplete: OnSongComplete
     lateinit var mediaPlayer: MediaPlayer
 
 
@@ -52,11 +57,14 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener {
             return this@MusicServices
         }
     }
-
+       //song complete
+    fun setListener( onSongComplete: OnSongComplete){
+        this.onSongComplete=onSongComplete
+    }
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
-        seekBar = SeekBar(this)
+       seekBar = SeekBar(this)
     }
 
 
@@ -92,53 +100,101 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener {
     }
 
     override fun onCompletion(mp: MediaPlayer?) {
-        Log.i("Tag","complete listener called")
+
+      onSongComplete.onSongComplete()
+        Log.i("Tag","complete listener called")}
+
+
+
 //        mp!!.reset()
 //        mp.setDataSource(musiclistSe[ ++currentIndex].path)
 //        mp.prepare()
 //        mp.start()
-        mp?.stop()
-        mp?.release()
+//        mp?.stop()
+//        mp?.release()
+//
+//        mp?.setDataSource(musiclistSe[ ++currentIndex].path)
+//        mp?.prepare()
+//        mp?.start()
 
-        mp?.setDataSource(musiclistSe[ ++currentIndex].path)
-        mp?.prepare()
-        mp?.start()
+
+
+
+    override fun onPrepared(mp: MediaPlayer?) {
+
+        mp!!.start()
+        val duration = mp.duration
+        //     musicServices!!.seekBar.max=duration
+        seekBar.max = (duration / 1000)
+        seekBar.postDelayed(progressRunner, intervell.toLong())
+        Log.i("Tag","seekbar Runner called")
+
+    }
+
+    fun setUi( seekBar: SeekBar,start_int:TextView){
+        this.seekBar=seekBar
+        startPoint=start_int
+
+
+
+        //  To  seek the seekBar
+                seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+            @RequiresApi(Build.VERSION_CODES.O)
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+
+                // if (fromUser)musicServices!!.mediaPlayer.seekTo(progress)
+                if (fromUser)mediaPlayer.seekTo(progress*2500)         //seekTo(progress*2500)
+                startPoint.text=String.format("%2d:%02d",
+                    TimeUnit.MILLISECONDS.toMinutes(progress.toLong()),
+                    TimeUnit.MINUTES.toSeconds(progress.toLong()))
+
+                start_int.text= String.format( "%d:%02d ",
+                  TimeUnit.MILLISECONDS.toMinutes(progress.toLong()),
+                    TimeUnit.MILLISECONDS.toMinutes(progress.toLong())-
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(progress.toLong()))
+                    )
+
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) =Unit
+        })
 
 
     }
 
-//    override fun onPrepared(mp: MediaPlayer?) {
-//
-//        mp!!.start()
-//        val duration = mp.duration
-//        //     musicServices!!.seekBar.max=duration
-//        seekBar.max = (duration / 1000)
-//        seekBar.postDelayed(progressRunner, intervell.toLong())
-//        Log.i("Tag","seekbar Runner called")
-//
-//    }
 
-//    private val progressRunner = object : Runnable {
-//        override fun run() {
-//            seekBar.progress = mediaPlayer.currentPosition
-//            if (mediaPlayer.isPlaying) {
-//                seekBar.postDelayed(this, intervell.toLong())
-//            }
-//        }
-//    }
+    private val progressRunner = object : Runnable {
+        override fun run() {
+            seekBar.progress = mediaPlayer.currentPosition
+            if (mediaPlayer.isPlaying) {
+                seekBar.postDelayed(this, intervell.toLong())
+            }
+        }
+    }
 
 
     fun playPauseMusic(isPlay: Boolean) {
         if (isPlay) {
+//  for Resume the song
+            mediaPlayer.start()
+            progressRunner.run()
+            isPlaying= true
 
-            playSong()
+            //playSong()
 
         } else {
 
             mediaPlayer.pause()
+            seekBar.removeCallbacks(progressRunner)
             isPlaying = false
 
         }
+    }
+    fun onResumeSong(){
+        mediaPlayer.start()
+        progressRunner.run()
+        isPlaying= true
     }
 
     fun playMusic() {
@@ -181,6 +237,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener {
         }
 
     }
+
 
 }
 

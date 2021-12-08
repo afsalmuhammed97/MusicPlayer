@@ -15,21 +15,24 @@ import android.widget.Toast
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
+import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.service.MusicServices
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.util.concurrent.TimeUnit
 
-                    //MediaPlayer.OnPreparedListener
-class PlayScreenActivity : AppCompatActivity() ,ServiceConnection,MediaPlayer.OnPreparedListener{
+//MediaPlayer.OnPreparedListener
+class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
 
- // lateinit var seekBar: SeekBar
-  val intervell=1000
-//    lateinit var start_tv: TextView
-//     lateinit var end_tv:TextView
-//     lateinit var music: Music
-var PLAY:Boolean=false
-         var songPostion :Int = 0
+                        lateinit var seekBarPlay: SeekBar
+                        val intervell=1000
+                        lateinit var startPoint:TextView
+                        lateinit var entPoint:TextView
+
+                        //     lateinit var music: Music
+                          var PLAY:Boolean=false
+                          var songPostion :Int = 0
    // var mediaPlayer :MediaPlayer ?=null
      var musicServices:MusicServices?=null
     var  musiclistPA= arrayListOf<Music>()
@@ -52,11 +55,18 @@ var PLAY:Boolean=false
 
 
     }
+    @Subscribe(threadMode=  ThreadMode.MAIN)
+    fun updateUi( music: Music){
+        setPlayScreen(music)
+
+        Log.i("MSG","event bus called")
+
+    }
 
     override fun onResume() {
         super.onResume()
         PLAY=true
-        EventBus.getDefault().register(this)
+      EventBus.getDefault().register(this)
         Toast.makeText(this,"Event bus regesterd",Toast.LENGTH_SHORT).show()
     }
 
@@ -65,23 +75,13 @@ var PLAY:Boolean=false
         EventBus.getDefault().unregister(this)
     }
 
-    @Subscribe(threadMode=  ThreadMode.MAIN)
-    fun updateUi( music: Music){
-        setPlayLayout(music)
 
-          Log.i("MSG","event bus called")
-
-    }
 
     override fun onStart() {
-
+         seekBarPlay= SeekBar(this)
         bindingPlayScreen.nextButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = true) }
 
-        bindingPlayScreen.priveButton.setOnClickListener {
-            musicServices!!.nextPreviousSong(
-                increment = false
-            )
-        }
+        bindingPlayScreen.priveButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = false) }
 
         bindingPlayScreen.playPauseButton.setOnClickListener {
 
@@ -89,32 +89,14 @@ var PLAY:Boolean=false
             if (musicServices!!.mediaPlayer.isPlaying){
 
                 musicServices!!.playPauseMusic(false)
-                bindingPlayScreen.playPauseButton.setImageResource(R.drawable.pause_bt_circle)
+                bindingPlayScreen.playPauseButton.setImageResource(R.drawable.play_bt_circle)
 
             }else{
                 musicServices!!.playPauseMusic(true)
-                bindingPlayScreen.playPauseButton.setImageResource(R.drawable.play_bt_circle)
+                bindingPlayScreen.playPauseButton.setImageResource(R.drawable.pause_bt_circle)
 
-            }
+            } }
 
-
-
-        }
-
-        //  To  seek the seekBar
-               bindingPlayScreen.songSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-                   override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-
-                      // if (fromUser)musicServices!!.mediaPlayer.seekTo(progress)
-                       if (fromUser) musicServices!!.mediaPlayer.seekTo(progress*1000)
-
-                   }
-
-                   override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-
-                   override fun onStopTrackingTouch(seekBar: SeekBar?) =Unit
-
-               })
 
 
         super.onStart()
@@ -128,14 +110,15 @@ var PLAY:Boolean=false
 
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-
-
-
+        musicServices!!.setUi(bindingPlayScreen.songSeekBar ,bindingPlayScreen.songStart)
+        musicServices!!.setListener(this)
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {}
+
+
                  //for setting the current song image  and tittle
-            fun setPlayLayout(music: Music){
+            fun setPlayScreen(music: Music){
                 Glide.with(this).load(music.artUri)
                     .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
                     .into(bindingPlayScreen.songImagePlay)
@@ -144,14 +127,6 @@ var PLAY:Boolean=false
 
             }
 
-    override fun onPrepared(mp: MediaPlayer?) {
-
-                 mp!!.start()
-        val duration=mp.duration
-          musicServices!!.seekBar.max=duration
-     //   musicServices!!.seekBar.max=(duration/1000)
-        musicServices!!.seekBar.postDelayed(progressRunner,intervell.toLong())
-    }
 private val progressRunner= object :Runnable{
     override fun run() {
         musicServices!!.seekBar.progress=musicServices!!.mediaPlayer.currentPosition
@@ -160,9 +135,29 @@ private val progressRunner= object :Runnable{
         }
     }}
 
+                        override fun onSongComplete() {
+                              if (musicServices!!.currentIndex == musicServices!!.musiclistSe.size-1)
 
+                              { musicServices!!.currentIndex= 0 }else{
 
-    //    override fun onPrepared(mp: MediaPlayer?) {
+                                  musicServices!!.currentIndex ++
+
+                                      musicServices!!.playSong()
+                                  }
+
+                              }
+
+                        }
+
+//    override fun onPrepared(mp: MediaPlayer?) {
+//
+//                 mp!!.start()
+//        val duration=mp.duration
+//          musicServices!!.seekBar.max=duration
+//     //   musicServices!!.seekBar.max=(duration/1000)
+//        musicServices!!.seekBar.postDelayed(progressRunner,intervell.toLong())
+//    }
+                        //    override fun onPrepared(mp: MediaPlayer?) {
 //        mp!!.start()
 //        val duration = mp.duration
 //        seekBar.max = duration
@@ -181,4 +176,3 @@ private val progressRunner= object :Runnable{
 
 
 
-}

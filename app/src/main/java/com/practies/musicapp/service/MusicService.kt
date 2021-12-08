@@ -133,10 +133,10 @@ TimeUnit.MINUTES.toSeconds(duration.toLong()))
         playSong()
     }
          //call this in playSceen
-    fun setUI( seekBar: SeekBar,start_int:TextView,ent_int:TextView){
-                this.seekBar=seekBar
-          startPoint=start_int
-          entPoint=ent_int
+        fun setUI( seekBar: SeekBar,start_int:TextView,ent_int:TextView){
+                    this.seekBar=seekBar
+              startPoint=start_int
+              entPoint=ent_int
 
 
         seekBar.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener{

@@ -95,7 +95,7 @@ private  lateinit var adapter:MusicAdapter
                 musicServices!!.musiclistSe=musiclist
                 musicServices!!.initMediaPlayer()
                 musicServices!!.playSong()
-                Log.i("TAG",musicServices?.musiclistSe.toString())
+            //    Log.i("TAG",musicServices?.musiclistSe.toString())
                 val intent=Intent(context,PlayScreenActivity::class.java)
                 startActivity(intent)
 

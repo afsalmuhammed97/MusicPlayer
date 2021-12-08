@@ -115,7 +115,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@android:color/transparent"
-            android:src="@drawable/play_bt_circle"
+            android:src="@drawable/pause_bt_circle"
             tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck"
             android:contentDescription="@string/puase_bt"/>
 
