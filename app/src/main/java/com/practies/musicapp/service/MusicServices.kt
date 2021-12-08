@@ -24,11 +24,13 @@ import com.practies.musicapp.formatDuration
 import com.practies.musicapp.interfaces.OnSongComplete
 import org.greenrobot.eventbus.EventBus
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 
 //,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener
-class MusicServices :Service(),MediaPlayer.OnCompletionListener ,MediaPlayer.OnPreparedListener {
+class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     var currentIndex = 0
     var songPosionSe = 0
     val intervell = 1000
@@ -64,7 +66,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener ,MediaPlayer.OnP
     override fun onCreate() {
         super.onCreate()
         mediaPlayer = MediaPlayer()
-       seekBar = SeekBar(this)
+      seekBar = SeekBar(this)
+
     }
 
 
@@ -120,46 +123,43 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener ,MediaPlayer.OnP
 
 
 
-    override fun onPrepared(mp: MediaPlayer?) {
+  //  override fun onPrepared(mp: MediaPlayer?) {
 
-        mp!!.start()
-        val duration = mp.duration
-        //     musicServices!!.seekBar.max=duration
-        seekBar.max = (duration / 1000)
-        seekBar.postDelayed(progressRunner, intervell.toLong())
-        Log.i("Tag","seekbar Runner called")
-
-    }
+//        mp!!.start()
+//
+//        val duration = mp.duration
+//          seekBar.max=duration
+//       // seekBar.max = (duration / 1000)
+//        seekBar.postDelayed(progressRunner, intervell.toLong())
+//        Log.i("Tag","seekbar Runner called") }
 
     fun setUi( seekBar: SeekBar,start_int:TextView){
-        this.seekBar=seekBar
-        startPoint=start_int
+      //  this.seekBar=seekBar
+       this.startPoint=start_int
 
 
 
-        //  To  seek the seekBar
-                seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-            @RequiresApi(Build.VERSION_CODES.O)
-            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+//        //  To  seek the seekBar
+//                seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
+//
+//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+//
+//
+//                if (fromUser)mediaPlayer.seekTo(progress*2500)         //seekTo(progress*2500)
+//
+//                start_int.text= formatDuration(progress.toLong())
+//
+//
+//            }
+//
+//            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+//            override fun onStopTrackingTouch(seekBar: SeekBar?) =Unit
+//        })
 
-                // if (fromUser)musicServices!!.mediaPlayer.seekTo(progress)
-                if (fromUser)mediaPlayer.seekTo(progress*2500)         //seekTo(progress*2500)
-                startPoint.text=String.format("%2d:%02d",
-                    TimeUnit.MILLISECONDS.toMinutes(progress.toLong()),
-                    TimeUnit.MINUTES.toSeconds(progress.toLong()))
 
-                start_int.text= String.format( "%d:%02d ",
-                  TimeUnit.MILLISECONDS.toMinutes(progress.toLong()),
-                    TimeUnit.MILLISECONDS.toMinutes(progress.toLong())-
-                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(progress.toLong()))
-                    )
-
-            }
-
-            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-            override fun onStopTrackingTouch(seekBar: SeekBar?) =Unit
-        })
-
+    }
+    fun setCurrentPlayerTimeText(ms:Long){
+        val dateFormat= SimpleDateFormat("mm:ss", Locale.getDefault())
 
     }
 
@@ -179,7 +179,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener ,MediaPlayer.OnP
 //  for Resume the song
             mediaPlayer.start()
             progressRunner.run()
-            isPlaying= true
+            isPlaying= true//
 
             //playSong()
 

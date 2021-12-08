@@ -26,6 +26,7 @@ import com.practies.musicapp.PlayScreenActivity
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
 import com.practies.musicapp.service.MusicServices
+import org.greenrobot.eventbus.EventBus
 import java.io.File
 
 //,ServiceConnection
@@ -88,13 +89,14 @@ private  lateinit var adapter:MusicAdapter
         adapter.setOnItemClickListener( object :MusicAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
 
-              //  Toast.makeText(context,"clicked position   $position",Toast.LENGTH_SHORT).show()
 
-               // songPosition=position
+
                 musicServices!!.currentIndex=position
                 musicServices!!.musiclistSe=musiclist
                 musicServices!!.initMediaPlayer()
                 musicServices!!.playSong()
+                val song=musiclist[position]
+                EventBus.getDefault().post(song)
             //    Log.i("TAG",musicServices?.musiclistSe.toString())
                 val intent=Intent(context,PlayScreenActivity::class.java)
                 startActivity(intent)

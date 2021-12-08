@@ -7,7 +7,9 @@ import android.content.ServiceConnection
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
 import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
@@ -25,18 +27,15 @@ import java.util.concurrent.TimeUnit
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
 
-                        lateinit var seekBarPlay: SeekBar
-                        val intervell=1000
+                       lateinit var seekBar: SeekBar
+                      val intervell=1000
                         lateinit var startPoint:TextView
                         lateinit var entPoint:TextView
 
-                        //     lateinit var music: Music
-                          var PLAY:Boolean=false
-                          var songPostion :Int = 0
    // var mediaPlayer :MediaPlayer ?=null
      var musicServices:MusicServices?=null
     var  musiclistPA= arrayListOf<Music>()
-
+         lateinit var seekbarRunnable: Runnable
         lateinit var bindingPlayScreen: ActivityPlayScreen2Binding
     override fun onCreate(savedInstanceState: Bundle?) {
         bindingPlayScreen= ActivityPlayScreen2Binding.inflate(layoutInflater)
@@ -58,14 +57,15 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
     @Subscribe(threadMode=  ThreadMode.MAIN)
     fun updateUi( music: Music){
         setPlayScreen(music)
-
+//          seekBarSetUp()
+//        seekFunction()
         Log.i("MSG","event bus called")
 
     }
 
     override fun onResume() {
         super.onResume()
-        PLAY=true
+
       EventBus.getDefault().register(this)
         Toast.makeText(this,"Event bus regesterd",Toast.LENGTH_SHORT).show()
     }
@@ -73,12 +73,13 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
     override fun onPause() {
         super.onPause()
         EventBus.getDefault().unregister(this)
+
     }
 
 
 
     override fun onStart() {
-         seekBarPlay= SeekBar(this)
+         seekBar= SeekBar(this)
         bindingPlayScreen.nextButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = true) }
 
         bindingPlayScreen.priveButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = false) }
@@ -110,12 +111,38 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-        musicServices!!.setUi(bindingPlayScreen.songSeekBar ,bindingPlayScreen.songStart)
         musicServices!!.setListener(this)
+        seekBarSetUp()
+        seekFunction()
+
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {}
+                private fun seekFunction(){
 
+                    bindingPlayScreen.songSeekBar.setOnSeekBarChangeListener( object :SeekBar.OnSeekBarChangeListener{
+                        override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean
+                        ) {
+                           if (fromUser) musicServices!!.mediaPlayer.seekTo(progress)
+                        }
+
+                        override fun onStartTrackingTouch(seekBar: SeekBar?) =Unit
+
+                        override fun onStopTrackingTouch(seekBar: SeekBar?)=Unit
+
+                    })
+
+                }
+
+                    private fun seekBarSetUp(){
+                        seekbarRunnable= Runnable {
+                            bindingPlayScreen.songStart.text= formatDuration(musicServices!!.mediaPlayer.currentPosition.toLong())
+                            bindingPlayScreen.songSeekBar.progress=musicServices!!.mediaPlayer.currentPosition
+                            bindingPlayScreen.songSeekBar.max=musicServices!!.mediaPlayer.duration
+                            Handler(Looper.getMainLooper()).postDelayed(seekbarRunnable,1000)
+                        }
+                        Handler(Looper.getMainLooper()).postDelayed(seekbarRunnable,1000)
+                    }
 
                  //for setting the current song image  and tittle
             fun setPlayScreen(music: Music){
@@ -124,16 +151,10 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                     .into(bindingPlayScreen.songImagePlay)
                      bindingPlayScreen.songNamePlay.text= music.title
                     bindingPlayScreen.songEnd.text=      formatDuration(music.duration)
+                   //  bindingPlayScreen.songStart.text=
 
             }
 
-private val progressRunner= object :Runnable{
-    override fun run() {
-        musicServices!!.seekBar.progress=musicServices!!.mediaPlayer.currentPosition
-        if (musicServices!!.mediaPlayer.isPlaying){
-            musicServices!!.seekBar.postDelayed(this,intervell.toLong())
-        }
-    }}
 
                         override fun onSongComplete() {
                               if (musicServices!!.currentIndex == musicServices!!.musiclistSe.size-1)
@@ -141,11 +162,11 @@ private val progressRunner= object :Runnable{
                               { musicServices!!.currentIndex= 0 }else{
 
                                   musicServices!!.currentIndex ++
-
+                                        updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
                                       musicServices!!.playSong()
-                                  }
+                                  } }
 
-                              }
+
 
                         }
 
