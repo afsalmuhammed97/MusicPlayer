@@ -1,10 +1,13 @@
 package com.practies.musicapp.service
 
 import android.annotation.SuppressLint
+import android.app.Application
+import android.app.PendingIntent
 import android.app.Service
 import android.content.ContentUris
 import android.content.Intent
 import android.database.Cursor
+import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
@@ -19,14 +22,19 @@ import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.app.NotificationCompat
 import com.practies.musicapp.Music
+import com.practies.musicapp.R
 import com.practies.musicapp.formatDuration
 import com.practies.musicapp.interfaces.OnSongComplete
+import com.practies.musicapp.notifications.ApplicationClass
+import com.practies.musicapp.notifications.NotificationReceiver
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.system.exitProcess
 
 
 //,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener
@@ -40,12 +48,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
     lateinit var mediaPlayer: MediaPlayer
-
-
     lateinit var mediaSession: MediaSessionCompat
     private var mybinder = Mybinder()
-    var musiclistSe =
-        arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
+    var musiclistSe = arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
 
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -57,6 +62,41 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
         fun currentService(): MusicServices {
 
             return this@MusicServices
+        }
+    }
+
+
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+
+
+        //notificationFunctions(notificationMsg)
+
+        return super.onStartCommand(intent, flags, startId)
+
+    }
+      // Notification bar play functions
+    private fun notificationFunctions(msg:String){
+        when(msg){
+
+             ApplicationClass.PREVIOUS ->  {  //previous song
+                 Toast.makeText(this,"preve button",Toast.LENGTH_SHORT).show()
+
+
+
+             }
+            ApplicationClass.PLAY ->{           //play or pause song
+                Toast.makeText(this,"play button",Toast.LENGTH_SHORT).show()
+
+            }
+            ApplicationClass.NEXT ->{          //next song
+                Toast.makeText(this,"Next button",Toast.LENGTH_SHORT).show()
+
+            }
+            ApplicationClass.EXit ->{        //Exit app   and notification
+                       exitProcess(1)
+
+            }
         }
     }
        //song complete
@@ -109,61 +149,6 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
 
-//        mp!!.reset()
-//        mp.setDataSource(musiclistSe[ ++currentIndex].path)
-//        mp.prepare()
-//        mp.start()
-//        mp?.stop()
-//        mp?.release()
-//
-//        mp?.setDataSource(musiclistSe[ ++currentIndex].path)
-//        mp?.prepare()
-//        mp?.start()
-
-
-
-
-  //  override fun onPrepared(mp: MediaPlayer?) {
-
-//        mp!!.start()
-//
-//        val duration = mp.duration
-//          seekBar.max=duration
-//       // seekBar.max = (duration / 1000)
-//        seekBar.postDelayed(progressRunner, intervell.toLong())
-//        Log.i("Tag","seekbar Runner called") }
-
-    fun setUi( seekBar: SeekBar,start_int:TextView){
-      //  this.seekBar=seekBar
-       this.startPoint=start_int
-
-
-
-//        //  To  seek the seekBar
-//                seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener{
-//
-//            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//
-//
-//                if (fromUser)mediaPlayer.seekTo(progress*2500)         //seekTo(progress*2500)
-//
-//                start_int.text= formatDuration(progress.toLong())
-//
-//
-//            }
-//
-//            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
-//            override fun onStopTrackingTouch(seekBar: SeekBar?) =Unit
-//        })
-
-
-    }
-    fun setCurrentPlayerTimeText(ms:Long){
-        val dateFormat= SimpleDateFormat("mm:ss", Locale.getDefault())
-
-    }
-
-
     private val progressRunner = object : Runnable {
         override fun run() {
             seekBar.progress = mediaPlayer.currentPosition
@@ -184,28 +169,12 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             //playSong()
 
         } else {
-
             mediaPlayer.pause()
             seekBar.removeCallbacks(progressRunner)
             isPlaying = false
-
         }
     }
-    fun onResumeSong(){
-        mediaPlayer.start()
-        progressRunner.run()
-        isPlaying= true
-    }
 
-    fun playMusic() {
-        playSong()
-
-    }
-
-    fun pauseMusic() {
-        mediaPlayer.pause()
-
-    }
 
     fun nextPreviousSong(increment: Boolean) {
         if (increment) {
@@ -239,55 +208,52 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
 
 
+    fun showNotification(){
+
+        val prevIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.PREVIOUS)
+          val prevPendingIntent=PendingIntent.getBroadcast(baseContext,0,prevIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val playIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.PLAY)
+        val playPendingIntent=PendingIntent.getBroadcast(baseContext,0,playIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val nextIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.NEXT)
+        val nextPendingIntent=PendingIntent.getBroadcast(baseContext,0,nextIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val exitIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.EXit)
+        val exitPendingIntent=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
+
+
+
+
+        val notification = NotificationCompat.Builder(baseContext,ApplicationClass.CHANNEL_ID)
+            .setContentTitle(musiclistSe[currentIndex].title)
+            .setContentText(musiclistSe[currentIndex].artist)
+            .setSmallIcon(R.mipmap.music_player_icon)
+            .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.headphone))
+            .setStyle(androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken))
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .setOnlyAlertOnce(true)
+
+            .addAction(R.drawable.previous_button,"Previous",prevPendingIntent)
+            .addAction(R.drawable.pause_bt_circle,"PlayPause",playPendingIntent)
+            .addAction(R.drawable.next_button,"Next",nextPendingIntent)
+            .addAction(R.drawable.exit_icon,"Exit",exitPendingIntent)
+            .build()
+        startForeground(11,notification)
+
+    }
+
+
+
+
+
 }
 
-//    fun playSong(isPlay:Boolean){
-//
-//        if (isPlay){
-//            mediaPlayer.pause()
-//            isPlaying =false
-//        }else
-//           // mediaPlayer.start()
-//        isPlaying=true
-//        playSong()
-//    }
-
-
-//    override fun onPrepared(mp: MediaPlayer?) {
-//        mp!!.start()
-//        val duration = mp.duration
-//        seekBar.max = duration
-//        seekBar.postDelayed(progressRunner, interval.toLong())
-//        end_tv.text = formatDuration(mp.duration.toLong())
-//
-//    }
-//    private val progressRunner= object :Runnable{
-//        override fun run() {
-//           seekBar.progress=mediaPlayer.currentPosition
-//                if (mediaPlayer.isPlaying){
-//                    seekBar.postDelayed(this,interval.toLong())
-//                }
-//        } }
 
 
 
 
-
-
-
-
-
-    // play music
-//    private fun playSong(){
-//        mediaPlayer.reset()
-//        val playSong=songs
-//        val currentSongId=playSong.id
-//        val trackUris=  ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,currentSongId)
-//
-//        mediaPlayer.setDataSource(applicationContext,trackUris)
-//        mediaPlayer.prepareAsync()
-//      //  progressRunner.run()
-  //  }
 
 
 

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.MiniPlayerFragment"
+    android:background="#B9ACCA">
+
+<!--    <com.google.android.material.imageview.ShapeableImageView-->
+<!--        android:id="@+id/shapeableImageView"-->
+<!--        android:layout_width="65dp"-->
+<!--        android:layout_height="70dp"-->
+<!--        android:layout_marginHorizontal="10dp"-->
+<!--        android:layout_marginVertical="5dp"-->
+<!--        android:src="@mipmap/music_player_icon"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:shapeAppearanceOverlay="@style/Rounded_corner" />-->
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/play_box"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        android:text="@string/song_name"
+        android:layout_marginStart="15dp"
+        />
+    <LinearLayout
+        android:id="@+id/play_box"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/prive_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+
+            android:contentDescription="@string/preve_bt"
+            android:src="@drawable/previous_button" />
+
+        <ImageButton
+            android:id="@+id/play_pauseButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/puase_bt"
+            android:src="@drawable/pause_bt_circle"
+            tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
+
+        <ImageButton
+            android:id="@+id/next_button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/transparent"
+            android:contentDescription="@string/next_bt"
+            android:src="@drawable/next_button"
+            tools:ignore="SpeakableTextPresentCheck" />
+
+    </LinearLayout>
+
+<!--    <TextView-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingVertical="5dp"-->
+<!--        android:text="@string/song_name"-->
+<!--        android:textSize="18sp"-->
+<!--        app:layout_constraintStart_toEndOf="@+id/shapeableImageView"-->
+<!--        tools:layout_editor_absoluteY="30dp" />-->
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -114,6 +114,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         musicServices!!.setListener(this)
         seekBarSetUp()
         seekFunction()
+        musicServices!!.showNotification()
 
     }
 
@@ -170,29 +171,6 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
                         }
 
-//    override fun onPrepared(mp: MediaPlayer?) {
-//
-//                 mp!!.start()
-//        val duration=mp.duration
-//          musicServices!!.seekBar.max=duration
-//     //   musicServices!!.seekBar.max=(duration/1000)
-//        musicServices!!.seekBar.postDelayed(progressRunner,intervell.toLong())
-//    }
-                        //    override fun onPrepared(mp: MediaPlayer?) {
-//        mp!!.start()
-//        val duration = mp.duration
-//        seekBar.max = duration
-//        seekBar.postDelayed(progressRunner, interval.toLong())
-//        end_tv.text = formatDuration(mp.duration.toLong())
-//
-//    }
-//    private val progressRunner= object :Runnable{
-//        override fun run() {
-//           seekBar.progress=   musicServices.mediaPlayer.currentPosition
-//                if (mediaPlayer.isPlaying){
-//                    seekBar.postDelayed(this,interval.toLong())
-//                }
-//        } }
 
 
 
