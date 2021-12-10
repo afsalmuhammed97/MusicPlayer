@@ -35,15 +35,82 @@
             android:layout_height="0dp"
             android:id="@+id/view_pager2"/>
         <!--    <include layout="@layout/mini_player_layout"/>-->
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/mini_player"
+<!--        <androidx.fragment.app.FragmentContainerView-->
+<!--            android:id="@+id/mini_player"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_weight=".25"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:name="com.practies.musicapp.fragments.MiniPlayerFragment"-->
+<!--            tools:layout="@layout/fragment_mini_player"-->
+<!--            />-->
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_weight=".25"
             android:layout_height="0dp"
+            android:layout_weight=".25"
+            android:orientation="horizontal"
+            android:id="@+id/mini_player_layout"
+            android:background="@color/black">
 
-            android:name="com.practies.musicapp.fragments.MiniPlayerFragment"
-            tools:layout="@layout/fragment_mini_player"
-            />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/mini_player"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:paddingVertical="5dp"
+
+                android:text="@string/song_name"
+                android:layout_marginStart="15dp"
+                />
+            <LinearLayout
+                android:id="@+id/mini_player"
+                android:layout_marginEnd="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <ImageButton
+                    android:id="@+id/prev_mini_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:layout_marginTop="4dp"
+                    android:contentDescription="@string/preve_bt"
+                    android:src="@drawable/previous_button" />
+
+                <ImageButton
+                    android:id="@+id/play_pause_mini_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/puase_bt"
+                    android:src="@drawable/pause_bt_circle"
+                    tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
+
+                <ImageButton
+                    android:id="@+id/next_mini_bt"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginTop="4dp"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/next_bt"
+                    android:src="@drawable/next_button"
+                    tools:ignore="SpeakableTextPresentCheck" />
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

@@ -46,6 +46,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         val intent =Intent(this, MusicServices::class.java)
        bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
        startService(intent)
+
         Intent(this,MusicServices::class.java)
         bindService(intent,this, BIND_AUTO_CREATE)
         startService(intent)
@@ -96,7 +97,8 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                 musicServices!!.playPauseMusic(true)
                 bindingPlayScreen.playPauseButton.setImageResource(R.drawable.pause_bt_circle)
 
-            } }
+            }
+        }
 
 
 
@@ -114,8 +116,8 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         musicServices!!.setListener(this)
         seekBarSetUp()
         seekFunction()
-        musicServices!!.showNotification()
-
+       musicServices!!.showNotification()
+         Log.i("MSg","Serveise  connected with playScreen")
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {}

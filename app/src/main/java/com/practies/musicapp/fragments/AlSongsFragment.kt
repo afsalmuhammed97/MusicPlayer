@@ -31,7 +31,7 @@ import java.io.File
 
 //,ServiceConnection
 class AlSongsFragment (): Fragment(),ServiceConnection{
-       var musicServices: MusicServices?=null
+       var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
     var servicesIntent :Intent?=null
 var songPosition=0

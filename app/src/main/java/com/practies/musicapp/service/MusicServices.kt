@@ -47,7 +47,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     lateinit var entPoint:TextView
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
-    lateinit var mediaPlayer: MediaPlayer
+   lateinit  var mediaPlayer: MediaPlayer
     lateinit var mediaSession: MediaSessionCompat
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()

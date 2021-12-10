@@ -19,13 +19,13 @@ import com.google.android.material.tabs.TabLayoutMediator
 
 import com.practies.musicapp.adapter.ViewPageAdapter
 import com.practies.musicapp.databinding.ActivityMainBinding
+import com.practies.musicapp.service.MusicServices
 
-import java.io.File
 
 class MainActivity : AppCompatActivity(),ServiceConnection {
 
     private lateinit var binding: ActivityMainBinding
-
+     var musicServices:MusicServices?=null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,9 +33,9 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-//        val intent = Intent(this, MusicService::class.java)
-//        bindService(intent,this, BIND_AUTO_CREATE)
-//        startService(intent)
+        val intent = Intent(this, MusicServices::class.java)
+        bindService(intent,this, BIND_AUTO_CREATE)
+        startService(intent)
 
 
         val adapter=ViewPageAdapter(supportFragmentManager, lifecycle)
@@ -56,16 +56,62 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
             }
         }.attach()
 
+
+
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        TODO("Not yet implemented")
+        val binder=service as MusicServices.Mybinder
+        musicServices=binder.currentService()
+        binding.nextMiniBt.setOnClickListener{
+            musicServices!!.nextPreviousSong(true)
+        }
+        binding.playPauseMiniBt.setOnClickListener{
+
+            if (musicServices!!.mediaPlayer.isPlaying){
+
+                musicServices!!.playPauseMusic(false)
+                binding.playPauseMiniBt.setImageResource(R.drawable.play_bt_circle)
+
+            }else{
+                musicServices!!.playPauseMusic(true)
+                binding.playPauseMiniBt.setImageResource(R.drawable.pause_bt_circle)
+
+            }
+        }
+        binding.prevMiniBt.setOnClickListener{
+            musicServices!!.nextPreviousSong(false)
+        }
+
+        binding.miniPlayerLayout.setOnClickListener{
+            //move  to the  player screen
+//            val intent=Intent(this,PlayScreenActivity::class.java)
+//            startActivity(intent)
+           // Toast.makeText(this,"Layout clicked",Toast.LENGTH_SHORT).show()
+        }
+
+
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
         TODO("Not yet implemented")
     }
+
+    ///mini player functions
+
+
+
+
+
+
 }
+
+
+
+
+
+
+
 
 //   override fun onRequestPermissionsResult(
 //        requestCode: Int,
