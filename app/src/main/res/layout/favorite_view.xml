@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/teal_200"
+    android:paddingTop="8dp"
+    android:layout_marginBottom="2dp">
+
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/imageMvFav"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:src="@mipmap/music_player_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/songs_name_fav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:shapeAppearanceOverlay="@style/Rounded_corner"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/songs_name_fav"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+
+        android:layout_marginStart="37dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="109dp"
+        android:layout_marginBottom="16dp"
+
+        android:layout_toEndOf="@+id/imageMvFav"
+        android:gravity="center_vertical"
+        android:paddingVertical="2dp"
+        android:singleLine="true"
+        android:text="@string/song_name"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+
+        tools:ignore="RelativeOverlap" />
+
+    <ImageButton
+
+        android:id="@+id/option_icon_fav"
+        android:layout_width="55dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+
+        android:layout_marginStart="69dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/preve_bt"
+        android:src="@drawable/down_arrow_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/songs_name_fav"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</RelativeLayout>

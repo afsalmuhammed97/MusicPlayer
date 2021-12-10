@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.practies.musicapp.fragments.AlSongsFragment
-import com.practies.musicapp.fragments.FavouriteFragment
+import com.practies.musicapp.fragments.favoriteFragment
 
 import com.practies.musicapp.fragments.PlaylistFragment
 
@@ -21,7 +21,7 @@ class ViewPageAdapter(fragmentManager: FragmentManager,lifecycle: Lifecycle):Fra
                         AlSongsFragment()
                     }
                     1-> {
-                        FavouriteFragment()
+                        favoriteFragment()
                     }
                     2->{
                        PlaylistFragment()

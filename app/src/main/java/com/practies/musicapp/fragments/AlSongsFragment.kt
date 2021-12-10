@@ -77,6 +77,8 @@ private  lateinit var adapter:MusicAdapter
         binding= FragmentAlSongsBinding.inflate(inflater,container,false)
          adapter = MusicAdapter(musiclist)
         binding.musicRV.layoutManager=LinearLayoutManager(context)
+        binding.musicRV.hasFixedSize()
+        binding.musicRV.setItemViewCacheSize(13)
         binding.musicRV.adapter=  adapter
         return binding.root
     }

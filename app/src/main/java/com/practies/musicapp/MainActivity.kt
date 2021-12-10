@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
            // Toast.makeText(this,"Layout clicked",Toast.LENGTH_SHORT).show()
         }
 
+       // binding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title
 
     }
 

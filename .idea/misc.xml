@@ -11,6 +11,7 @@
         <entry key="..\:/MusicApp/app/src/main/res/drawable-v24/previous_button.xml" value="0.21614583333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/drawable/_favorite_border.xml" value="0.21614583333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/drawable/arrow_back.xml" value="0.21614583333333334" />
+        <entry key="..\:/MusicApp/app/src/main/res/drawable/down_arrow_icon.xml" value="0.21614583333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/drawable/favorite.xml" value="0.21614583333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.21614583333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/drawable/ic_baseline_pause_circle_outline_24.xml" value="0.21614583333333334" />
@@ -31,15 +32,18 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen2.xml" value="0.15" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/favorite_view.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/favourite_view.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_al_songs.xml" value="0.19583333333333333" />
-        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favourite.xml" value="0.22083333333333333" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favorite.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favourite.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_library.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_mini_player.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.20677083333333332" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_song_list.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/mini_player_lay_out.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/mini_player_layout.xml" value="0.2" />
-        <entry key="..\:/MusicApp/app/src/main/res/layout/music_view.xml" value="0.33" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/music_view.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/MusicplayerIcon.xml" value="0.22592592592592592" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.12395833333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/music_player_icon.xml" value="0.22592592592592592" />

@@ -13,11 +13,11 @@ import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.formatDuration
+import com.practies.musicapp.interfaces.OnSongComplete
 
 
 //private val context: Context    , private val intemOnclicked:(Music) ->Unit  ,var onSongSelect: onSongSelect
-class MusicAdapter(private val musicList: ArrayList<Music>)
-    :RecyclerView.Adapter<MusicAdapter.MyHolder>() {
+class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapter<MusicAdapter.MyHolder>() {
 
     private lateinit var mListenr:onItemClickListener
 
@@ -35,7 +35,7 @@ class MusicAdapter(private val musicList: ArrayList<Music>)
     {
         val title= itemView.findViewById<TextView>(R.id.songs_nameMv)
 
-        val duration=itemView.findViewById<TextView>(R.id.song_duration)
+       // val duration=itemView.findViewById<TextView>(R.id.song_duration)
         val albumName=itemView.findViewById<TextView>(R.id.song_album)
         val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
 
@@ -64,7 +64,7 @@ class MusicAdapter(private val musicList: ArrayList<Music>)
        val item=musicList [position]
         holder.title.text=item.title
         holder.albumName.text=item.album
-        holder.duration.text= formatDuration(item.duration)
+        //holder.duration.text= formatDuration(item.duration)
 
         Glide.with(holder.itemView.context).load(musicList[position].artUri)
             .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
