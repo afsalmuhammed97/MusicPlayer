@@ -19,10 +19,12 @@ import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.service.MusicServices
+import com.practies.musicapp.service.MusicServices.Companion
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.concurrent.TimeUnit
+import kotlin.properties.Delegates
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
@@ -31,10 +33,16 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                       val intervell=1000
                         lateinit var startPoint:TextView
                         lateinit var entPoint:TextView
+                        var isFavorite:Boolean=false
 
+    companion object{
+   // var isFavorite:Boolean=false
+    var favIndex:Int=0
+
+}
    // var mediaPlayer :MediaPlayer ?=null
      var musicServices:MusicServices?=null
-    var  musiclistPA= arrayListOf<Music>()
+    var  favoriteListPA= arrayListOf<Music>()
          lateinit var seekbarRunnable: Runnable
         lateinit var bindingPlayScreen: ActivityPlayScreen2Binding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -81,6 +89,12 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
     override fun onStart() {
          seekBar= SeekBar(this)
+
+        bindingPlayScreen.favButton.setOnClickListener{
+
+                            favaIconChang()
+        }
+
         bindingPlayScreen.nextButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = true) }
 
         bindingPlayScreen.priveButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = false) }
@@ -100,11 +114,27 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
             }
         }
 
-
-
         super.onStart()
     }
+            fun favaIconChang(){
+                if ( !isFavorite) {
+                    bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+                    // musicServices!!.favoritelistSe.add(musicServices!!.musiclistSe[musicServices!!.currentIndex])
+                    Toast.makeText(this,"true",Toast.LENGTH_SHORT).show()
 
+
+                    isFavorite=true
+
+
+                }else {
+                    bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+                    // musicServices!!.favoritelistSe.removeAt(favIndex)
+                    Toast.makeText(this, "false", Toast.LENGTH_SHORT).show()
+
+                    isFavorite = false
+                }
+
+            }
 
 
 
@@ -116,8 +146,18 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         musicServices!!.setListener(this)
         seekBarSetUp()
         seekFunction()
-       musicServices!!.showNotification()
-         Log.i("MSg","Serveise  connected with playScreen")
+     //  musicServices!!.showNotification()
+        //to check the current song is favorite or not
+//             val tempIndex   = musicServices!!.favoriteChecker(musicServices!!.musiclistSe[musicServices!!.currentIndex].id)
+//              if (tempIndex != -1) favIndex=tempIndex
+//
+//        if (isFavorite) {
+//          //  bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+//        }else
+//          //  bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+//            Toast.makeText(this,"fav index ${favIndex} ",Toast.LENGTH_SHORT).show()
+
+        Log.i("MSg","Serveise  connected with playScreen")
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {}
@@ -149,6 +189,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
                  //for setting the current song image  and tittle
             fun setPlayScreen(music: Music){
+
                 Glide.with(this).load(music.artUri)
                     .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
                     .into(bindingPlayScreen.songImagePlay)

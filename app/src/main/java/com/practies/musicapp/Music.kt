@@ -18,8 +18,8 @@ fun formatDuration(duration: Long):String {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-fun  favoriteChecker(id: String){
 
 
-}
+
+
 

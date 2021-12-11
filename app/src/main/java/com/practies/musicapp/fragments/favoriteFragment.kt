@@ -57,11 +57,11 @@ class favoriteFragment : Fragment(),ServiceConnection {
         tempList.add("song name 8")
 
 
-        favAdapter= FavoriteAdapter (tempList)//(favoriteList )
+       favAdapter= FavoriteAdapter (tempList)//(favoriteList )
         binding.favRecyclerView.layoutManager= LinearLayoutManager(context)
         binding.favRecyclerView.hasFixedSize()
         binding.favRecyclerView.setItemViewCacheSize(13)
-        binding.favRecyclerView.adapter=favAdapter
+       binding.favRecyclerView.adapter=favAdapter
         return binding.root
     }
 
@@ -82,6 +82,9 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
         Toast.makeText(context,"Favorite connected",Toast.LENGTH_SHORT).show()
         musicServices!!.musiclistSe=favoriteList
+
+
+
 
     }
 

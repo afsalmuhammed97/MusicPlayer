@@ -22,7 +22,7 @@ class FavoriteAdapter(private val favoriteList:ArrayList<String>):RecyclerView.A
   //  ,listener:onItemClickListner
     class FavHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
            val title=itemView.findViewById<TextView>(R.id.songs_name_fav)
-       // val songImag=itemView.findViewById<ImageView>(R.id.imageMvFav)
+        val songImag=itemView.findViewById<ImageView>(R.id.imageMvFav)
 
         init {
             itemView.setOnClickListener {
