@@ -1,7 +1,9 @@
 package com.practies.musicapp
 
 import com.practies.musicapp.fragments.favoriteFragment
+import com.practies.musicapp.service.MusicServices
 import java.io.Serializable
+import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
 data class Music(
@@ -18,7 +20,7 @@ fun formatDuration(duration: Long):String {
         return String.format("%02d:%02d", minutes, seconds)
     }
 
-
+//var musicServices:WeakReference<MusicServices>?=null
 
 
 

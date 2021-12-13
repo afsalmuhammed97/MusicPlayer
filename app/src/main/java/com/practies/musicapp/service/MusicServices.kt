@@ -2,6 +2,7 @@ package com.practies.musicapp.service
 
 import android.annotation.SuppressLint
 import android.app.Application
+import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.ContentUris
@@ -23,13 +24,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
+import androidx.lifecycle.ViewModelProvider
 import com.practies.musicapp.Music
+import com.practies.musicapp.PlayScreenActivity
 
 import com.practies.musicapp.R
 import com.practies.musicapp.formatDuration
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.notifications.ApplicationClass
 import com.practies.musicapp.notifications.NotificationReceiver
+import com.practies.musicapp.view_model.MusicViewModel
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.SimpleDateFormat
@@ -41,14 +45,22 @@ import kotlin.system.exitProcess
 
 //,MediaPlayer.OnPreparedListener , mediaPlayer= MediaPlayer(),MediaPlayer.OnErrorListener,MediaPlayer.OnPreparedListener
 class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
+
+
+
+
+
+
+
+
     var currentIndex = 0
     var songPosionSe = 0
     val intervell = 1000
     var isPlaying = false
     companion object{   //    var isFavorite:Boolean=false
     }
-    lateinit var startPoint:TextView
-    lateinit var entPoint:TextView
+
+
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
    lateinit  var mediaPlayer: MediaPlayer
@@ -59,6 +71,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
+
+
         return mybinder
     }
 
@@ -73,43 +87,58 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        Toast.makeText(this,"${intent?.action}",Toast.LENGTH_SHORT).show()
+        // Notification bar play functions
+       when(intent?.action){
+
+           ApplicationClass.PREVIOUS->{
+               //previous song
+               Log.i("MSG","previous button clicked")
+               Toast.makeText(baseContext,"preve button",Toast.LENGTH_SHORT).show()
+           }
+           ApplicationClass.PLAY ->{           //play or pause song
+               Toast.makeText(baseContext,"play button",Toast.LENGTH_SHORT).show()
+               Log.i("MSG","play button clicked")
+
+               if (mediaPlayer.isPlaying){
+
+                  playPauseMusic(false)
+                  // bindingPlayScreen.playPauseButton.setImageResource(R.drawable.play_bt_circle)
+
+               }else{
+                  playPauseMusic(true)
+               //   PlayScreenActivity.playPauseButton.setImageResource(R.drawable.pause_bt_circle)
+
+               }
 
 
+           }
+           ApplicationClass.NEXT ->{          //next song
+               Toast.makeText(this,"Next button",Toast.LENGTH_SHORT).show()
+               Log.i("MSG","next button clicked")
+
+           }
+           ApplicationClass.EXit ->{        //Exit app   and notification
+               exitProcess(1)
+
+           }
+
+
+
+       }
         //notificationFunctions(notificationMsg)
 
         return super.onStartCommand(intent, flags, startId)
 
     }
-      // Notification bar play functions
-    private fun notificationFunctions(msg:String){
-        when(msg){
 
-             ApplicationClass.PREVIOUS ->  {  //previous song
-                 Toast.makeText(this,"preve button",Toast.LENGTH_SHORT).show()
-
-
-
-             }
-            ApplicationClass.PLAY ->{           //play or pause song
-                Toast.makeText(this,"play button",Toast.LENGTH_SHORT).show()
-
-            }
-            ApplicationClass.NEXT ->{          //next song
-                Toast.makeText(this,"Next button",Toast.LENGTH_SHORT).show()
-
-            }
-            ApplicationClass.EXit ->{        //Exit app   and notification
-                       exitProcess(1)
-
-            }
-        }
-    }
        //song complete
     fun setListener( onSongComplete: OnSongComplete){
         this.onSongComplete=onSongComplete
     }
     override fun onCreate() {
         super.onCreate()
+
         mediaPlayer = MediaPlayer()
       seekBar = SeekBar(this)
 

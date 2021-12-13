@@ -14,12 +14,15 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
+import com.practies.musicapp.model.FavoriteMusic
 import com.practies.musicapp.service.MusicServices
 import com.practies.musicapp.service.MusicServices.Companion
+import com.practies.musicapp.view_model.MusicViewModel
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -29,23 +32,26 @@ import kotlin.properties.Delegates
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
 
-                       lateinit var seekBar: SeekBar
-                      val intervell=1000
-                        lateinit var startPoint:TextView
-                        lateinit var entPoint:TextView
-                        var isFavorite:Boolean=false
-
+    lateinit var seekBar: SeekBar
+    val intervell=1000
+    lateinit var startPoint:TextView
+    lateinit var entPoint:TextView
+    var isFavorite:Boolean=false
     companion object{
    // var isFavorite:Boolean=false
     var favIndex:Int=0
-
 }
-   // var mediaPlayer :MediaPlayer ?=null
+    lateinit var musicViewModel: MusicViewModel
+
      var musicServices:MusicServices?=null
     var  favoriteListPA= arrayListOf<Music>()
+
          lateinit var seekbarRunnable: Runnable
+
         lateinit var bindingPlayScreen: ActivityPlayScreen2Binding
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
         bindingPlayScreen= ActivityPlayScreen2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(bindingPlayScreen.root)
@@ -58,21 +64,32 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         Intent(this,MusicServices::class.java)
         bindService(intent,this, BIND_AUTO_CREATE)
         startService(intent)
+//  View Model of Database******************************************
 
-
-
+      // musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
+     // musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)
 
     }
+    //call back from eventbus
     @Subscribe(threadMode=  ThreadMode.MAIN)
     fun updateUi( music: Music){
         setPlayScreen(music)
+
+//      FavoriteMusic(music.id,music.title          /***   add to favorite databa
+//            ,music.album,music.artist,music.duration,
+//            music.path,music.artUri,music.playListId)
 //          seekBarSetUp()
 //        seekFunction()
         Log.i("MSG","event bus called")
 
     }
 
+
+
+
+
     override fun onResume() {
+
         super.onResume()
 
       EventBus.getDefault().register(this)
@@ -88,11 +105,13 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 
     override fun onStart() {
-         seekBar= SeekBar(this)
+
+        seekBar= SeekBar(this)
 
         bindingPlayScreen.favButton.setOnClickListener{
 
                             favaIconChang()
+            currentSongAddToFavoriteList()
         }
 
         bindingPlayScreen.nextButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = true) }
@@ -120,9 +139,9 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                 if ( !isFavorite) {
                     bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
                     // musicServices!!.favoritelistSe.add(musicServices!!.musiclistSe[musicServices!!.currentIndex])
-                    Toast.makeText(this,"true",Toast.LENGTH_SHORT).show()
+                   // Toast.makeText(this,"true",Toast.LENGTH_SHORT).show()
 
-
+                   currentSongAddToFavoriteList()
                     isFavorite=true
 
 
@@ -138,15 +157,15 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 
 
-
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
         musicServices!!.setListener(this)
         seekBarSetUp()
         seekFunction()
-     //  musicServices!!.showNotification()
+         musicServices!!.showNotification()
+
+
         //to check the current song is favorite or not
 //             val tempIndex   = musicServices!!.favoriteChecker(musicServices!!.musiclistSe[musicServices!!.currentIndex].id)
 //              if (tempIndex != -1) favIndex=tempIndex
@@ -162,6 +181,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
     override fun onServiceDisconnected(name: ComponentName?) {}
                 private fun seekFunction(){
+
 
                     bindingPlayScreen.songSeekBar.setOnSeekBarChangeListener( object :SeekBar.OnSeekBarChangeListener{
                         override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean
@@ -189,7 +209,6 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
                  //for setting the current song image  and tittle
             fun setPlayScreen(music: Music){
-
                 Glide.with(this).load(music.artUri)
                     .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
                     .into(bindingPlayScreen.songImagePlay)
@@ -209,6 +228,24 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                                         updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
                                       musicServices!!.playSong()
                                   } }
+
+
+   private fun currentSongAddToFavoriteList(){
+        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
+        val  favoriteMusic=FavoriteMusic(
+            curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
+            curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId
+        )
+         //add to data base
+         //
+       //
+       musicViewModel.addSong(favoriteMusic)
+        Toast.makeText(this,"the song is added",Toast.LENGTH_SHORT).show()
+
+
+
+    }
+
 
 
 

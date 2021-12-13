@@ -1,5 +1,6 @@
 package com.practies.musicapp.database
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -10,8 +11,15 @@ import com.practies.musicapp.model.FavoriteMusic
 abstract class FavoriteDataBase :RoomDatabase() {
 
     abstract fun musicDao():MusicDao
+    //abstract val  musicDao:MusicDao
 
 companion object{
+//    fun getDatabase(application: Application):FavoriteDataBase{
+//        return  Room.databaseBuilder(application,FavoriteDataBase::class.java,"favorites")
+//            .build()
+//    }
+
+
     @Volatile
 private var INSTANCE :FavoriteDataBase ?=null
 
@@ -32,6 +40,7 @@ private var INSTANCE :FavoriteDataBase ?=null
     }
 
 }
+
 
 
 }
