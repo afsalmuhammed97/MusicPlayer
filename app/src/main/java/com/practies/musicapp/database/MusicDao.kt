@@ -12,7 +12,7 @@ interface MusicDao {
 
 
    @Query("SELECT * FROM  favorites ORDER BY title ")
-   fun readAllSongs():MutableList<FavoriteMusic>
+   fun readAllSongs(): MutableList<FavoriteMusic>
 
    @Delete
    fun  deleteSong(favoriteMusic: FavoriteMusic)

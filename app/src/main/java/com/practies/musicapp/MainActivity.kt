@@ -20,6 +20,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.practies.musicapp.adapter.ViewPageAdapter
 import com.practies.musicapp.databinding.ActivityMainBinding
 import com.practies.musicapp.service.MusicServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(),ServiceConnection {
@@ -91,6 +94,10 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         }
 
        // binding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title
+        GlobalScope.launch (Dispatchers.IO){
+            musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
+            // Log.i("Fav Frag",musicServices!!.favoritelistSe.toString())
+        }
 
     }
 

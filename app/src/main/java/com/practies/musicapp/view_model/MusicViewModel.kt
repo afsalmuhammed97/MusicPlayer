@@ -1,6 +1,7 @@
 package com.practies.musicapp.view_model
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.viewModelScope
@@ -18,6 +19,7 @@ private val readAllFavSongs:MutableList<FavoriteMusic>
 
 
 init {
+    Log.i("Music ViewModel","viewModel init called")
     val musicDao=FavoriteDataBase.getDatabase(application).musicDao()
     repository=FavoriteRepository(musicDao)
       readAllFavSongs=repository.readAllSongs

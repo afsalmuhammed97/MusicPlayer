@@ -29,11 +29,17 @@ import com.practies.musicapp.Music
 import com.practies.musicapp.PlayScreenActivity
 
 import com.practies.musicapp.R
+import com.practies.musicapp.database.FavoriteDataBase
+import com.practies.musicapp.database.FavoriteDataBase.Companion.getDatabase
+import com.practies.musicapp.database.MusicDao
 import com.practies.musicapp.formatDuration
 import com.practies.musicapp.interfaces.OnSongComplete
+import com.practies.musicapp.model.FavoriteMusic
 import com.practies.musicapp.notifications.ApplicationClass
 import com.practies.musicapp.notifications.NotificationReceiver
-import com.practies.musicapp.view_model.MusicViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 import java.text.SimpleDateFormat
@@ -59,15 +65,14 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     var isPlaying = false
     companion object{   //    var isFavorite:Boolean=false
     }
-
-
+     lateinit var favMusicDao:MusicDao                   // lateinit var musicFavDao: musicDao
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
    lateinit  var mediaPlayer: MediaPlayer
     lateinit var mediaSession: MediaSessionCompat
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
-    var favoritelistSe:ArrayList<Music> = ArrayList()//arrayListOf<Music>()
+     var favoritelistSe:MutableList<FavoriteMusic> =ArrayList()         //arrayListOf<Music>()
 
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -89,12 +94,12 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Toast.makeText(this,"${intent?.action}",Toast.LENGTH_SHORT).show()
         // Notification bar play functions
-       when(intent?.action){
+          when(intent?.action){
 
            ApplicationClass.PREVIOUS->{
                //previous song
                Log.i("MSG","previous button clicked")
-               Toast.makeText(baseContext,"preve button",Toast.LENGTH_SHORT).show()
+               //Toast.makeText(baseContext,"preve button",Toast.LENGTH_SHORT).show()
            }
            ApplicationClass.PLAY ->{           //play or pause song
                Toast.makeText(baseContext,"play button",Toast.LENGTH_SHORT).show()
@@ -142,22 +147,31 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
         mediaPlayer = MediaPlayer()
       seekBar = SeekBar(this)
 
+
+
+        //////to  access  the database//*******************************************************
+        favMusicDao=getDatabase(this).musicDao()
+
+
+//        GlobalScope.launch (Dispatchers.IO){ favoritelistSe= favMusicDao.readAllSongs()  }
+//              Log.i("Serveice" ,favoritelistSe.toString())
+
     }
  //   to check the current song is included in favorite list or not
-    fun favoriteChecker(id:String): Int {
-
-       // var favIndex:Int=-1
-         favoritelistSe.forEachIndexed{currentIndex,music ->
-             if (id==music.id){
-               //  isFavorite=true
-                return currentIndex
-             }
-         }
-
-return  -1
-
-
-    }
+//    fun favoriteChecker(id:String): Int {
+//
+//       // var favIndex:Int=-1
+//         favoritelistSe.forEachIndexed{currentIndex,music ->
+//             if (id==music.id){
+//               //  isFavorite=true
+//                return currentIndex
+//             }
+//         }
+//
+//return  -1
+//
+//
+//    }
 
 
     fun playSong() {

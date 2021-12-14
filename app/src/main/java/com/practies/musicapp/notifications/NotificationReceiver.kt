@@ -39,7 +39,9 @@ class NotificationReceiver:BroadcastReceiver() {
               // musicServices?.get().let { it?.nextPreviousSong(true) }
 
             }
-            ApplicationClass.EXit -> {        //Exit app   and notification
+            ApplicationClass.EXit -> {
+                //Exit app   and notification
+
                    exitProcess(0)
 
 

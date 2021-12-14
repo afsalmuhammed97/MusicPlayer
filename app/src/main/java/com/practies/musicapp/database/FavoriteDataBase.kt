@@ -14,10 +14,6 @@ abstract class FavoriteDataBase :RoomDatabase() {
     //abstract val  musicDao:MusicDao
 
 companion object{
-//    fun getDatabase(application: Application):FavoriteDataBase{
-//        return  Room.databaseBuilder(application,FavoriteDataBase::class.java,"favorites")
-//            .build()
-//    }
 
 
     @Volatile

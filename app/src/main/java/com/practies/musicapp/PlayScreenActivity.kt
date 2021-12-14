@@ -17,12 +17,18 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.practies.musicapp.database.FavoriteDataBase
+import com.practies.musicapp.database.FavoriteDataBase.Companion.getDatabase
+import com.practies.musicapp.database.MusicDao
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.FavoriteMusic
 import com.practies.musicapp.service.MusicServices
 import com.practies.musicapp.service.MusicServices.Companion
-import com.practies.musicapp.view_model.MusicViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -31,7 +37,7 @@ import kotlin.properties.Delegates
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
-
+  //   lateinit var favMusicDao:MusicDao
     lateinit var seekBar: SeekBar
     val intervell=1000
     lateinit var startPoint:TextView
@@ -41,7 +47,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
    // var isFavorite:Boolean=false
     var favIndex:Int=0
 }
-    lateinit var musicViewModel: MusicViewModel
+  // lateinit var musicViewModel: MusicViewModel
 
      var musicServices:MusicServices?=null
     var  favoriteListPA= arrayListOf<Music>()
@@ -66,8 +72,13 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         startService(intent)
 //  View Model of Database******************************************
 
-      // musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
-     // musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)
+//       musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)
+//        favMusicDao =FavoriteDataBase.getDatabase(this).musicDao()
+        //getDatabase(requireActivity().application).musicDao()
+
+
+
+
 
     }
     //call back from eventbus
@@ -141,7 +152,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                     // musicServices!!.favoritelistSe.add(musicServices!!.musiclistSe[musicServices!!.currentIndex])
                    // Toast.makeText(this,"true",Toast.LENGTH_SHORT).show()
 
-                   currentSongAddToFavoriteList()
+                 //  currentSongAddToFavoriteList()
                     isFavorite=true
 
 
@@ -231,16 +242,24 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 
    private fun currentSongAddToFavoriteList(){
-        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
+     //  val     musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
+
+       val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
         val  favoriteMusic=FavoriteMusic(
             curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
             curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId
         )
          //add to data base
-         //
-       //
-       musicViewModel.addSong(favoriteMusic)
-        Toast.makeText(this,"the song is added",Toast.LENGTH_SHORT).show()
+       GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDao.addSong(favoriteMusic)
+           Log.i("Favourites", "Song added")
+
+//              musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
+
+
+       }
+
+      //  musicViewModel.addSong(favoriteMusic)
+     //   Toast.makeText(this,"the song is added",Toast.LENGTH_SHORT).show()
 
 
 

@@ -98,7 +98,7 @@ private  lateinit var adapter:MusicAdapter
                 musicServices!!.initMediaPlayer()
                 musicServices!!.playSong()
                 val song=musiclist[position]
-                EventBus.getDefault().post(song)
+              //  EventBus.getDefault().post(song)
             //    Log.i("TAG",musicServices?.musiclistSe.toString())
                 val intent=Intent(context,PlayScreenActivity::class.java)
                 startActivity(intent)
@@ -167,10 +167,10 @@ private fun  getAllAudio():ArrayList<Music>{
            Toast.makeText(context,"service connected",Toast.LENGTH_SHORT).show()
 
 
-    //  Log.d("TAG","music service connected")
-       // musicServices!!.musiclistSe=musiclist
-//        Log.i("TAG",musicServices?.musiclistSe.toString())
-          // musicServices!!.songPosition=songPosition
+    // Log.d("TAG","music service connected")
+    // musicServices!!.musiclistSe=musiclist
+//     Log.i("TAG",musicServices?.musiclistSe.toString())
+    // musicServices!!.songPosition=songPosition
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {

@@ -1,5 +1,7 @@
 package com.practies.musicapp
 
+import com.practies.musicapp.database.FavoriteDataBase
+import com.practies.musicapp.database.MusicDao
 import com.practies.musicapp.fragments.favoriteFragment
 import com.practies.musicapp.service.MusicServices
 import java.io.Serializable
@@ -22,6 +24,7 @@ fun formatDuration(duration: Long):String {
 
 //var musicServices:WeakReference<MusicServices>?=null
 
+    //(context)?.userDao()!!
 
 
 

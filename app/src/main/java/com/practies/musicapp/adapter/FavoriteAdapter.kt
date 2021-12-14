@@ -8,9 +8,10 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.Music
 import com.practies.musicapp.R
+import com.practies.musicapp.model.FavoriteMusic
 
 
-class FavoriteAdapter(private val favoriteList:ArrayList<String>):RecyclerView.Adapter<FavoriteAdapter.FavHolder>() {
+class FavoriteAdapter(private val favoriteList:  MutableList<FavoriteMusic>):RecyclerView.Adapter<FavoriteAdapter.FavHolder>() {
    // lateinit var fListener:onItemClickListner
 
   /* interface onItemClickListner{
@@ -41,7 +42,7 @@ class FavoriteAdapter(private val favoriteList:ArrayList<String>):RecyclerView.A
 
     override fun onBindViewHolder(holder: FavHolder, position: Int) {
         val item=favoriteList[position]
-        holder.title.text=item //.title
+        holder.title.text=item.title
 //       Glide.with(holder.itemView.context).load(favoriteList[position].artUri)
 //           .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
 //           .into(holder.songImag)

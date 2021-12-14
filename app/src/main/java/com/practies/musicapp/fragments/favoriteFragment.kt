@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.speech.tts.TextToSpeech
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -17,15 +18,19 @@ import com.practies.musicapp.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
+import com.practies.musicapp.model.FavoriteMusic
 import com.practies.musicapp.service.MusicServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class favoriteFragment : Fragment(),ServiceConnection {
      var musicServices:MusicServices?=null
     lateinit var binding: FragmentFavoriteBinding
     lateinit var favAdapter:FavoriteAdapter
-    var  favoriteList= arrayListOf<Music>()
-          val favoriteSongs:ArrayList<Music> = ArrayList()
+    var  favoriteList= ArrayList<FavoriteMusic>()
+         // var favoriteSongs:MutableList<FavoriteMusic> = ArrayList()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
               val intent=Intent(context,MusicServices::class.java)
@@ -38,6 +43,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
+
 
         binding= FragmentFavoriteBinding.inflate(inflater,container,false)
 
@@ -55,9 +61,9 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
         tempList.add("song name 7")
         tempList.add("song name 8")
+         Log.i("In Favorite",favoriteList.toString())
 
-
-       favAdapter= FavoriteAdapter (tempList)//(favoriteList )
+       favAdapter= FavoriteAdapter (favoriteList)//(favoriteList )
         binding.favRecyclerView.layoutManager= LinearLayoutManager(context)
         binding.favRecyclerView.hasFixedSize()
         binding.favRecyclerView.setItemViewCacheSize(13)
@@ -81,8 +87,11 @@ class favoriteFragment : Fragment(),ServiceConnection {
         musicServices=binder.currentService()
 
         Toast.makeText(context,"Favorite connected",Toast.LENGTH_SHORT).show()
-        musicServices!!.musiclistSe=favoriteList
-
+       // musicServices!!.favoritelistSe=favoriteList
+//        GlobalScope.launch (Dispatchers.IO){
+//            musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
+//           // Log.i("Fav Frag",musicServices!!.favoritelistSe.toString())
+//        }
 
 
 
