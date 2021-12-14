@@ -94,10 +94,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         }
 
        // binding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title
-        GlobalScope.launch (Dispatchers.IO){
-            musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
-            // Log.i("Fav Frag",musicServices!!.favoritelistSe.toString())
-        }
+
 
     }
 

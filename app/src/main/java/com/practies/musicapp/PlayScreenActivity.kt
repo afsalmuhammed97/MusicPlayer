@@ -74,9 +74,12 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 //       musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)
 //        favMusicDao =FavoriteDataBase.getDatabase(this).musicDao()
-        //getDatabase(requireActivity().application).musicDao()
 
 
+//        GlobalScope.launch (Dispatchers.IO){
+//            musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
+//            // Log.i("Fav Frag",musicServices!!.favoritelistSe.toString())
+//        }
 
 
 
