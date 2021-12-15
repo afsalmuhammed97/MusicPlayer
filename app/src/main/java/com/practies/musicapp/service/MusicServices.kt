@@ -63,7 +63,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     var songPosionSe = 0
     val intervell = 1000
     var isPlaying = false
-    companion object{   //    var isFavorite:Boolean=false
+    companion object{      var isFavorite:Boolean=false
     }
      lateinit var favMusicDao:MusicDao                   // lateinit var musicFavDao: musicDao
     lateinit var seekBar: SeekBar
@@ -157,21 +157,12 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 //              Log.i("Serveice" ,favoritelistSe.toString())
 
     }
- //   to check the current song is included in favorite list or not
-//    fun favoriteChecker(id:String): Int {
-//
-//       // var favIndex:Int=-1
-//         favoritelistSe.forEachIndexed{currentIndex,music ->
-//             if (id==music.id){
-//               //  isFavorite=true
-//                return currentIndex
-//             }
-//         }
-//
-//return  -1
-//
-//
-//    }
+
+
+
+
+
+
 
 
     fun playSong() {
@@ -307,7 +298,16 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     }
 
-
+//     fun favoriteCheck(id:String):Boolean{
+//         isFavorite=false
+//         favoritelistSe.contains()
+//             if (id ==music.id){
+//                 isFavorite=true
+//                 return true
+//             }
+//         }
+//         return  false
+//     }
 
 
 

@@ -19,6 +19,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.BuildConfig.DEBUG
 import com.practies.musicapp.Music
@@ -26,6 +27,7 @@ import com.practies.musicapp.PlayScreenActivity
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
 import com.practies.musicapp.service.MusicServices
+import com.practies.musicapp.view_model.MusicViewModel
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -45,6 +47,7 @@ private  lateinit var adapter:MusicAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+           Log.i("Main","view model intialized")
          musiclist=getAllAudio()
         //to start service
         val intent =Intent(context, MusicServices::class.java)

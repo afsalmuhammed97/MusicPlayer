@@ -73,7 +73,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 //  View Model of Database******************************************
 
 //       musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)
-//        favMusicDao =FavoriteDataBase.getDatabase(this).musicDao()
+        //favMusicDao =FavoriteDataBase.getDatabase(this).musicDao()
 
 
 //        GlobalScope.launch (Dispatchers.IO){
@@ -124,8 +124,11 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
         bindingPlayScreen.favButton.setOnClickListener{
 
-                            favaIconChang()
-            currentSongAddToFavoriteList()
+                   if(! isFavorite){
+                       currentSongAddToFavoriteList()
+                   }else{
+                       removeSongFromFavorite()
+                   }
         }
 
         bindingPlayScreen.nextButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = true) }
@@ -160,7 +163,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 
                 }else {
-                    bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+                 //   bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
                     // musicServices!!.favoritelistSe.removeAt(favIndex)
                     Toast.makeText(this, "false", Toast.LENGTH_SHORT).show()
 
@@ -223,6 +226,10 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
                  //for setting the current song image  and tittle
             fun setPlayScreen(music: Music){
+                  if (checkTheSongIsInFavourites(music.id)){
+                      bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+                  }else{                      bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+                  }
                 Glide.with(this).load(music.artUri)
                     .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
                     .into(bindingPlayScreen.songImagePlay)
@@ -232,6 +239,18 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
             }
 
+    private fun checkTheSongIsInFavourites(id:String): Boolean {
+                    isFavorite=false
+                musicServices!!.favoritelistSe.forEachIndexed { index, favoriteMusic ->
+
+                    if (id==favoriteMusic.id){
+                        isFavorite =true
+                        return true
+                    }
+                }
+
+        return false
+    }
 
                         override fun onSongComplete() {
                               if (musicServices!!.currentIndex == musicServices!!.musiclistSe.size-1)
@@ -255,23 +274,38 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
          //add to data base
        GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDao.addSong(favoriteMusic)
            Log.i("Favourites", "Song added")
-
-//              musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
-
-
        }
+       bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
 
-      //  musicViewModel.addSong(favoriteMusic)
-     //   Toast.makeText(this,"the song is added",Toast.LENGTH_SHORT).show()
+   }
+
+         private fun removeSongFromFavorite(){
+
+             val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
+             val  favoriteMusic=FavoriteMusic(
+                 curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
+                 curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId)
+             GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDao.deleteSong(favoriteMusic) }
+
+             bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+         }
 
 
 
-    }
 
 
 
 
-                        }
+
+
+
+
+}
+
+
+
+
+
 
 
 

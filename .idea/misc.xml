@@ -32,7 +32,7 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen2.xml" value="0.15" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.2" />
-        <entry key="..\:/MusicApp/app/src/main/res/layout/favorite_view.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/favorite_view.xml" value="0.15" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/favourite_view.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_al_songs.xml" value="0.19583333333333333" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favorite.xml" value="0.2" />
@@ -52,8 +52,6 @@
     </option>
   </component>
   <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/database/FavoriteRepository.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/view_model/MusicViewModel.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/view_model/ViewModelFactory.kt" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">

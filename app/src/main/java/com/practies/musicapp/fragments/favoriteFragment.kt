@@ -42,13 +42,14 @@ class favoriteFragment : Fragment(),ServiceConnection {
         requireActivity().startService(intent)
              favMusicDao= FavoriteDataBase.getDatabase(requireActivity().application).musicDao()
              GlobalScope.launch (Dispatchers.IO){
-
                  favoriteList=favMusicDao.readAllSongs()
                  Log.i("Fav Frag",favoriteList.toString())
              }
 
 
     }
+
+
 
 
 
@@ -68,20 +69,6 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
             binding= FragmentFavoriteBinding.inflate(inflater,container,false)
 
-        val tempList=ArrayList<String>()
-        tempList.add("song name 1 ")
-        tempList.add("song name 2")
-
-        tempList.add("song name 3")
-
-        tempList.add("song name 4")
-
-        tempList.add("song name 5")
-
-        tempList.add("song name 6")
-
-        tempList.add("song name 7")
-        tempList.add("song name 8")
         // Log.i("In Favorite",favoriteList.toString())
 
        favAdapter= FavoriteAdapter (favoriteList)//(favoriteList )
@@ -94,26 +81,20 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        favAdapter.setOnItemClickListner(object :FavoriteAdapter.onItemClickListner{
-//            override fun onItemClick(position: Int) {
-//              Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
-//            }
+        favAdapter.setOnItemClickListner(object :FavoriteAdapter.onItemClickListner{
+            override fun onItemClick(position: Int) {
+              Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
+            }
 
-   //     })
+        })
 
     }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-
+       musicServices!!.favoritelistSe=favoriteList
         Toast.makeText(context,"Favorite connected",Toast.LENGTH_SHORT).show()
-       // musicServices!!.favoritelistSe=favoriteList
-//        GlobalScope.launch (Dispatchers.IO){
-//            musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
-//           // Log.i("Fav Frag",musicServices!!.favoritelistSe.toString())
-//        }
-
 
 
     }

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -88,8 +89,9 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
         binding.miniPlayerLayout.setOnClickListener{
             //move  to the  player screen
-//            val intent=Intent(this,PlayScreenActivity::class.java)
-//            startActivity(intent)
+           val intent=Intent(this,PlayScreenActivity::class.java)
+           startActivity(intent)
+            Log.i("Main","reopen play screen")
            // Toast.makeText(this,"Layout clicked",Toast.LENGTH_SHORT).show()
         }
 
