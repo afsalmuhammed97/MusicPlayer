@@ -12,24 +12,23 @@ import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
 import android.util.Log
-import android.util.Log.INFO
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practies.musicapp.BuildConfig.DEBUG
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practies.musicapp.Music
 import com.practies.musicapp.PlayScreenActivity
+import com.practies.musicapp.R
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
 import com.practies.musicapp.service.MusicServices
-import com.practies.musicapp.view_model.MusicViewModel
-import org.greenrobot.eventbus.EventBus
 import java.io.File
+
 //8888888888888888888888888888888888888888888888888888888888888888888888888888888888888
 //,ServiceConnection
 class AlSongsFragment (): Fragment(),ServiceConnection{
@@ -95,8 +94,8 @@ private  lateinit var adapter:MusicAdapter
             override fun onItemClick(position: Int) {
 
 
-
                 musicServices!!.setSongList(musiclist,position)
+               // EventBus.getDefault().post(musiclist[position])
                // musicServices!!.musiclistSe=musiclist
               //  musicServices!!.initMediaPlayer()
               //  musicServices!!.playSong()
@@ -110,12 +109,53 @@ private  lateinit var adapter:MusicAdapter
 
             }
 
+            override fun onOptionClick(position: Int) {
+                         popupMenus(view)
+            }
+
         })
 
     }
 
+     private fun popupMenus(view: View){
+         val popupMenu=PopupMenu(context,view)
+         popupMenu.inflate(R.menu.droop_down_menu)
+        popupMenu.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.addToPlayList->{
+                    customAlertDialog()
+                   // Toast.makeText(context,"add to play ",Toast.LENGTH_SHORT).show()
+                    true
+
+                }
+
+                R.id.addToFavorite ->{   Toast.makeText(context,"add to fav ",Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> true
+            }
+
+        }
+         popupMenu.show()
+     }
 
 
+
+//  to show the popup window
+    fun customAlertDialog(){
+
+  val customDialog=LayoutInflater.from(context).inflate(R.layout.play_list_menu,binding.root,false)
+val  builder=MaterialAlertDialogBuilder(requireContext())
+   builder.setView(customDialog )
+
+      builder.setPositiveButton("Add") { dialog, _ ->
+           dialog.dismiss()
+       }
+     builder.setNegativeButton("Cancel") { dialog, _ ->
+           dialog.cancel()
+       }
+           builder.show()
+    }
 
 ////   val cursor:Cursor?=requireActivity().contentResolver.query(
 @SuppressLint("Recycle", "Range")
@@ -167,7 +207,7 @@ private fun  getAllAudio():ArrayList<Music>{
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
       val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-           Toast.makeText(context,"service connected",Toast.LENGTH_SHORT).show()
+        Log.i("MSG","service connected")
 
 
     // Log.d("TAG","music service connected")

@@ -14,5 +14,14 @@
     <string name="option_bt">option</string>
     <string name="library_bt">library</string>
     <string name="music_image">music_image</string>
+    <string name="playListTittle">Add to playlist</string>
+    <string name="addToFavorite">Add to favorite</string>
+    <string name="removeFromPlaylist">Remove from playlist</string>
+
+    <string name="playListName">Playlist name</string>
+
+
+
+
 
 </resources>

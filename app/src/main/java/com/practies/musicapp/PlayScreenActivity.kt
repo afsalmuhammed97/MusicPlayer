@@ -59,6 +59,8 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         Intent(this,MusicServices::class.java)
         bindService(intent,this, BIND_AUTO_CREATE)
         startService(intent)
+
+
 //  View Model of Database******************************************
 
 //       musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)

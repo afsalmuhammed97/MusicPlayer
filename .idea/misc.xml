@@ -44,6 +44,9 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/mini_player_lay_out.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/mini_player_layout.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/music_view.xml" value="0.25" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/play_list_meu.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/popup_menu.xml" value="0.22" />
+        <entry key="..\:/MusicApp/app/src/main/res/menu/droop_down_menu.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/MusicplayerIcon.xml" value="0.22592592592592592" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.12395833333333334" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/music_player_icon.xml" value="0.22592592592592592" />
@@ -56,6 +59,7 @@
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/database/FavoriteRepository.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/database/MusicDao.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/model/FavoriteMusic.kt" />
+    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/view_model/MusicViewModel.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/view_model/ViewModelFactory.kt" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">

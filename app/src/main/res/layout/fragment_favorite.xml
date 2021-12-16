@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#577B81"
+    android:background="@color/black"
     tools:context=".fragments.favoriteFragment">
 
     <androidx.recyclerview.widget.RecyclerView
@@ -20,6 +20,7 @@
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/shuffle_bt"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
         app:backgroundTint="@color/teal_200"

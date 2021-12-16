@@ -3,15 +3,10 @@ package com.practies.musicapp
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.practies.musicapp.database.FavoriteDataBase
-import com.practies.musicapp.database.MusicDao
-import com.practies.musicapp.databinding.FavoriteViewBinding
-import com.practies.musicapp.fragments.favoriteFragment
-import com.practies.musicapp.service.MusicServices
 import java.io.Serializable
-import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
- @Entity (tableName = "allMusics")
+
+@Entity (tableName = "allMusics")
 
 data class Music(
      @PrimaryKey  val id: String,

@@ -18,13 +18,13 @@
         android:layout_marginTop="60dp"
         android:background="#63454A"
         android:contentDescription="@string/music_image"
-        app:shapeAppearanceOverlay="@style/Rounded_corner"
         android:src="@drawable/headphone"
         app:flow_horizontalAlign="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.428"
+        app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:shapeAppearanceOverlay="@style/Rounded_corner" />
 
     <androidx.appcompat.widget.AppCompatSeekBar
         android:id="@+id/song_seek_bar"

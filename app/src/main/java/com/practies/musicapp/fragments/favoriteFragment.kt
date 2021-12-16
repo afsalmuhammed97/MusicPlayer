@@ -30,7 +30,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
     lateinit var binding: FragmentFavoriteBinding
     lateinit var favAdapter:FavoriteAdapter
     var  favoriteList= arrayListOf<Music>()
-         // var favoriteSongs:MutableList<FavoriteMusic> = ArrayList()
+    var isShuffle:Boolean=false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
              favMusicDao=MusicDatabase.getDatabase(requireActivity().application).musicDao()
 
         GlobalScope.launch (Dispatchers.IO){
-            favoriteList= favMusicDao.readAllSong() as ArrayList<Music>
+            favoriteList= favMusicDao.readAllFavoriteSong() as ArrayList<Music>
             Log.i("Fav Frag",favoriteList.toString())
 
 
@@ -82,14 +82,17 @@ class favoriteFragment : Fragment(),ServiceConnection {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         favAdapter.setOnItemClickListner(object :FavoriteAdapter.onItemClickListner{
-            override fun onItemClick(position: Int) {
-
-                musicServices!!.setSongList(favoriteList,position)
+            override fun onItemClick(position: Int) { musicServices!!.setSongList(favoriteList,position)
 
              // Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
-            }
+            } })
+        binding.shuffleBt.setOnClickListener{
 
-        })
+           //musicServices!!.musiclistSe.shuffle()
+                favoriteList.shuffle()
+               // isShuffle=true
+                Toast.makeText(context,"shuffle on",Toast.LENGTH_SHORT).show()
+        }
 
     }
 

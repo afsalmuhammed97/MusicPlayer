@@ -70,7 +70,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Toast.makeText(this,"${intent?.action}",Toast.LENGTH_SHORT).show()
+
         // Notification bar play functions
           when(intent?.action){
 
@@ -128,11 +128,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
         //////to  access  the database//*******************************************************
-       // favMusicDao=getDatabase(this).musicDao()
+
       favMusicDa=MusicDatabase.getDatabase(this).musicDao()
 
-//        GlobalScope.launch (Dispatchers.IO){ favoritelistSe= favMusicDao.readAllSongs()  }
-//              Log.i("Serveice" ,favoritelistSe.toString())
 
     }
 
@@ -140,6 +138,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
       fun setSongList(songList:ArrayList<Music>,songPosition:Int){
           musiclistSe=songList
           currentIndex=songPosition
+
           initMediaPlayer()
           playSong()
 
@@ -172,7 +171,6 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     fun initMediaPlayer() {
         Log.i("MSG", "init player invoked")
-        Toast.makeText(this, "player inited", Toast.LENGTH_SHORT).show()
         //  mediaPlayer= MediaPlayer()
         mediaPlayer.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)

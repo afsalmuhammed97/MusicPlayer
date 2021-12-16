@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -25,6 +26,7 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
    // lateinit var  mListener:onItemClickListener
     interface onItemClickListener{
         fun onItemClick(position: Int)
+        fun onOptionClick(position: Int)
     }
 
    fun setOnItemClickListener(listener:onItemClickListener){
@@ -38,12 +40,18 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
        // val duration=itemView.findViewById<TextView>(R.id.song_duration)
         val albumName=itemView.findViewById<TextView>(R.id.song_album)
         val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
+        val optionMenu=itemView.findViewById<ImageButton>(R.id.option_icon)
 
 
            init {
               itemView.setOnClickListener {
                   listener.onItemClick(adapterPosition)
               }
+               optionMenu.setOnClickListener{
+                   listener.onOptionClick(adapterPosition)            //onItemClick(position)
+               }
+
+
            }
 
 
