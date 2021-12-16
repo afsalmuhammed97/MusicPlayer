@@ -83,7 +83,10 @@ class favoriteFragment : Fragment(),ServiceConnection {
         super.onViewCreated(view, savedInstanceState)
         favAdapter.setOnItemClickListner(object :FavoriteAdapter.onItemClickListner{
             override fun onItemClick(position: Int) {
-              Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
+
+                musicServices!!.setSongList(favoriteList,position)
+
+             // Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
             }
 
         })

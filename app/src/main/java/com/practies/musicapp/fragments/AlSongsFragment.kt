@@ -96,11 +96,11 @@ private  lateinit var adapter:MusicAdapter
 
 
 
-                musicServices!!.currentIndex=position
-                musicServices!!.musiclistSe=musiclist
-                musicServices!!.initMediaPlayer()
-                musicServices!!.playSong()
-                val song=musiclist[position]
+                musicServices!!.setSongList(musiclist,position)
+               // musicServices!!.musiclistSe=musiclist
+              //  musicServices!!.initMediaPlayer()
+              //  musicServices!!.playSong()
+               // val song=musiclist[position]
               //  EventBus.getDefault().post(song)
             //    Log.i("TAG",musicServices?.musiclistSe.toString())
                 val intent=Intent(context,PlayScreenActivity::class.java)

@@ -137,7 +137,13 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
 
 
+      fun setSongList(songList:ArrayList<Music>,songPosition:Int){
+          musiclistSe=songList
+          currentIndex=songPosition
+          initMediaPlayer()
+          playSong()
 
+      }
 
 
 
