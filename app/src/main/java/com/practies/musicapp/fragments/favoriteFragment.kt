@@ -1,27 +1,23 @@
 package com.practies.musicapp.fragments
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.speech.tts.TextToSpeech
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.Music
-import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
-import com.practies.musicapp.database.FavoriteDataBase
-import com.practies.musicapp.database.MusicDao
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
-import com.practies.musicapp.model.FavoriteMusic
+import com.practies.musicapp.musicDatabase.MusicDao
+import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.service.MusicServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -33,20 +29,24 @@ class favoriteFragment : Fragment(),ServiceConnection {
      var musicServices:MusicServices?=null
     lateinit var binding: FragmentFavoriteBinding
     lateinit var favAdapter:FavoriteAdapter
-    var  favoriteList= mutableListOf<FavoriteMusic>()
+    var  favoriteList= arrayListOf<Music>()
          // var favoriteSongs:MutableList<FavoriteMusic> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
               val intent=Intent(context,MusicServices::class.java)
         requireActivity().bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
         requireActivity().startService(intent)
-             favMusicDao= FavoriteDataBase.getDatabase(requireActivity().application).musicDao()
-             GlobalScope.launch (Dispatchers.IO){
-                 favoriteList=favMusicDao.readAllSongs()
-                 Log.i("Fav Frag",favoriteList.toString())
-             }
+             favMusicDao=MusicDatabase.getDatabase(requireActivity().application).musicDao()
+
+        GlobalScope.launch (Dispatchers.IO){
+            favoriteList= favMusicDao.readAllSong() as ArrayList<Music>
+            Log.i("Fav Frag",favoriteList.toString())
 
 
+        }
+
+///////////////////////////////////////////////////
     }
 
 

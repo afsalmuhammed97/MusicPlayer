@@ -30,7 +30,7 @@ import com.practies.musicapp.service.MusicServices
 import com.practies.musicapp.view_model.MusicViewModel
 import org.greenrobot.eventbus.EventBus
 import java.io.File
-
+//8888888888888888888888888888888888888888888888888888888888888888888888888888888888888
 //,ServiceConnection
 class AlSongsFragment (): Fragment(),ServiceConnection{
        var  musicServices: MusicServices?=null

@@ -12,11 +12,11 @@ import kotlinx.android.parcel.Parcelize
 data class FavoriteMusic (
                                //(autoGenerate = true)
      @PrimaryKey     val id: String,       //val uid: Int,
-     @ColumnInfo    val title:String?,
-     @ColumnInfo  val album:String?,
-     @ColumnInfo val artist:String?,
+     @ColumnInfo    val title:String,
+     @ColumnInfo  val album:String,
+     @ColumnInfo val artist:String,
      @ColumnInfo  val duration:Long =0,
-     @ColumnInfo  val path:String?,
+     @ColumnInfo  val path:String,
      @ColumnInfo  val artUri:String?,
      @ColumnInfo  val playListId:Int=0 ):Parcelable  //:ASong(id,title,album,artist,duration,path,artUri,playListId),
 

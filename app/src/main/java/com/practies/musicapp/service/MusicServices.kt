@@ -1,50 +1,28 @@
 package com.practies.musicapp.service
 
-import android.annotation.SuppressLint
-import android.app.Application
-import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
-import android.content.ContentUris
 import android.content.Intent
-import android.database.Cursor
 import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.MediaPlayer
-import android.net.Uri
 import android.os.Binder
-import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
-import android.provider.MediaStore
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
-import androidx.lifecycle.ViewModelProvider
 import com.practies.musicapp.Music
-import com.practies.musicapp.PlayScreenActivity
-
 import com.practies.musicapp.R
-import com.practies.musicapp.database.FavoriteDataBase
-import com.practies.musicapp.database.FavoriteDataBase.Companion.getDatabase
-import com.practies.musicapp.database.MusicDao
-import com.practies.musicapp.formatDuration
 import com.practies.musicapp.interfaces.OnSongComplete
-import com.practies.musicapp.model.FavoriteMusic
+import com.practies.musicapp.musicDatabase.MusicDao
+import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.notifications.ApplicationClass
 import com.practies.musicapp.notifications.NotificationReceiver
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
-import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
@@ -65,14 +43,14 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     var isPlaying = false
     companion object{      var isFavorite:Boolean=false
     }
-     lateinit var favMusicDao:MusicDao                   // lateinit var musicFavDao: musicDao
+     lateinit var  favMusicDa:MusicDao             // lateinit var musicFavDao: musicDao
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
    lateinit  var mediaPlayer: MediaPlayer
     lateinit var mediaSession: MediaSessionCompat
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
-     var favoritelistSe:MutableList<FavoriteMusic> =ArrayList()         //arrayListOf<Music>()
+     var favoritelistSe= arrayListOf<Music>()             //    ArrayList<Music>       =ArrayList()         //arrayListOf<Music>()
 
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -150,8 +128,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
         //////to  access  the database//*******************************************************
-        favMusicDao=getDatabase(this).musicDao()
-
+       // favMusicDao=getDatabase(this).musicDao()
+      favMusicDa=MusicDatabase.getDatabase(this).musicDao()
 
 //        GlobalScope.launch (Dispatchers.IO){ favoritelistSe= favMusicDao.readAllSongs()  }
 //              Log.i("Serveice" ,favoritelistSe.toString())

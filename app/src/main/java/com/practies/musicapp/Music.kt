@@ -1,5 +1,8 @@
 package com.practies.musicapp
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.practies.musicapp.database.FavoriteDataBase
 import com.practies.musicapp.database.MusicDao
 import com.practies.musicapp.databinding.FavoriteViewBinding
@@ -8,14 +11,22 @@ import com.practies.musicapp.service.MusicServices
 import java.io.Serializable
 import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
+ @Entity (tableName = "allMusics")
 
 data class Music(
-    val id: String,
-    val title:String,
-    val album:String,
-    val artist:String, val duration:Long =0,
-    val path:String, val artUri:String ,val playListId:Int=0 ): Serializable
+     @PrimaryKey  val id: String,
+     @ColumnInfo val title:String,
+     @ColumnInfo val album:String,
+     @ColumnInfo val artist:String,
+     @ColumnInfo val duration:Long =0,
+     @ColumnInfo val path:String,
+     @ColumnInfo val artUri:String,
+     @ColumnInfo val playListId:Int=0 ): Serializable
     //:Serializable
+
+
+
+
 fun formatDuration(duration: Long):String {
         val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
         val seconds = (TimeUnit.SECONDS.convert(duration, TimeUnit.MILLISECONDS) -

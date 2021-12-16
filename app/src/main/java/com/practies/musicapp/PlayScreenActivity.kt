@@ -1,11 +1,8 @@
 package com.practies.musicapp
 
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -14,26 +11,18 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.practies.musicapp.database.FavoriteDataBase
-import com.practies.musicapp.database.FavoriteDataBase.Companion.getDatabase
-import com.practies.musicapp.database.MusicDao
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
-import com.practies.musicapp.model.FavoriteMusic
 import com.practies.musicapp.service.MusicServices
-import com.practies.musicapp.service.MusicServices.Companion
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.util.concurrent.TimeUnit
-import kotlin.properties.Delegates
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
@@ -267,12 +256,12 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
      //  val     musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
 
        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
-        val  favoriteMusic=FavoriteMusic(
+        val  favoriteMusic=Music(
             curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
             curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId
         )
          //add to data base
-       GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDao.addSong(favoriteMusic)
+       GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDa.addSong(favoriteMusic)         //.addSong(favoriteMusic)
            Log.i("Favourites", "Song added")
        }
        bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
@@ -282,10 +271,10 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
          private fun removeSongFromFavorite(){
 
              val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
-             val  favoriteMusic=FavoriteMusic(
+             val  favoriteMusic=Music(
                  curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
                  curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId)
-             GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDao.deleteSong(favoriteMusic) }
+             GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
 
              bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
          }
