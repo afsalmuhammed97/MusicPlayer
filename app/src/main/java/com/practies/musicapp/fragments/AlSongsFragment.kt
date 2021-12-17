@@ -15,6 +15,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -27,6 +29,7 @@ import com.practies.musicapp.R
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
 import com.practies.musicapp.service.MusicServices
+import kotlinx.android.synthetic.*
 import java.io.File
 
 //8888888888888888888888888888888888888888888888888888888888888888888888888888888888888
@@ -34,12 +37,13 @@ import java.io.File
 class AlSongsFragment (): Fragment(),ServiceConnection{
        var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
-    var servicesIntent :Intent?=null
-var songPosition=0
-     val i:String=""
 
+
+
+    lateinit var listView: ListView
+    var playList= arrayListOf<String>()
+ lateinit var listAdapter:ArrayAdapter<String>
 private  lateinit var adapter:MusicAdapter
-
 
       var  musiclist= arrayListOf<Music>()
 
@@ -59,7 +63,11 @@ private  lateinit var adapter:MusicAdapter
        // requireActivity().startService(Intent(context,MusicServices::class.java))
 
        // Toast.makeText(context,"service started ",Toast.LENGTH_SHORT).show()
-
+        playList.add("play List 1")
+        playList.add("play List 2")
+        playList.add("play List 3")
+        playList.add("play List 4")
+        playList.add("play List 5")
 
 
 
@@ -95,6 +103,8 @@ private  lateinit var adapter:MusicAdapter
 
 
                 musicServices!!.setSongList(musiclist,position)
+                val intent=Intent(context,PlayScreenActivity::class.java)
+                startActivity(intent)
                // EventBus.getDefault().post(musiclist[position])
                // musicServices!!.musiclistSe=musiclist
               //  musicServices!!.initMediaPlayer()
@@ -102,28 +112,27 @@ private  lateinit var adapter:MusicAdapter
                // val song=musiclist[position]
               //  EventBus.getDefault().post(song)
             //    Log.i("TAG",musicServices?.musiclistSe.toString())
-                val intent=Intent(context,PlayScreenActivity::class.java)
-                startActivity(intent)
+
 
 
 
             }
 
             override fun onOptionClick(position: Int) {
-                         popupMenus(view)
+                         popupMenus(view,position)
             }
 
         })
 
     }
 
-     private fun popupMenus(view: View){
+     private fun popupMenus(view: View,position:Int){
          val popupMenu=PopupMenu(context,view)
          popupMenu.inflate(R.menu.droop_down_menu)
         popupMenu.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.addToPlayList->{
-                    customAlertDialog()
+                    customAlertDialog(position)
                    // Toast.makeText(context,"add to play ",Toast.LENGTH_SHORT).show()
                     true
 
@@ -142,10 +151,19 @@ private  lateinit var adapter:MusicAdapter
 
 
 //  to show the popup window
-    fun customAlertDialog(){
-
+    fun customAlertDialog(position: Int){
+//position for operation with database
   val customDialog=LayoutInflater.from(context).inflate(R.layout.play_list_menu,binding.root,false)
-val  builder=MaterialAlertDialogBuilder(requireContext())
+    val listView= customDialog.findViewById<ListView>(R.id.play_list_view)
+
+    listAdapter= ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,playList)
+      listView.adapter=listAdapter
+
+      listAdapter.notifyDataSetChanged()
+
+
+    val  builder=MaterialAlertDialogBuilder(requireContext())
+
    builder.setView(customDialog )
 
       builder.setPositiveButton("Add") { dialog, _ ->
@@ -156,6 +174,17 @@ val  builder=MaterialAlertDialogBuilder(requireContext())
        }
            builder.show()
     }
+
+           //  to show the  playlist names in a listView
+
+    fun showplaylist(){
+       // val adapter=ArrayAdapter(requireContext(),R.layout.list_item_view,playList)
+
+          // listView=
+    }
+
+
+
 
 ////   val cursor:Cursor?=requireActivity().contentResolver.query(
 @SuppressLint("Recycle", "Range")

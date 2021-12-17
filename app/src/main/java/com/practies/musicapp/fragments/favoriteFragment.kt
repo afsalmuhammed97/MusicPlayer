@@ -1,5 +1,6 @@
 package com.practies.musicapp.fragments
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -53,6 +54,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
 
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
@@ -72,10 +74,12 @@ class favoriteFragment : Fragment(),ServiceConnection {
         // Log.i("In Favorite",favoriteList.toString())
 
        favAdapter= FavoriteAdapter (favoriteList)//(favoriteList )
+        favAdapter.notifyDataSetChanged()
         binding.favRecyclerView.layoutManager= LinearLayoutManager(context)
         binding.favRecyclerView.hasFixedSize()
         binding.favRecyclerView.setItemViewCacheSize(13)
        binding.favRecyclerView.adapter=favAdapter
+
         return binding.root
     }
 

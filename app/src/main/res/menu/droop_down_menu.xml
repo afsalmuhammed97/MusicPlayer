@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/addToPlayList"
-        android:title="@string/playListTittle"
+        android:title="@string/newPlayList"
         />
 
        <item

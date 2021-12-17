@@ -89,10 +89,11 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
         binding.miniPlayerLayout.setOnClickListener{
             //move  to the  player screen
-           val intent=Intent(this,PlayScreenActivity::class.java)
-           startActivity(intent)
-            Log.i("Main","reopen play screen")
-           // Toast.makeText(this,"Layout clicked",Toast.LENGTH_SHORT).show()
+            if (musicServices !=null) {
+                val intent = Intent(this, PlayScreenActivity::class.java)
+                startActivity(intent)
+                Log.i("Main", "reopen play screen")
+            }
         }
 
        // binding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title

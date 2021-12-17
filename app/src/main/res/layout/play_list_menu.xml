@@ -8,13 +8,13 @@
     <TextView
         android:id="@+id/header_title"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="wrap_content"
         android:background="@color/back_ground"
-        android:paddingTop="8dp"
+        android:paddingTop="4dp"
         android:text="@string/playListTittle"
         android:textAlignment="center"
         android:textColor="@color/teal_200"
-        android:textSize="20sp"
+        android:textSize="16sp"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
         app:layout_constraintTop_toBottomOf="@id/header_title"
               app:boxStrokeColor="@color/teal_200"
         app:startIconDrawable="@drawable/library"
-        android:hint="@string/playListName"
+        android:hint="@string/newPlayList"
         style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"
         >
 <!--        style="@style/Widget.Material3.AutoCompleteTextView.OutlinedBox"-->
@@ -47,7 +47,7 @@
     <ListView
         android:id="@+id/play_list_view"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

@@ -39,12 +39,16 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favourite.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_library.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_mini_player.xml" value="0.2" />
-        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.20677083333333332" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_song_list.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/list_item_view.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/list_view_item.xml" value="0.15" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/mini_player_lay_out.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/mini_player_layout.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/music_view.xml" value="0.25" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/play_list_menu.xml" value="0.15" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/play_list_meu.xml" value="0.2" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/play_list_view.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/popup_menu.xml" value="0.22" />
         <entry key="..\:/MusicApp/app/src/main/res/menu/droop_down_menu.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/mipmap-anydpi-v26/MusicplayerIcon.xml" value="0.22592592592592592" />
@@ -55,12 +59,7 @@
     </option>
   </component>
   <component name="ProjectPlainTextFileTypeManager">
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/database/FavoriteDataBase.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/database/FavoriteRepository.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/database/MusicDao.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/model/FavoriteMusic.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/view_model/MusicViewModel.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/view_model/ViewModelFactory.kt" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
