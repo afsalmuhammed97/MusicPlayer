@@ -21,8 +21,6 @@ import com.practies.musicapp.interfaces.OnSongComplete
 class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapter<MusicAdapter.MyHolder>() {
 
     private lateinit var mListenr:onItemClickListener
-
-
    // lateinit var  mListener:onItemClickListener
     interface onItemClickListener{
         fun onItemClick(position: Int)
@@ -41,7 +39,6 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
         val albumName=itemView.findViewById<TextView>(R.id.song_album)
         val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
         val optionMenu=itemView.findViewById<ImageButton>(R.id.option_icon)
-
 
            init {
               itemView.setOnClickListener {

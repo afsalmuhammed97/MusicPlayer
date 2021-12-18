@@ -8,13 +8,17 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.Music
+import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
 import com.practies.musicapp.musicDatabase.MusicDao
@@ -89,7 +93,13 @@ class favoriteFragment : Fragment(),ServiceConnection {
             override fun onItemClick(position: Int) { musicServices!!.setSongList(favoriteList,position)
 
              // Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
-            } })
+            }
+
+            override fun onOptionClick(position: Int) {
+                // to remove song from favorite list
+                popupMenu(position)
+            }
+        })
         binding.shuffleBt.setOnClickListener{
 
            //musicServices!!.musiclistSe.shuffle()
@@ -97,6 +107,48 @@ class favoriteFragment : Fragment(),ServiceConnection {
                // isShuffle=true
                 Toast.makeText(context,"shuffle on",Toast.LENGTH_SHORT).show()
         }
+
+    }
+
+    private fun popupMenu(position:Int){
+
+        val popupMenu= PopupMenu(context,view)
+        popupMenu.inflate(R.menu.fav_option_menu)
+        popupMenu.setOnMenuItemClickListener (object :PopupMenu.OnMenuItemClickListener{
+            @SuppressLint("NotifyDataSetChanged")
+            override fun onMenuItemClick(item: MenuItem?): Boolean {
+                when(item?.itemId){
+                    R.id.removeFromPlayList->{
+                        //*****************
+                        //function to remove item from database
+                          val tempMusic= favoriteList[position]
+                        favoriteList.remove(tempMusic)
+                              removeSongFromFavorite(position)
+                        favAdapter.notifyDataSetChanged()
+                     return   true
+                    }
+                    R.id.cancel_action ->{
+                        popupMenu.dismiss()
+                        return true
+                    }
+                    else ->
+                        return false
+                }
+
+            }
+
+        })
+
+        popupMenu.show()
+    }
+
+    private fun removeSongFromFavorite(position: Int){
+
+        val selectedSong=favoriteList[position]
+        val  favoriteMusic=Music(
+            selectedSong.id,selectedSong.title,selectedSong.album,selectedSong.artist,
+            selectedSong.duration,selectedSong.path,selectedSong.artUri,selectedSong.playListId)
+        GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
 
     }
 

@@ -2,10 +2,7 @@ package com.practies.musicapp.fragments
 
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import android.database.Cursor
 import android.net.Uri
 import android.os.Bundle
@@ -15,15 +12,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.ListView
-import android.widget.PopupMenu
-import android.widget.Toast
+import android.widget.*
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.practies.musicapp.Music
+import com.practies.musicapp.PlayList
 import com.practies.musicapp.PlayScreenActivity
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.MusicAdapter
@@ -39,10 +36,9 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
     lateinit var binding: FragmentAlSongsBinding
 
 
-
     lateinit var listView: ListView
     var playList= arrayListOf<String>()
- lateinit var listAdapter:ArrayAdapter<String>
+    lateinit var listAdapter:ArrayAdapter<String>
 private  lateinit var adapter:MusicAdapter
 
       var  musiclist= arrayListOf<Music>()
@@ -113,20 +109,17 @@ private  lateinit var adapter:MusicAdapter
               //  EventBus.getDefault().post(song)
             //    Log.i("TAG",musicServices?.musiclistSe.toString())
 
-
-
-
             }
 
             override fun onOptionClick(position: Int) {
-                         popupMenus(view,position)
+                         popupMenus(position)
             }
 
         })
 
     }
 
-     private fun popupMenus(view: View,position:Int){
+     private fun popupMenus(position:Int){
          val popupMenu=PopupMenu(context,view)
          popupMenu.inflate(R.menu.droop_down_menu)
         popupMenu.setOnMenuItemClickListener {
@@ -134,8 +127,8 @@ private  lateinit var adapter:MusicAdapter
                 R.id.addToPlayList->{
                     customAlertDialog(position)
                    // Toast.makeText(context,"add to play ",Toast.LENGTH_SHORT).show()
-                    true
 
+                    true
                 }
 
                 R.id.addToFavorite ->{   Toast.makeText(context,"add to fav ",Toast.LENGTH_SHORT).show()
@@ -149,22 +142,30 @@ private  lateinit var adapter:MusicAdapter
      }
 
 
-
 //  to show the popup window
     fun customAlertDialog(position: Int){
 //position for operation with database
-  val customDialog=LayoutInflater.from(context).inflate(R.layout.play_list_menu,binding.root,false)
-    val listView= customDialog.findViewById<ListView>(R.id.play_list_view)
-
-    listAdapter= ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,playList)
-      listView.adapter=listAdapter
-
-      listAdapter.notifyDataSetChanged()
-
+    val customDialog=LayoutInflater.from(context).inflate(R.layout.play_list_menu,binding.root,false)
+     listView= customDialog.findViewById(R.id.play_list_view)
+    val createBt=customDialog.findViewById<Button>(R.id.create_bt)
 
     val  builder=MaterialAlertDialogBuilder(requireContext())
 
-   builder.setView(customDialog )
+
+    createBt.setOnClickListener{
+        Toast.makeText(context,"crete bt clicked ",Toast.LENGTH_SHORT).show()
+    }
+
+
+    listAdapter= ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,playList)
+      listView.adapter=listAdapter
+    listView.onItemClickListener
+      listAdapter.notifyDataSetChanged()
+
+
+
+
+   builder.setView(customDialog  )
 
       builder.setPositiveButton("Add") { dialog, _ ->
            dialog.dismiss()
@@ -175,13 +176,9 @@ private  lateinit var adapter:MusicAdapter
            builder.show()
     }
 
-           //  to show the  playlist names in a listView
+           //  to show the create playlist and ,  playlist names in a listView
 
-    fun showplaylist(){
-       // val adapter=ArrayAdapter(requireContext(),R.layout.list_item_view,playList)
 
-          // listView=
-    }
 
 
 

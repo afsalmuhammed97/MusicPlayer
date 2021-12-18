@@ -17,10 +17,12 @@
     <string name="playListTittle">Add to playlist</string>
     <string name="addToFavorite">Add to favorite</string>
     <string name="removeFromPlaylist">Remove from playlist</string>
-    <string name="newPlayList">New playlist</string>
+    <string name="addToPlayList">add to PlayList </string>
     <string name="playListName">Playlist name</string>
     <string name="songCount">0 songs</string>
-
+    <string name="createPlayList">New</string>
+    <string name="removeFromFavorite">Remove</string>
+    <string name="cancel">Cancel</string>
 
 
 
