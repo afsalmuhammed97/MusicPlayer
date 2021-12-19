@@ -10,7 +10,7 @@
 //import android.view.LayoutInflater
 //import android.view.View
 //import android.view.ViewGroup
-//import com.practies.musicapp.Music
+//import com.practies.musicapp.model.Music
 //import com.practies.musicapp.R
 //import com.practies.musicapp.adapter.MusicAdapter1
 //import com.practies.musicapp.databinding.FragmentLibraryBinding

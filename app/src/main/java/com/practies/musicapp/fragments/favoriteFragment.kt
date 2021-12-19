@@ -14,13 +14,13 @@ import android.view.ViewGroup
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practies.musicapp.Music
+import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
+import com.practies.musicapp.favorite
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.service.MusicServices
@@ -45,13 +45,13 @@ class favoriteFragment : Fragment(),ServiceConnection {
              favMusicDao=MusicDatabase.getDatabase(requireActivity().application).musicDao()
 
         GlobalScope.launch (Dispatchers.IO){
-            favoriteList= favMusicDao.readAllFavoriteSong() as ArrayList<Music>
+            favoriteList= favMusicDao.readAllSongs() as ArrayList<Music>
             Log.i("Fav Frag",favoriteList.toString())
 
 
         }
 
-///////////////////////////////////////////////////
+///////////////////////////////////////////////////readAllFavoriteSong()
     }
 
 
@@ -145,9 +145,10 @@ class favoriteFragment : Fragment(),ServiceConnection {
     private fun removeSongFromFavorite(position: Int){
 
         val selectedSong=favoriteList[position]
-        val  favoriteMusic=Music(
+        selectedSong.playListName= favorite
+        val  favoriteMusic= Music(  selectedSong.timeStamp,
             selectedSong.id,selectedSong.title,selectedSong.album,selectedSong.artist,
-            selectedSong.duration,selectedSong.path,selectedSong.artUri,selectedSong.playListId)
+            selectedSong.duration,selectedSong.path,selectedSong.artUri,selectedSong.playListName)
         GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
 
     }

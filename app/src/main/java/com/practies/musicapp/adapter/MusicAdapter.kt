@@ -1,20 +1,16 @@
 package com.practies.musicapp.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.practies.musicapp.Music
+import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
-import com.practies.musicapp.formatDuration
-import com.practies.musicapp.interfaces.OnSongComplete
 
 
 //private val context: Context    , private val intemOnclicked:(Music) ->Unit  ,var onSongSelect: onSongSelect

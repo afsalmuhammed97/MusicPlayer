@@ -10,6 +10,8 @@ object Constants {
            const val PLAY=1
            const val PAUSE=2
 
+           const val favorite="favorite"
+
 
 }
 fun durationConverter(duration: Long):String{

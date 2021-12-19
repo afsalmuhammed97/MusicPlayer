@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
+import com.practies.musicapp.model.Music
 import com.practies.musicapp.service.MusicServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -114,6 +115,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         seekBar= SeekBar(this)
 
         bindingPlayScreen.favButton.setOnClickListener{
+
 
                    if(! isFavorite){
                        currentSongAddToFavoriteList()
@@ -256,15 +258,21 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
    private fun currentSongAddToFavoriteList(){
      //  val     musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
-
+         var mPlaylist=ArrayList<Music>()
        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
-        val  favoriteMusic=Music(
+       curretSong.playListName= favorite
+       curretSong.timeStamp=System.currentTimeMillis().toString()+curretSong.id
+        val  favoriteMusic= Music(
+            curretSong.timeStamp,
             curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
-            curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId
+            curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListName,
         )
          //add to data base
        GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDa.addSong(favoriteMusic)         //.addSong(favoriteMusic)
            Log.i("Favourites", "Song added")
+           mPlaylist=musicServices!!.favMusicDa.readAllSongs()  as ArrayList<Music>
+
+           Log.i("IMPo",mPlaylist.toString())
        }
        bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
 
@@ -273,9 +281,10 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
          private fun removeSongFromFavorite(){
 
              val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
-             val  favoriteMusic=Music(
+
+             val  favoriteMusic= Music( curretSong.timeStamp,
                  curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
-                 curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListId)
+                 curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListName)
              GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
 
              bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)

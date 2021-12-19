@@ -14,7 +14,7 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.practies.musicapp.Music
+import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.musicDatabase.MusicDao
@@ -135,7 +135,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
 
 
-      fun setSongList(songList:ArrayList<Music>,songPosition:Int){
+      fun setSongList(songList:ArrayList<Music>, songPosition:Int){
           musiclistSe=songList
           currentIndex=songPosition
 

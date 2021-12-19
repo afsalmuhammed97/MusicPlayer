@@ -1,11 +1,15 @@
 package com.practies.musicapp
 
+import com.practies.musicapp.model.Music
 import kotlin.properties.Delegates
 
 data class PlayList (
     val playListName:String,
     val songCount:Int ,val playlistImage:String)
 
+
+
+data class PlayListItem(val playListName: String)
 
 class   PlayListDemo{
 

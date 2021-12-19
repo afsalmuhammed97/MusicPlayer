@@ -2,6 +2,7 @@ package com.practies.musicapp.fragments
 
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
@@ -15,16 +16,18 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.practies.musicapp.Music
-import com.practies.musicapp.PlayList
+import com.google.android.material.textfield.TextInputEditText
+import com.practies.musicapp.model.Music
 import com.practies.musicapp.PlayScreenActivity
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.MusicAdapter
+import com.practies.musicapp.adapter.PlayListNameAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
+import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
 import kotlinx.android.synthetic.*
 import java.io.File
@@ -35,16 +38,17 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
        var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
 
+   lateinit var dialogFragment:CustomDialogFragment
+   lateinit var listRecyclerView: RecyclerView
+    //     var playList=ArrayList<String>()
 
-    lateinit var listView: ListView
-    var playList= arrayListOf<String>()
-    lateinit var listAdapter:ArrayAdapter<String>
 private  lateinit var adapter:MusicAdapter
-
+lateinit var listAdapter:PlayListNameAdapter
       var  musiclist= arrayListOf<Music>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
            Log.i("Main","view model intialized")
          musiclist=getAllAudio()
@@ -58,12 +62,12 @@ private  lateinit var adapter:MusicAdapter
 
        // requireActivity().startService(Intent(context,MusicServices::class.java))
 
-       // Toast.makeText(context,"service started ",Toast.LENGTH_SHORT).show()
-        playList.add("play List 1")
-        playList.add("play List 2")
-        playList.add("play List 3")
-        playList.add("play List 4")
-        playList.add("play List 5")
+       playList.add("list 1")
+
+
+
+
+
 
 
 
@@ -112,12 +116,32 @@ private  lateinit var adapter:MusicAdapter
             }
 
             override fun onOptionClick(position: Int) {
-                         popupMenus(position)
+                       //  popupMenus(position)
+                customAlertDialog(position)
+                      // createDialog()
             }
 
         })
 
     }
+
+        fun createDialog() {
+            val alertDialogBuilder = AlertDialog.Builder(requireContext())
+            val customAlert=LayoutInflater.from(context).inflate(R.layout.create_list,binding.root,false)
+            val playListTx=customAlert.findViewById<TextInputEditText>(R.id.play_list_text)
+           alertDialogBuilder.setView(customAlert)
+
+            alertDialogBuilder.setNegativeButton("Cancel") { dialogInterface: DialogInterface, i: Int ->
+                dialogInterface.cancel()
+            }
+            alertDialogBuilder.setPositiveButton("create") { _: DialogInterface, i: Int ->
+                val play = playListTx.text
+                playList.add(play.toString())
+            }
+            alertDialogBuilder.create()
+            alertDialogBuilder.show()
+        }
+
 
      private fun popupMenus(position:Int){
          val popupMenu=PopupMenu(context,view)
@@ -125,8 +149,8 @@ private  lateinit var adapter:MusicAdapter
         popupMenu.setOnMenuItemClickListener {
             when(it.itemId){
                 R.id.addToPlayList->{
-                    customAlertDialog(position)
-                   // Toast.makeText(context,"add to play ",Toast.LENGTH_SHORT).show()
+                   // customAlertDialog(position)
+
 
                     true
                 }
@@ -143,29 +167,48 @@ private  lateinit var adapter:MusicAdapter
 
 
 //  to show the popup window
-    fun customAlertDialog(position: Int){
+@SuppressLint("NotifyDataSetChanged")
+fun customAlertDialog(position: Int) {
 //position for operation with database
-    val customDialog=LayoutInflater.from(context).inflate(R.layout.play_list_menu,binding.root,false)
-     listView= customDialog.findViewById(R.id.play_list_view)
-    val createBt=customDialog.findViewById<Button>(R.id.create_bt)
-
-    val  builder=MaterialAlertDialogBuilder(requireContext())
 
 
-    createBt.setOnClickListener{
-        Toast.makeText(context,"crete bt clicked ",Toast.LENGTH_SHORT).show()
+    val customDialog = LayoutInflater.from(context).inflate(R.layout.play_list_menu, binding.root, false)
+    val createBt = customDialog.findViewById<Button>(R.id.create_bt)
+    val listRecycle = customDialog.findViewById<RecyclerView>(R.id.playListRv)
+    val builder = MaterialAlertDialogBuilder(requireContext())
+    builder.setView(customDialog  )
+
+    listAdapter = PlayListNameAdapter(playList)
+    listAdapter.notifyDataSetChanged()
+    listRecycle.layoutManager = LinearLayoutManager(context)
+    listRecycle.adapter = listAdapter
+    createBt.setOnClickListener {
+        createDialog()
+        // Toast.makeText(context,"crete bt clicked ",Toast.LENGTH_SHORT).show()
+
     }
 
 
-    listAdapter= ArrayAdapter(requireContext(),android.R.layout.simple_list_item_1,playList)
-      listView.adapter=listAdapter
-    listView.onItemClickListener
-      listAdapter.notifyDataSetChanged()
+    listAdapter.setOnItemClickListener(object : MusicAdapter.onItemClickListener {
+
+
+        override fun onItemClick(position: Int) {
+
+            //create  function for  add the song to this list **********
+            Toast.makeText(context, playList[position], Toast.LENGTH_SHORT).show()
+
+        }
+
+        override fun onOptionClick(position: Int) {
+            TODO("Not yet implemented")
+        }
+
+    })
 
 
 
 
-   builder.setView(customDialog  )
+
 
       builder.setPositiveButton("Add") { dialog, _ ->
            dialog.dismiss()
@@ -212,14 +255,16 @@ private fun  getAllAudio():ArrayList<Music>{
                 val uri = Uri.parse("content://media/external/audio/albumart")
                 val artUriC= Uri.withAppendedPath(uri, albumIdC).toString()
 
-                val music=Music(
+                val music= Music(
                     id =idC,
                     title =titleC,
                     album = albumC ,
                     artist = artistC,
                     path = pathC,
                     duration = durationC,
-                    artUri =artUriC)
+                    artUri =artUriC,
+                     timeStamp = "",
+                       playListName = ""   )
                 //to get path of song
                 val file= File(music.path)
                 if (file.exists())
