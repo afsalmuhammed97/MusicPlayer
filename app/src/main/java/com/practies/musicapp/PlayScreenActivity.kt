@@ -232,7 +232,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                    //  bindingPlayScreen.songStart.text=
 
             }
-
+           //move this function to service
     private fun checkTheSongIsInFavourites(id:String): Boolean {
                     isFavorite=false
                 musicServices!!.favoritelistSe.forEachIndexed { index, favoriteMusic ->

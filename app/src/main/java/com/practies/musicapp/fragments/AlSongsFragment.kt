@@ -36,12 +36,12 @@ import kotlinx.coroutines.launch
 import java.io.File
 
 //8888888888888888888888888888888888888888888888888888888888888888888888888888888888888
-//,ServiceConnection
+
 class AlSongsFragment (): Fragment(),ServiceConnection{
        var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
 
-
+      var existSong:Boolean=false
       var  selectedSongPosition:Int = 0
     private  lateinit var adapter:MusicAdapter
 lateinit var listAdapter:PlayListNameAdapter
@@ -62,8 +62,6 @@ lateinit var listAdapter:PlayListNameAdapter
        requireActivity().startService(intent)
 
        // requireActivity().startService(Intent(context,MusicServices::class.java))
-
-       playList.add("list 1")
 
 
 
@@ -228,7 +226,11 @@ fun customAlertDialog(position: Int) {
 
            //  to show the create playlist and ,  playlist names in a listView
 
+fun checkSongInPlayList(song:Music,playListName:String){
+    existSong=false
 
+
+}
 
 
 
@@ -287,11 +289,14 @@ private fun  getAllAudio():ArrayList<Music>{
         musicServices=binder.currentService()
         Log.i("MSG","service connected")
 
+             //to get allPlayList from db
+        GlobalScope.launch (Dispatchers.IO){
+            playList=musicServices!!.favMusicDa.getAllPlayListName() as ArrayList<String>
 
-    // Log.d("TAG","music service connected")
-    // musicServices!!.musiclistSe=musiclist
-//     Log.i("TAG",musicServices?.musiclistSe.toString())
-    // musicServices!!.songPosition=songPosition
+          Log.i("DB", playList.toString())
+        }
+
+
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {

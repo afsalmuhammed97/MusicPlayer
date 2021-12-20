@@ -52,9 +52,9 @@ var temp=ArrayList<Music>()
 //        }
         GlobalScope.launch(Dispatchers.IO) {       favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
             Log.i("Fav Frag", favoriteList.toString())
-            temp=favMusicDao.readAllSongs() as ArrayList<Music>
+           // temp=favMusicDao.readAllFavoriteSong() as ArrayList<Music>
 
-            Log.i("INFavorite",temp.toString())
+            Log.i("INFavorite",favoriteList.toString())
 
         }
 
