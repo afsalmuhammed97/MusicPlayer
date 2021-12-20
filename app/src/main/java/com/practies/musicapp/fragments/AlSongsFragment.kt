@@ -191,16 +191,23 @@ fun customAlertDialog(position: Int) {
             //*****************************************
             val tempPlayListName= playList[position]
             val song:Music
-                 song=musiclist[selectedSongPosition]
+            song=musiclist[selectedSongPosition]
+
+            if ( ! checkSongInPlayList(song,tempPlayListName)){
+
                 song.timeStamp=System.currentTimeMillis().toString()+song.id
                 song.play_list_name= tempPlayListName
-            GlobalScope.launch (Dispatchers.IO){
-                musicServices!!.favMusicDa.addSong(song)
-              play=musicServices!!.favMusicDa.readAllSongs() as ArrayList<Music>
+                GlobalScope.launch (Dispatchers.IO){
+                    musicServices!!.favMusicDa.addSong(song)
+                    play=musicServices!!.favMusicDa.readAllSongs() as ArrayList<Music>
 
-               Log.i("PLY List",play.toString())
+                    Log.i("PLY List",play.toString())
 
+                }
+            }else{
+                Toast.makeText(context,"This song already exist ",Toast.LENGTH_SHORT).show()
             }
+
 
 //********************************************************
             //create  function for  add the song to this list **********
@@ -226,9 +233,22 @@ fun customAlertDialog(position: Int) {
 
            //  to show the create playlist and ,  playlist names in a listView
 
-fun checkSongInPlayList(song:Music,playListName:String){
+fun checkSongInPlayList(song:Music,playListName:String):Boolean{
     existSong=false
+    var customPlaylist=ArrayList<Music>()
+    GlobalScope.launch (Dispatchers.IO) {
+        customPlaylist = musicServices!!.favMusicDa.getPlayList(playListName) as ArrayList<Music>
 
+    }
+     customPlaylist.forEachIndexed{ _,mSong->
+         if (song.id== mSong.id){
+             existSong=true
+             return true
+         }
+
+     }
+
+        return false
 
 }
 
@@ -293,7 +313,7 @@ private fun  getAllAudio():ArrayList<Music>{
         GlobalScope.launch (Dispatchers.IO){
             playList=musicServices!!.favMusicDa.getAllPlayListName() as ArrayList<String>
 
-          Log.i("DB", playList.toString())
+         // Log.i("DB", playList.toString())
         }
 
 

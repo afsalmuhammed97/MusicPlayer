@@ -275,7 +275,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
            Log.i("Favourites", "Song added")
            mPlaylist=musicServices!!.favMusicDa.readAllSongs()  as ArrayList<Music>
 
-           Log.i("IMPo",mPlaylist.toString())
+          // Log.i("IMPo",mPlaylist.toString())
        }
        bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
 
