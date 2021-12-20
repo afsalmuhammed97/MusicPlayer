@@ -18,7 +18,7 @@ data class Music(
     @ColumnInfo val duration:Long =0,
     @ColumnInfo val path:String,
     @ColumnInfo val artUri:String,
-    @ColumnInfo var playListName:String ): Serializable
+    @ColumnInfo var play_list_name:String ): Serializable
 
 
 

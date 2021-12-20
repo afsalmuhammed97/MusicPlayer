@@ -30,6 +30,9 @@ import com.practies.musicapp.databinding.FragmentAlSongsBinding
 import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
 import kotlinx.android.synthetic.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 //8888888888888888888888888888888888888888888888888888888888888888888888888888888888888
@@ -38,14 +41,12 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
        var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
 
-   lateinit var dialogFragment:CustomDialogFragment
-   lateinit var listRecyclerView: RecyclerView
-    //     var playList=ArrayList<String>()
 
-private  lateinit var adapter:MusicAdapter
+      var  selectedSongPosition:Int = 0
+    private  lateinit var adapter:MusicAdapter
 lateinit var listAdapter:PlayListNameAdapter
       var  musiclist= arrayListOf<Music>()
-
+     var play=ArrayList<Music>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,11 +76,7 @@ lateinit var listAdapter:PlayListNameAdapter
     }
 
 
-    override fun onDestroy() {
-
-
-        super.onDestroy()
-    }
+    override fun onDestroy() { super.onDestroy() }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -101,7 +98,7 @@ lateinit var listAdapter:PlayListNameAdapter
         adapter.setOnItemClickListener( object :MusicAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
 
-
+                  selectedSongPosition=position
                 musicServices!!.setSongList(musiclist,position)
                 val intent=Intent(context,PlayScreenActivity::class.java)
                 startActivity(intent)
@@ -193,7 +190,21 @@ fun customAlertDialog(position: Int) {
 
 
         override fun onItemClick(position: Int) {
+            //*****************************************
+            val tempPlayListName= playList[position]
+            val song:Music
+                 song=musiclist[selectedSongPosition]
+                song.timeStamp=System.currentTimeMillis().toString()+song.id
+                song.play_list_name= tempPlayListName
+            GlobalScope.launch (Dispatchers.IO){
+                musicServices!!.favMusicDa.addSong(song)
+              play=musicServices!!.favMusicDa.readAllSongs() as ArrayList<Music>
 
+               Log.i("PLY List",play.toString())
+
+            }
+
+//********************************************************
             //create  function for  add the song to this list **********
             Toast.makeText(context, playList[position], Toast.LENGTH_SHORT).show()
 
@@ -204,10 +215,6 @@ fun customAlertDialog(position: Int) {
         }
 
     })
-
-
-
-
 
 
       builder.setPositiveButton("Add") { dialog, _ ->
@@ -264,7 +271,7 @@ private fun  getAllAudio():ArrayList<Music>{
                     duration = durationC,
                     artUri =artUriC,
                      timeStamp = "",
-                       playListName = ""   )
+                       play_list_name = ""   )
                 //to get path of song
                 val file= File(music.path)
                 if (file.exists())

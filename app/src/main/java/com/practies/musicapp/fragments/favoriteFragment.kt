@@ -24,9 +24,8 @@ import com.practies.musicapp.favorite
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.service.MusicServices
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi as DelicateCoroutinesApi1
 
 
 class favoriteFragment : Fragment(),ServiceConnection {
@@ -36,6 +35,9 @@ class favoriteFragment : Fragment(),ServiceConnection {
     lateinit var favAdapter:FavoriteAdapter
     var  favoriteList= arrayListOf<Music>()
     var isShuffle:Boolean=false
+var temp=ArrayList<Music>()
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,12 +46,18 @@ class favoriteFragment : Fragment(),ServiceConnection {
         requireActivity().startService(intent)
              favMusicDao=MusicDatabase.getDatabase(requireActivity().application).musicDao()
 
-        GlobalScope.launch (Dispatchers.IO){
-            favoriteList= favMusicDao.readAllSongs() as ArrayList<Music>
-            Log.i("Fav Frag",favoriteList.toString())
+//        GlobalScope.launch (Dispatchers.IO) {
+//            favoriteList = favMusicDao.readAllSongs() as  ArrayList<Music>
+//
+//        }
+        GlobalScope.launch(Dispatchers.IO) {       favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
+            Log.i("Fav Frag", favoriteList.toString())
+            temp=favMusicDao.readAllSongs() as ArrayList<Music>
 
+            Log.i("INFavorite",temp.toString())
 
         }
+
 
 ///////////////////////////////////////////////////readAllFavoriteSong()
     }
@@ -145,10 +153,10 @@ class favoriteFragment : Fragment(),ServiceConnection {
     private fun removeSongFromFavorite(position: Int){
 
         val selectedSong=favoriteList[position]
-        selectedSong.playListName= favorite
+        selectedSong.play_list_name= favorite
         val  favoriteMusic= Music(  selectedSong.timeStamp,
             selectedSong.id,selectedSong.title,selectedSong.album,selectedSong.artist,
-            selectedSong.duration,selectedSong.path,selectedSong.artUri,selectedSong.playListName)
+            selectedSong.duration,selectedSong.path,selectedSong.artUri,selectedSong.play_list_name)
         GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
 
     }

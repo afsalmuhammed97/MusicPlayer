@@ -18,6 +18,7 @@ import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.service.MusicServices
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -256,16 +257,18 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                                   } }
 
 
+   @DelicateCoroutinesApi
    private fun currentSongAddToFavoriteList(){
      //  val     musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
          var mPlaylist=ArrayList<Music>()
+
        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
-       curretSong.playListName= favorite
+       curretSong.play_list_name= favorite
        curretSong.timeStamp=System.currentTimeMillis().toString()+curretSong.id
         val  favoriteMusic= Music(
             curretSong.timeStamp,
             curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
-            curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListName,
+            curretSong.duration,curretSong.path,curretSong.artUri,curretSong.play_list_name,
         )
          //add to data base
        GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDa.addSong(favoriteMusic)         //.addSong(favoriteMusic)
@@ -284,7 +287,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
              val  favoriteMusic= Music( curretSong.timeStamp,
                  curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
-                 curretSong.duration,curretSong.path,curretSong.artUri,curretSong.playListName)
+                 curretSong.duration,curretSong.path,curretSong.artUri,curretSong.play_list_name)
              GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
 
              bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)

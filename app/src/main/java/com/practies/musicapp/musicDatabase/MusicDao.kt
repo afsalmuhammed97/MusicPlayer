@@ -9,9 +9,9 @@ interface MusicDao {
 
     @Insert(onConflict =OnConflictStrategy.IGNORE)
     fun addSong(music: Music)
-   // @Query("SELECT * FROM `allMusics` WHERE `playlist-ame` LIKE 'favourites'")
-    @Query("SELECT * FROM  allmusics   WHERE  playListName LIKE  'favorite'  ")
-    fun readAllFavoriteSong(): List<Music>
+
+    @Query("SELECT * FROM allMusics WHERE play_list_name = 'favorites'")
+   fun readAllFavoriteSong():List<Music>
 
     @Delete
     fun deleteSong(music: Music)
