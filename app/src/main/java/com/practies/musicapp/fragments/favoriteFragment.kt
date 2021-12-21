@@ -54,7 +54,7 @@ var temp=ArrayList<Music>()
             Log.i("Fav Frag", favoriteList.toString())
            // temp=favMusicDao.readAllFavoriteSong() as ArrayList<Music>
 
-            Log.i("INFavorite",favoriteList.toString())
+            //Log.i("INFavorite",favoriteList.toString())
 
         }
 

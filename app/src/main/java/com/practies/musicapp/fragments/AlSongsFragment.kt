@@ -199,7 +199,7 @@ fun customAlertDialog(position: Int) {
                 song.play_list_name= tempPlayListName
                 GlobalScope.launch (Dispatchers.IO){
                     musicServices!!.favMusicDa.addSong(song)
-                    play=musicServices!!.favMusicDa.readAllSongs() as ArrayList<Music>
+                    play=musicServices!!.favMusicDa.getPlayList(tempPlayListName) as ArrayList<Music>
 
                     Log.i("PLY List",play.toString())
 

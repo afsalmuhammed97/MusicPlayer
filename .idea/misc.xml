@@ -31,6 +31,7 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_play_screen2.xml" value="0.15" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/activity_song_list2.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/activity_splash_screen.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/create_list.xml" value="0.19583333333333333" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/favorite_view.xml" value="0.15" />
@@ -41,6 +42,7 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_library.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_mini_player.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_sogn_list.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_song_list.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/list_item_view.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/list_view_item.xml" value="0.15" />

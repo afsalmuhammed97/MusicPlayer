@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.practies.musicapp">
-<!--    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>-->
-        <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/> -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -18,14 +18,15 @@
         android:roundIcon="@mipmap/music_player_icon_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MusicApp">
-
-
+        <activity
+            android:name=".SongListActivity2"
+            android:exported="false" />
         <activity
             android:name=".PlayScreenActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".SplashScreen"
             android:exported="true">
@@ -39,9 +40,10 @@
         <service
             android:name=".service.MusicServices"
             android:enabled="true" />
-        <receiver android:name=".notifications.NotificationReceiver"
-            android:enabled="true"/>
 
+        <receiver
+            android:name=".notifications.NotificationReceiver"
+            android:enabled="true" />
     </application>
 
 </manifest>

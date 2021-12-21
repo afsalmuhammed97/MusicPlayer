@@ -273,7 +273,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
          //add to data base
        GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDa.addSong(favoriteMusic)         //.addSong(favoriteMusic)
            Log.i("Favourites", "Song added")
-           mPlaylist=musicServices!!.favMusicDa.readAllSongs()  as ArrayList<Music>
+          // mPlaylist=musicServices!!.favMusicDa.readAllSongs()  as ArrayList<Music>
 
           // Log.i("IMPo",mPlaylist.toString())
        }

@@ -25,9 +25,10 @@ class ViewPageAdapter(fragmentManager: FragmentManager,lifecycle: Lifecycle):Fra
                     }
                     2->{
                        PlaylistFragment()
+
                     }
+
                     else->{
-                       // PlaylistFragment()
                         Fragment()
                     }
                 }
