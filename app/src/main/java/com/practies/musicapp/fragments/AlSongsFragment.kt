@@ -42,7 +42,7 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
     lateinit var binding: FragmentAlSongsBinding
 
       var existSong:Boolean=false
-      var  selectedSongPosition:Int = 0
+
     private  lateinit var adapter:MusicAdapter
 lateinit var listAdapter:PlayListNameAdapter
       var  musiclist= arrayListOf<Music>()
@@ -96,7 +96,7 @@ lateinit var listAdapter:PlayListNameAdapter
         adapter.setOnItemClickListener( object :MusicAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
 
-                  selectedSongPosition=position
+
                 musicServices!!.setSongList(musiclist,position)
                 val intent=Intent(context,PlayScreenActivity::class.java)
                 startActivity(intent)
@@ -165,7 +165,7 @@ lateinit var listAdapter:PlayListNameAdapter
 @SuppressLint("NotifyDataSetChanged")
 fun customAlertDialog(position: Int) {
 //position for operation with database
-
+        var songPostion=position
 
     val customDialog = LayoutInflater.from(context).inflate(R.layout.play_list_menu, binding.root, false)
     val createBt = customDialog.findViewById<Button>(R.id.create_bt)
@@ -191,7 +191,7 @@ fun customAlertDialog(position: Int) {
             //*****************************************
             val tempPlayListName= playList[position]
             val song:Music
-            song=musiclist[selectedSongPosition]
+            song=musiclist[songPostion]
 
             if ( ! checkSongInPlayList(song,tempPlayListName)){
 

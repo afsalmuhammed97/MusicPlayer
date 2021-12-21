@@ -23,6 +23,7 @@ import com.practies.musicapp.playList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlaylistFragment : Fragment() {
@@ -57,13 +58,16 @@ private lateinit var adapter:PlayListAdapter
         adapter.setOnItemClickListner(object :PlayListAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
                 val name= playList[position]
-                songList=loadSongList(name)
-                   Log.i("SongList",songList.toString())
+                loadSongList(name)
+
+
+                   Log.i("SongList in view",songList.toString())
                 val intent=Intent(context,SongListActivity2::class.java)
-             //  intent.putExtra("songs",)
+               intent.putExtra("songs",songList)
+                Log.i("Test", playList.toString())
                 startActivity(intent)
 
-              Toast.makeText(context,"item clicked ${position}",Toast.LENGTH_SHORT).show()
+              Toast.makeText(context,"item clicked ${playList[position]}",Toast.LENGTH_SHORT).show()
 
             }
 
@@ -75,13 +79,17 @@ private lateinit var adapter:PlayListAdapter
 
     }
         //to get the selected song list
-    fun loadSongList(listName:String):ArrayList<Music>{
+    fun loadSongList(listName:String){
         var List=ArrayList<Music>()
+
         GlobalScope.launch (Dispatchers.IO){
-            List=musicDa.getPlayList(listName) as ArrayList<Music>
-            Log.i("SongList",List.toString())
+            withContext(Dispatchers.IO){
+                songList=musicDa.getPlayList(listName) as ArrayList<Music>
+                Log.i("SongList",songList.toString())
+            }
+
         }
-        return List
+
     }
 
     fun loadFragment(){

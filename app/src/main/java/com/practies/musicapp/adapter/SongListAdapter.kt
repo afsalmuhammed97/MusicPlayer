@@ -12,7 +12,7 @@ import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.R
 import com.practies.musicapp.model.Music
 
-class SongListAdapter(private val songList:ArrayList<String>):RecyclerView.Adapter<SongListAdapter.SongHolder>() {
+class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapter<SongListAdapter.SongHolder>() {
        private lateinit var sListenr:MusicAdapter.onItemClickListener
     fun setOnItemclickListner( listener:MusicAdapter.onItemClickListener){
         sListenr=listener
@@ -26,12 +26,12 @@ class SongListAdapter(private val songList:ArrayList<String>):RecyclerView.Adapt
 
     override fun onBindViewHolder(holder: SongListAdapter.SongHolder, position: Int) {
        val item=songList[position]
-        holder.songNeme.text=  item //.title
-//        holder.albumName.text= item.album
-//        Glide.with(holder.itemView.context).load(songList[position].artUri)
-//            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
-//            .into(holder.songImage)
-//
+        holder.songNeme.text=  item.title
+        holder.albumName.text= item.album
+        Glide.with(holder.itemView.context).load(songList[position].artUri)
+            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
+            .into(holder.songImage)
+
 
 
     }

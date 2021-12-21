@@ -3,6 +3,7 @@ package com.practies.musicapp
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.adapter.SongListAdapter
 import com.practies.musicapp.databinding.ActivitySongList2Binding
@@ -17,6 +18,13 @@ class SongListActivity2 : AppCompatActivity() {
         binding= ActivitySongList2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+
+
+         songList=intent.getSerializableExtra("songs") as ArrayList<Music>
+             //intent.getSerializableExtra("songs")  as ArrayList<Music>
+             Log.i("SongList",songList.toString())
+
+
                 val temp=ArrayList<String>()
              temp.add("song 1")
         temp.add("song 1")
@@ -44,7 +52,7 @@ class SongListActivity2 : AppCompatActivity() {
 
 
 
-        songAdapter= SongListAdapter(temp)
+        songAdapter= SongListAdapter(songList)
         songAdapter.notifyDataSetChanged()
         binding.songListRv.layoutManager=LinearLayoutManager(this)
         binding.songListRv.hasFixedSize()
