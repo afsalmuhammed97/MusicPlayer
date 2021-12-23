@@ -18,13 +18,11 @@ import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.service.MusicServices
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.Runnable
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
@@ -33,10 +31,10 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
     val intervell=1000
     lateinit var startPoint:TextView
     lateinit var entPoint:TextView
-    var isFavorite:Boolean=false
+
     companion object{
-   // var isFavorite:Boolean=false
-    var favIndex:Int=0
+    var isFavorite:Boolean=false
+
 }
   // lateinit var musicViewModel: MusicViewModel
 
@@ -46,7 +44,6 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
          lateinit var seekbarRunnable: Runnable
 
         lateinit var bindingPlayScreen: ActivityPlayScreen2Binding
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         bindingPlayScreen= ActivityPlayScreen2Binding.inflate(layoutInflater)
@@ -54,13 +51,12 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         setContentView(bindingPlayScreen.root)
 
 
+
+
+
         val intent =Intent(this, MusicServices::class.java)
        bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
        startService(intent)
-
-        Intent(this,MusicServices::class.java)
-        bindService(intent,this, BIND_AUTO_CREATE)
-        startService(intent)
 
 
 //  View Model of Database******************************************
@@ -69,25 +65,14 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         //favMusicDao =FavoriteDataBase.getDatabase(this).musicDao()
 
 
-//        GlobalScope.launch (Dispatchers.IO){
-//            musicServices!!.favoritelistSe=   musicServices!!.favMusicDao.readAllSongs()
-//            // Log.i("Fav Frag",musicServices!!.favoritelistSe.toString())
-//        }
-
-
-
     }
     //call back from eventbus
-    @Subscribe(threadMode=  ThreadMode.MAIN)
+  @Subscribe(threadMode=  ThreadMode.MAIN)
     fun updateUi( music: Music){
         setPlayScreen(music)
 
-//      FavoriteMusic(music.id,music.title          /***   add to favorite databa
-//            ,music.album,music.artist,music.duration,
-//            music.path,music.artUri,music.playListId)
-//          seekBarSetUp()
-//        seekFunction()
-        Log.i("MSG","event bus called")
+        Log.i("MSG" +
+                "","event bus called")
 
     }
 
@@ -100,29 +85,34 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         super.onResume()
 
       EventBus.getDefault().register(this)
-        Toast.makeText(this,"Event bus regesterd",Toast.LENGTH_SHORT).show()
+
     }
 
     override fun onPause() {
         super.onPause()
+
         EventBus.getDefault().unregister(this)
 
     }
 
 
 
+
+
     override fun onStart() {
 
+
+       // updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
+
         seekBar= SeekBar(this)
-
         bindingPlayScreen.favButton.setOnClickListener{
-
-
-                   if(! isFavorite){
-                       currentSongAddToFavoriteList()
-                   }else{
-                       removeSongFromFavorite()
-                   }
+           if (isFavorite){
+               bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+               removeSongFromFavorite()
+           }else{
+               bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+               currentSongAddToFavoriteList()
+           }
         }
 
         bindingPlayScreen.nextButton.setOnClickListener { musicServices!!.nextPreviousSong(increment = true) }
@@ -144,48 +134,23 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
             }
         }
 
+        bindingPlayScreen.shuffleButton.setOnClickListener { musicServices!!.musiclistSe.shuffle()
+            Toast.makeText(this,"Shuffle On",Toast.LENGTH_SHORT).show()
+        }
+
         super.onStart()
     }
-            fun favaIconChang(){
-                if ( !isFavorite) {
-                    bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
-                    // musicServices!!.favoritelistSe.add(musicServices!!.musiclistSe[musicServices!!.currentIndex])
-                   // Toast.makeText(this,"true",Toast.LENGTH_SHORT).show()
-
-                 //  currentSongAddToFavoriteList()
-                    isFavorite=true
-
-
-                }else {
-                 //   bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
-                    // musicServices!!.favoritelistSe.removeAt(favIndex)
-                    Toast.makeText(this, "false", Toast.LENGTH_SHORT).show()
-
-                    isFavorite = false
-                }
-
-            }
 
 
 
-    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
         musicServices!!.setListener(this)
+                updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
         seekBarSetUp()
         seekFunction()
          musicServices!!.showNotification()
-
-
-        //to check the current song is favorite or not
-//             val tempIndex   = musicServices!!.favoriteChecker(musicServices!!.musiclistSe[musicServices!!.currentIndex].id)
-//              if (tempIndex != -1) favIndex=tempIndex
-//
-//        if (isFavorite) {
-//          //  bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
-//        }else
-//          //  bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
-//            Toast.makeText(this,"fav index ${favIndex} ",Toast.LENGTH_SHORT).show()
 
         Log.i("MSg","Serveise  connected with playScreen")
     }
@@ -220,16 +185,18 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
                  //for setting the current song image  and tittle
             fun setPlayScreen(music: Music){
-                  if (checkTheSongIsInFavourites(music.id)){
+//
+                     if (checkTheSongIsInFavourites(music.id)){
                       bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
-                  }else{                      bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
-                  }
+                  }else{ bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border) }
+
+
                 Glide.with(this).load(music.artUri)
                     .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
                     .into(bindingPlayScreen.songImagePlay)
                      bindingPlayScreen.songNamePlay.text= music.title
                     bindingPlayScreen.songEnd.text=      formatDuration(music.duration)
-                   //  bindingPlayScreen.songStart.text=
+
 
             }
            //move this function to service
@@ -259,7 +226,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
    @DelicateCoroutinesApi
    private fun currentSongAddToFavoriteList(){
-     //  val     musicViewModel= ViewModelProvider(this )[MusicViewModel::class.java]
+
          var mPlaylist=ArrayList<Music>()
 
        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]

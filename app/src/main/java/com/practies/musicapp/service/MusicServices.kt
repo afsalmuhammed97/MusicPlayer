@@ -1,7 +1,10 @@
 package com.practies.musicapp.service
 
+import android.app.AlertDialog
 import android.app.PendingIntent
 import android.app.Service
+import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.AudioManager
@@ -14,14 +17,19 @@ import android.util.Log
 import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.practies.musicapp.Constants
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
+import com.practies.musicapp.favorite
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.notifications.ApplicationClass
 import com.practies.musicapp.notifications.NotificationReceiver
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
+import java.lang.Runnable
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
@@ -38,20 +46,17 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
     var currentIndex = 0
-    var songPosionSe = 0
     val intervell = 1000
     var isPlaying = false
-    companion object{      var isFavorite:Boolean=false
-    }
-     lateinit var  favMusicDa:MusicDao             // lateinit var musicFavDao: musicDao
+    companion object{     var songCurrentTitle:String =""}
+     lateinit var  favMusicDa:MusicDao
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
    lateinit  var mediaPlayer: MediaPlayer
     lateinit var mediaSession: MediaSessionCompat
     private var mybinder = Mybinder()
-    var musiclistSe = arrayListOf<Music>()              //mutableListOf<Music>() //arrayListOf<Music>()
-     var favoritelistSe= arrayListOf<Music>()             //    ArrayList<Music>       =ArrayList()         //arrayListOf<Music>()
-
+    var musiclistSe = arrayListOf<Music>()
+    var favoritelistSe= arrayListOf<Music>()
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
 
@@ -70,14 +75,13 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
-        // Notification bar play functions
+       //  Notification bar play functions
           when(intent?.action){
 
            ApplicationClass.PREVIOUS->{
                //previous song
                Log.i("MSG","previous button clicked")
-               //Toast.makeText(baseContext,"preve button",Toast.LENGTH_SHORT).show()
+               Toast.makeText(baseContext,"preve button",Toast.LENGTH_SHORT).show()
            }
            ApplicationClass.PLAY ->{           //play or pause song
                Toast.makeText(baseContext,"play button",Toast.LENGTH_SHORT).show()
@@ -86,14 +90,11 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
                if (mediaPlayer.isPlaying){
 
                   playPauseMusic(false)
-                  // bindingPlayScreen.playPauseButton.setImageResource(R.drawable.play_bt_circle)
 
                }else{
                   playPauseMusic(true)
-               //   PlayScreenActivity.playPauseButton.setImageResource(R.drawable.pause_bt_circle)
 
-               }
-
+                  }
 
            }
            ApplicationClass.NEXT ->{          //next song
@@ -105,10 +106,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
                exitProcess(1)
 
            }
+          }
 
 
-
-       }
         //notificationFunctions(notificationMsg)
 
         return super.onStartCommand(intent, flags, startId)
@@ -119,23 +119,78 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     fun setListener( onSongComplete: OnSongComplete){
         this.onSongComplete=onSongComplete
     }
+
+
     override fun onCreate() {
         super.onCreate()
 
         mediaPlayer = MediaPlayer()
       seekBar = SeekBar(this)
 
-
-
         //////to  access  the database//*******************************************************
 
       favMusicDa=MusicDatabase.getDatabase(this).musicDao()
+    }
 
+
+
+    /////////////////////To  check current song is favorite or not
+    fun faveChecker():Boolean {
+        var songExist = false
+        val currentSong = musiclistSe[currentIndex]
+        GlobalScope.launch(Dispatchers.IO) {
+            songExist =favMusicDa.checkSongExist(currentSong.id, favorite)
+        }
+        return songExist
+    }
+    /////////////////////////
+    fun removeSongFromList(list:ArrayList<Music>,songPosition: Int,context: Context) {
+        val alertDialog = AlertDialog.Builder(context)
+        alertDialog.setTitle("Delete Song")
+        alertDialog.setMessage("Are you sure ,want to delete")
+        alertDialog.setNegativeButton("No") { dialogInterface: DialogInterface, i: Int ->
+            dialogInterface.cancel()
+        }
+        alertDialog.setPositiveButton("Yes") { _: DialogInterface, i: Int ->
+
+            val song = list[songPosition]
+            GlobalScope.launch(Dispatchers.IO) { favMusicDa.deleteSong(song) }
+        }
+    }
+
+
+
+///////////To  remove or add the favorite song
+
+    private fun favoriteSongAddOrRemove(){
+        var songExist:Boolean
+        val currentSong=musiclistSe[currentIndex]
+               GlobalScope.launch (Dispatchers.IO){   songExist= favMusicDa.checkSongExist(currentSong.id, favorite)
+
+                   withContext(Dispatchers.IO){
+                        if (!songExist){
+                            currentSong.play_list_name= favorite
+                            currentSong.timeStamp=System.currentTimeMillis().toString()+currentSong.id
+                            val  favoriteMusic= Music(
+                                currentSong.timeStamp,
+                                currentSong.id,currentSong.title,currentSong.album,currentSong.artist,
+                                currentSong.duration,currentSong.path,currentSong.artUri,currentSong.play_list_name,
+                            )
+                            favMusicDa.addSong(favoriteMusic)
+                            Log.i("Favourite", "Song added")
+                        }else{
+                            favMusicDa.deleteSong(currentSong)
+                            Log.i("Favorite","song removed from fav")
+                   }
+               }
+        }
 
     }
 
 
-      fun setSongList(songList:ArrayList<Music>, songPosition:Int){
+
+
+    fun setSongList(songList:ArrayList<Music>, songPosition:Int){
           musiclistSe=songList
           currentIndex=songPosition
 
@@ -160,7 +215,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.prepare()
             mediaPlayer.start()
             isPlaying = true
-
+             songCurrentTitle=musiclistSe[currentIndex].title
         } catch (e: Exception) {
             return
         }

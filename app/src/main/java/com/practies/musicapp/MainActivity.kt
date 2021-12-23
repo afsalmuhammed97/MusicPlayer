@@ -21,6 +21,7 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.practies.musicapp.adapter.ViewPageAdapter
 import com.practies.musicapp.databinding.ActivityMainBinding
 import com.practies.musicapp.service.MusicServices
+import com.practies.musicapp.service.MusicServices.Companion.songCurrentTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -67,6 +68,10 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
+
+
+
+
         binding.nextMiniBt.setOnClickListener{
             musicServices!!.nextPreviousSong(true)
         }
@@ -86,7 +91,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         binding.prevMiniBt.setOnClickListener{
             musicServices!!.nextPreviousSong(false)
         }
-
+      //  binding.songNameMini.text=songCurrentTitle
         binding.miniPlayerLayout.setOnClickListener{
             //move  to the  player screen
             if (musicServices !=null) {

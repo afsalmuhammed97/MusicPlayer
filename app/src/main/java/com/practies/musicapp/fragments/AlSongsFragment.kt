@@ -99,14 +99,8 @@ lateinit var listAdapter:PlayListNameAdapter
 
                 musicServices!!.setSongList(musiclist,position)
                 val intent=Intent(context,PlayScreenActivity::class.java)
+                intent.putExtra("music",musiclist[position])
                 startActivity(intent)
-               // EventBus.getDefault().post(musiclist[position])
-               // musicServices!!.musiclistSe=musiclist
-              //  musicServices!!.initMediaPlayer()
-              //  musicServices!!.playSong()
-               // val song=musiclist[position]
-              //  EventBus.getDefault().post(song)
-            //    Log.i("TAG",musicServices?.musiclistSe.toString())
 
             }
 

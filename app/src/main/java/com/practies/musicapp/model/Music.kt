@@ -3,7 +3,9 @@ package com.practies.musicapp.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.practies.musicapp.service.MusicServices
 import java.io.Serializable
+import java.lang.ref.WeakReference
 
 
 @Entity(tableName = "allMusics")
@@ -22,3 +24,4 @@ data class Music(
 
 
 
+var musicServices: WeakReference<MusicServices>?=null

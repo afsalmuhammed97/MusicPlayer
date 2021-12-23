@@ -13,14 +13,39 @@ import com.practies.musicapp.R
 import com.practies.musicapp.model.Music
 
 class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapter<SongListAdapter.SongHolder>() {
-       private lateinit var sListenr:MusicAdapter.onItemClickListener
-    fun setOnItemclickListner( listener:MusicAdapter.onItemClickListener){
+       private lateinit var sListenr:onItemClickListener
+
+    interface onItemClickListener {
+        fun onItemClick(position: Int)
+        fun onOptionClick(position: Int)
+    }
+    fun setOnItemclickListner(listener:onItemClickListener){
         sListenr=listener
     }
 
+    class SongHolder(itemView:View, listener: onItemClickListener):RecyclerView.ViewHolder(itemView) {
+
+        val songNeme = itemView.findViewById<TextView>(R.id.songs_nameMv)
+        // val duration=itemView.findViewById<TextView>(R.id.song_duration)
+        val albumName=itemView.findViewById<TextView>(R.id.song_album)
+        val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
+        val optionMenu=itemView.findViewById<ImageButton>(R.id.option_icon)
+
+        init {
+            itemView.setOnClickListener {
+                listener.onOptionClick(adapterPosition)
+            }
+            optionMenu.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+        }
+
+    }
+
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListAdapter.SongHolder {
        val view=LayoutInflater.from(parent.context).inflate(R.layout.music_view,parent,false)
-           return SongHolder(view)//sListenr
+           return SongHolder(view,sListenr)//sListenr
 
     }
 
@@ -40,22 +65,4 @@ class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapte
        return songList.size
     }
    // ,listener:MusicAdapter.onItemClickListener
-    class SongHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
-
-        val songNeme = itemView.findViewById<TextView>(R.id.songs_nameMv)
-        // val duration=itemView.findViewById<TextView>(R.id.song_duration)
-        val albumName=itemView.findViewById<TextView>(R.id.song_album)
-        val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
-        val optionMenu=itemView.findViewById<ImageButton>(R.id.option_icon)
-
-//        init {
-//            itemView.setOnClickListener {
-//                listener.onOptionClick(adapterPosition)
-//            }
-//            optionMenu.setOnClickListener {
-//                listener.onItemClick(adapterPosition)
-//            }
-//        }
-
-    }
 }

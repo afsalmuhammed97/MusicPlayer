@@ -46,15 +46,10 @@ var temp=ArrayList<Music>()
         requireActivity().startService(intent)
              favMusicDao=MusicDatabase.getDatabase(requireActivity().application).musicDao()
 
-//        GlobalScope.launch (Dispatchers.IO) {
-//            favoriteList = favMusicDao.readAllSongs() as  ArrayList<Music>
-//
-//        }
+
         GlobalScope.launch(Dispatchers.IO) {       favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
             Log.i("Fav Frag", favoriteList.toString())
-           // temp=favMusicDao.readAllFavoriteSong() as ArrayList<Music>
 
-            //Log.i("INFavorite",favoriteList.toString())
 
         }
 
@@ -108,13 +103,13 @@ var temp=ArrayList<Music>()
                 popupMenu(position)
             }
         })
-        binding.shuffleBt.setOnClickListener{
-
-           //musicServices!!.musiclistSe.shuffle()
-                favoriteList.shuffle()
-               // isShuffle=true
-                Toast.makeText(context,"shuffle on",Toast.LENGTH_SHORT).show()
-        }
+//        binding.shuffleBt.setOnClickListener{
+//
+//           //musicServices!!.musiclistSe.shuffle()
+//                favoriteList.shuffle()
+//               // isShuffle=true
+//                Toast.makeText(context,"shuffle on",Toast.LENGTH_SHORT).show()
+//        }
 
     }
 
@@ -130,8 +125,9 @@ var temp=ArrayList<Music>()
                         //*****************
                         //function to remove item from database
                           val tempMusic= favoriteList[position]
-                        favoriteList.remove(tempMusic)
                               removeSongFromFavorite(position)
+                        favoriteList.remove(tempMusic)
+
                         favAdapter.notifyDataSetChanged()
                      return   true
                     }
@@ -153,11 +149,9 @@ var temp=ArrayList<Music>()
     private fun removeSongFromFavorite(position: Int){
 
         val selectedSong=favoriteList[position]
-        selectedSong.play_list_name= favorite
-        val  favoriteMusic= Music(  selectedSong.timeStamp,
-            selectedSong.id,selectedSong.title,selectedSong.album,selectedSong.artist,
-            selectedSong.duration,selectedSong.path,selectedSong.artUri,selectedSong.play_list_name)
-        GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
+
+
+        GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(selectedSong) }
 
     }
 
@@ -165,7 +159,7 @@ var temp=ArrayList<Music>()
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
        musicServices!!.favoritelistSe=favoriteList
-        Toast.makeText(context,"Favorite connected",Toast.LENGTH_SHORT).show()
+    //    Toast.makeText(context,"Favorite connected",Toast.LENGTH_SHORT).show()
 
 
     }

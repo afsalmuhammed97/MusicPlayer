@@ -11,14 +11,14 @@ import com.practies.musicapp.R
 
 class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Adapter<PlayListAdapter.PlayListHolder>() {
 
-    private lateinit var pListener:onItemClickListener
+    private lateinit var pListener: MusicAdapter.onItemClickListener
 
-    interface onItemClickListener{
+    interface onItemClickListener {
         fun onItemClick(position: Int)
         fun onOptionClick(position: Int)
     }
 
-    fun setOnItemClickListner(listener:onItemClickListener){
+    fun setOnItemClickListner(listener: MusicAdapter.onItemClickListener){
         pListener=listener
     }
 
@@ -26,9 +26,8 @@ class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Ad
 
 
 
-    class PlayListHolder(itemview: View,listener:onItemClickListener):RecyclerView.ViewHolder(itemview) {
+    class PlayListHolder(itemview: View,listener: MusicAdapter.onItemClickListener):RecyclerView.ViewHolder(itemview) {
         val playlistName=itemview.findViewById<TextView>(R.id.play_list_name)
-        val songCount=itemview.findViewById<TextView>(R.id.song_count)
         val playListImage=itemview.findViewById<ImageView>(R.id.play_list_image)
         val deleteBt=itemview.findViewById<ImageButton>(R.id.delete_bt)
         init {

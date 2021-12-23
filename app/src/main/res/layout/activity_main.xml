@@ -57,6 +57,7 @@
             <TextView
                 android:id="@+id/song_name_mini"
                 android:layout_width="0dp"
+                android:singleLine="true"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/mini_player"
