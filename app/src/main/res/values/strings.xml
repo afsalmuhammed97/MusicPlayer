@@ -23,6 +23,7 @@
     <string name="createPlayList">New</string>
     <string name="removeFromFavorite">Remove</string>
     <string name="cancel">Cancel</string>
+    <string name="search">Search</string>
 
 
 </resources>

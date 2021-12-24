@@ -12,14 +12,23 @@ import kotlin.system.exitProcess
 
 class NotificationReceiver:BroadcastReceiver() {
 
+    val services:MusicServices?=null
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val notificationIntent = Intent(context, MusicServices::class.java)
-        notificationIntent.putExtra("Action", intent?.action)
-       peekService(context, notificationIntent)
+       // notificationIntent.putExtra("Action", intent?.action)
+
+      // peekService(context, notificationIntent)
+
+        when (intent?.action) {
+            ApplicationClass.PLAY -> {
+                Toast.makeText(context, "preve button", Toast.LENGTH_SHORT).show()
+
+//        services!!.playSong()
     }
 
-}
+
+}}}
 
 
 //        when (intent?.action) {

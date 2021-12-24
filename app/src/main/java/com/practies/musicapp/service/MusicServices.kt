@@ -56,6 +56,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     lateinit var mediaSession: MediaSessionCompat
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()
+    var tempListSe= arrayListOf<Music>()
     var favoritelistSe= arrayListOf<Music>()
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")

@@ -132,27 +132,7 @@ lateinit var listAdapter:PlayListNameAdapter
         }
 
 
-     private fun popupMenus(position:Int){
-         val popupMenu=PopupMenu(context,view)
-         popupMenu.inflate(R.menu.droop_down_menu)
-        popupMenu.setOnMenuItemClickListener {
-            when(it.itemId){
-                R.id.addToPlayList->{
-                   // customAlertDialog(position)
 
-
-                    true
-                }
-
-                R.id.addToFavorite ->{   Toast.makeText(context,"add to fav ",Toast.LENGTH_SHORT).show()
-                    true
-                }
-                else -> true
-            }
-
-        }
-         popupMenu.show()
-     }
 
 
 //  to show the popup window
@@ -205,7 +185,7 @@ fun customAlertDialog(position: Int) {
 
 //********************************************************
             //create  function for  add the song to this list **********
-            Toast.makeText(context, playList[position], Toast.LENGTH_SHORT).show()
+          //  Toast.makeText(context, playList[position], Toast.LENGTH_SHORT).show()
 
         }
 
@@ -216,7 +196,7 @@ fun customAlertDialog(position: Int) {
     })
 
 
-      builder.setPositiveButton("Add") { dialog, _ ->
+      builder.setPositiveButton("Ok") { dialog, _ ->
            dialog.dismiss()
        }
      builder.setNegativeButton("Cancel") { dialog, _ ->
