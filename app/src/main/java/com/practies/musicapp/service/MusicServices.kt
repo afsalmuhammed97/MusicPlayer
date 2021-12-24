@@ -3,9 +3,7 @@ package com.practies.musicapp.service
 import android.app.AlertDialog
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
-import android.content.DialogInterface
-import android.content.Intent
+import android.content.*
 import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.MediaPlayer
@@ -44,7 +42,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
 
-
+    var repeat:Boolean=false
     var currentIndex = 0
     val intervell = 1000
     var isPlaying = false
@@ -54,6 +52,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     lateinit var onSongComplete: OnSongComplete
    lateinit  var mediaPlayer: MediaPlayer
     lateinit var mediaSession: MediaSessionCompat
+    lateinit var receiver: NotificationReceiver
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()
     var tempListSe= arrayListOf<Music>()
@@ -77,6 +76,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
        //  Notification bar play functions
+
+
+
           when(intent?.action){
 
            ApplicationClass.PREVIOUS->{
@@ -110,7 +112,6 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
           }
 
 
-        //notificationFunctions(notificationMsg)
 
         return super.onStartCommand(intent, flags, startId)
 
@@ -136,28 +137,28 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
     /////////////////////To  check current song is favorite or not
-    fun faveChecker():Boolean {
-        var songExist = false
-        val currentSong = musiclistSe[currentIndex]
-        GlobalScope.launch(Dispatchers.IO) {
-            songExist =favMusicDa.checkSongExist(currentSong.id, favorite)
-        }
-        return songExist
-    }
+//    fun faveChecker():Boolean {
+//        var songExist = false
+//        val currentSong = musiclistSe[currentIndex]
+//        GlobalScope.launch(Dispatchers.IO) {
+//            songExist =favMusicDa.checkSongExist(currentSong.id, favorite)
+//        }
+//        return songExist
+//    }
     /////////////////////////
-    fun removeSongFromList(list:ArrayList<Music>,songPosition: Int,context: Context) {
-        val alertDialog = AlertDialog.Builder(context)
-        alertDialog.setTitle("Delete Song")
-        alertDialog.setMessage("Are you sure ,want to delete")
-        alertDialog.setNegativeButton("No") { dialogInterface: DialogInterface, i: Int ->
-            dialogInterface.cancel()
-        }
-        alertDialog.setPositiveButton("Yes") { _: DialogInterface, i: Int ->
-
-            val song = list[songPosition]
-            GlobalScope.launch(Dispatchers.IO) { favMusicDa.deleteSong(song) }
-        }
-    }
+//    fun removeSongFromList(list:ArrayList<Music>,songPosition: Int,context: Context) {
+//        val alertDialog = AlertDialog.Builder(context)
+//        alertDialog.setTitle("Delete Song")
+//        alertDialog.setMessage("Are you sure ,want to delete")
+//        alertDialog.setNegativeButton("No") { dialogInterface: DialogInterface, i: Int ->
+//            dialogInterface.cancel()
+//        }
+//        alertDialog.setPositiveButton("Yes") { _: DialogInterface, i: Int ->
+//
+//            val song = list[songPosition]
+//            GlobalScope.launch(Dispatchers.IO) { favMusicDa.deleteSong(song) }
+//        }
+//    }
 
 
 
@@ -300,7 +301,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
 
 
-    fun showNotification(){
+    fun showNotification(playPause:Int){
 
         val prevIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.PREVIOUS)
           val prevPendingIntent=PendingIntent.getBroadcast(baseContext,0,prevIntent,PendingIntent.FLAG_UPDATE_CURRENT)

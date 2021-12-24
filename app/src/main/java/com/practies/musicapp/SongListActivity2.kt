@@ -117,7 +117,7 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
                 val intent=Intent(this,PlayScreenActivity::class.java)
                 startActivity(intent)
             }
-        Toast.makeText(this@SongListActivity2,"service connected",Toast.LENGTH_SHORT).show()
+      //  Toast.makeText(this@SongListActivity2,"service connected",Toast.LENGTH_SHORT).show()
 
     }
 

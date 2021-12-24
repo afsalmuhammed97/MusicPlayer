@@ -182,11 +182,6 @@ fun customAlertDialog(position: Int) {
                 Toast.makeText(context,"This song already exist ",Toast.LENGTH_SHORT).show()
             }
 
-
-//********************************************************
-            //create  function for  add the song to this list **********
-          //  Toast.makeText(context, playList[position], Toast.LENGTH_SHORT).show()
-
         }
 
         override fun onOptionClick(position: Int) {
@@ -281,6 +276,7 @@ private fun  getAllAudio():ArrayList<Music>{
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
       val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
+
         Log.i("MSG","service connected")
 
              //to get allPlayList from db
@@ -291,9 +287,11 @@ private fun  getAllAudio():ArrayList<Music>{
         }
 
 
+
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
+              musicServices=null
 
     }
 

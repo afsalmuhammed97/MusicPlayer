@@ -6,25 +6,30 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.practies.musicapp.MainActivity
 import com.practies.musicapp.PlayScreenActivity
+import com.practies.musicapp.model.musicServices
 
 import com.practies.musicapp.service.MusicServices
 import kotlin.system.exitProcess
 
 class NotificationReceiver:BroadcastReceiver() {
 
-    val services:MusicServices?=null
+
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val notificationIntent = Intent(context, MusicServices::class.java)
-       // notificationIntent.putExtra("Action", intent?.action)
+        notificationIntent.putExtra("Action", intent?.action)
 
-      // peekService(context, notificationIntent)
+       peekService(context, notificationIntent)
 
         when (intent?.action) {
             ApplicationClass.PLAY -> {
                 Toast.makeText(context, "preve button", Toast.LENGTH_SHORT).show()
 
-//        services!!.playSong()
+
+//                if (services.isPlaying){
+//                    services. playPauseMusic(false)
+//                }else
+//                  services.playPauseMusic(true)
     }
 
 

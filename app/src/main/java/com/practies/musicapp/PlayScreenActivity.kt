@@ -1,5 +1,6 @@
 package com.practies.musicapp
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -26,19 +27,13 @@ import java.lang.Runnable
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
-  //   lateinit var favMusicDao:MusicDao
+
     lateinit var seekBar: SeekBar
-    val intervell=1000
-    lateinit var startPoint:TextView
-    lateinit var entPoint:TextView
 
     companion object{
-    var isFavorite:Boolean=false
+    var isFavorite:Boolean=false}
 
-}
-  // lateinit var musicViewModel: MusicViewModel
-
-     var musicServices:MusicServices?=null
+        var musicServices:MusicServices?=null
     var  favoriteListPA= arrayListOf<Music>()
 
          lateinit var seekbarRunnable: Runnable
@@ -150,10 +145,17 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                 updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
         seekBarSetUp()
         seekFunction()
-         musicServices!!.showNotification()
+         musicServices!!.showNotification(R.drawable.pause_bt_circle)
+
+                bindingPlayScreen.repeatBt.setOnClickListener {      if( ! musicServices!!.repeat){ musicServices!!.mediaPlayer.isLooping=true
+                }else{    musicServices!!.mediaPlayer.isLooping=false
+                    musicServices!!.
+                }
+                }
 
         Log.i("MSg","Serveise  connected with playScreen")
     }
+
 
     override fun onServiceDisconnected(name: ComponentName?) {}
                 private fun seekFunction(){

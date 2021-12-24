@@ -178,13 +178,13 @@
             android:contentDescription="@string/shuffle_bt"/>
 
         <ImageButton
-            android:id="@+id/mor_option_bt"
+            android:id="@+id/repeat_bt"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:padding="4dp"
-            android:src="@drawable/more_vert"
+            android:src="@drawable/repeat"
             tools:ignore="SpeakableTextPresentCheck"
             android:contentDescription="@string/option_bt"/>
 
