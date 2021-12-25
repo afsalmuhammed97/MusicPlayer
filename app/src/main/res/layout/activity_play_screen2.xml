@@ -145,13 +145,13 @@
         app:layout_constraintTop_toBottomOf="@+id/play_box">
 
         <ImageButton
-            android:id="@+id/playlist_button"
+            android:id="@+id/repeat_bt"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:padding="4dp"
-            android:src="@drawable/library"
+            android:src="@drawable/repeat"
             tools:ignore="SpeakableTextPresentCheck"
             android:contentDescription="@string/library_bt"/>
 
@@ -178,13 +178,13 @@
             android:contentDescription="@string/shuffle_bt"/>
 
         <ImageButton
-            android:id="@+id/repeat_bt"
+            android:id="@+id/equalizer_bt"
             android:layout_width="0dp"
             android:layout_height="48dp"
             android:layout_weight="1"
             android:background="@android:color/transparent"
             android:padding="4dp"
-            android:src="@drawable/repeat"
+            android:src="@drawable/equlizer"
             tools:ignore="SpeakableTextPresentCheck"
             android:contentDescription="@string/option_bt"/>
 

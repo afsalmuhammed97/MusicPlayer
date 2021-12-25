@@ -22,6 +22,5 @@ data class Music(
     @ColumnInfo val artUri:String,
     @ColumnInfo var play_list_name:String ): Serializable
 
-
-
+var lastPlayedSongId:String=""
 var musicServices: WeakReference<MusicServices>?=null

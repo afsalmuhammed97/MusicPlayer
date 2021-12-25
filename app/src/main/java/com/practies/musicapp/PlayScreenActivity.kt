@@ -145,11 +145,20 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                 updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
         seekBarSetUp()
         seekFunction()
-         musicServices!!.showNotification(R.drawable.pause_bt_circle)
+                //*********************************************************************
+       //  musicServices!!.showNotification(R.drawable.pause_bt_circle)
 
-                bindingPlayScreen.repeatBt.setOnClickListener {      if( ! musicServices!!.repeat){ musicServices!!.mediaPlayer.isLooping=true
-                }else{    musicServices!!.mediaPlayer.isLooping=false
-                    musicServices!!.
+                bindingPlayScreen.repeatBt.setOnClickListener {      if(  musicServices!!.repeat){
+
+                    musicServices!!.mediaPlayer.isLooping=false
+                    bindingPlayScreen.repeatBt.setImageResource(R.drawable.repeat)
+
+                    musicServices!!.repeat=false
+
+                }else{
+                    musicServices!!.mediaPlayer.isLooping=true
+                    bindingPlayScreen.repeatBt.setImageResource(R.drawable.baseline_repeat_on)
+                    musicServices!!.repeat=true
                 }
                 }
 

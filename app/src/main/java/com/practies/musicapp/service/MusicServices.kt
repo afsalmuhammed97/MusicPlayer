@@ -21,6 +21,7 @@ import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.favorite
 import com.practies.musicapp.interfaces.OnSongComplete
+import com.practies.musicapp.model.lastPlayedSongId
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.notifications.ApplicationClass
@@ -46,6 +47,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     var currentIndex = 0
     val intervell = 1000
     var isPlaying = false
+    var isPause=false
     companion object{     var songCurrentTitle:String =""}
      lateinit var  favMusicDa:MusicDao
     lateinit var seekBar: SeekBar
@@ -217,6 +219,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.prepare()
             mediaPlayer.start()
             isPlaying = true
+
              songCurrentTitle=musiclistSe[currentIndex].title
         } catch (e: Exception) {
             return
@@ -263,6 +266,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
         } else {
             mediaPlayer.pause()
+            lastPlayedSongId= musiclistSe[currentIndex].id
             seekBar.removeCallbacks(progressRunner)
             isPlaying = false
         }

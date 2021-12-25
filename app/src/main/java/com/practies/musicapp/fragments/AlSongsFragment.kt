@@ -176,8 +176,8 @@ fun customAlertDialog(position: Int) {
                     play=musicServices!!.favMusicDa.getPlayList(tempPlayListName) as ArrayList<Music>
 
                     Log.i("PLY List",play.toString())
-
                 }
+                Toast.makeText(context,"One song added to Playlist ",Toast.LENGTH_SHORT).show()
             }else{
                 Toast.makeText(context,"This song already exist ",Toast.LENGTH_SHORT).show()
             }
