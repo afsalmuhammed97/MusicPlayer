@@ -41,7 +41,6 @@ private lateinit var adapter:PlayListAdapter
         musicDa= MusicDatabase.getDatabase(requireContext()).musicDao()
 
         adapter= PlayListAdapter(playList)
-        adapter.notifyDataSetChanged()
         binding.playListRv.layoutManager=LinearLayoutManager(context)
         binding.playListRv.hasFixedSize()
         binding.playListRv.setItemViewCacheSize(13)
@@ -85,15 +84,23 @@ private lateinit var adapter:PlayListAdapter
                 val name= playList[position]
                 GlobalScope.launch (Dispatchers.IO){ musicDa.deletePlayList(name)  }
                 Toast.makeText(context,"${name}  deleted",Toast.LENGTH_SHORT).show()
-
+                     deletePlayListView(position)
             }
            alertDialog.create()
             alertDialog.show()
 
     }
+    //delete playList from view
+    @SuppressLint("NotifyDataSetChanged")
+    fun deletePlayListView(position: Int){
+        val listElement= playList[position]
+        playList.remove(listElement)
+        adapter.notifyDataSetChanged()
+    }
+
         //to get the selected song list
     fun loadSongList(listName:String){
-        var List=ArrayList<Music>()
+      //  var List=ArrayList<Music>()
 
         GlobalScope.launch (Dispatchers.IO){
             withContext(Dispatchers.IO){

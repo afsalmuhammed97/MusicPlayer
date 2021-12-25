@@ -23,6 +23,7 @@ import com.practies.musicapp.databinding.FragmentFavoriteBinding
 import com.practies.musicapp.favorite
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
+import com.practies.musicapp.musicDatabase.MusicDatabase.Companion.getDatabase
 import com.practies.musicapp.service.MusicServices
 import kotlinx.coroutines.*
 import kotlinx.coroutines.DelicateCoroutinesApi as DelicateCoroutinesApi1
@@ -44,12 +45,14 @@ var temp=ArrayList<Music>()
               val intent=Intent(context,MusicServices::class.java)
         requireActivity().bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
         requireActivity().startService(intent)
-             favMusicDao=MusicDatabase.getDatabase(requireActivity().application).musicDao()
+             favMusicDao=getDatabase(requireActivity().application).musicDao()
 
 
-        GlobalScope.launch(Dispatchers.IO) {       favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
+        GlobalScope.launch(Dispatchers.IO) {
+
+                favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
+
             Log.i("Fav Frag", favoriteList.toString())
-
 
         }
 
@@ -66,7 +69,6 @@ var temp=ArrayList<Music>()
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 //        favMusicDao= FavoriteDataBase.getDatabase(requireActivity().application).musicDao()
-       // /getDatabase(requireActivity().application).musicDao()
 
 
 

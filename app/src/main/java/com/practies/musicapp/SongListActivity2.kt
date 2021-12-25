@@ -2,14 +2,14 @@ package com.practies.musicapp
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.ComponentName
-import android.content.DialogInterface
-import android.content.Intent
-import android.content.ServiceConnection
+import android.content.*
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
+import android.view.MenuItem
+import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.adapter.PlayListAdapter
@@ -25,6 +25,8 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
     var songList=ArrayList<Music>()
     lateinit var binding: ActivitySongList2Binding
     var musicServices:MusicServices?=null
+    var removed: Boolean=false
+    lateinit var element :Music
     lateinit var songAdapter:SongListAdapter
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,7 +51,6 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
 
         binding.playListName.text=songListName
         songAdapter = SongListAdapter(songList)
-        songAdapter.notifyDataSetChanged()
         binding.songListRv.layoutManager = LinearLayoutManager(this)
         binding.songListRv.hasFixedSize()
         binding.songListRv.setItemViewCacheSize(10)
@@ -58,8 +59,9 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
 
         songAdapter.setOnItemclickListner(object :SongListAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
-                       deleteSelectedSong(position)
-               Toast.makeText(this@SongListActivity2,"itemClicked",Toast.LENGTH_SHORT).show()
+                element=songList[position]
+                deleteSelectedSong(position)
+
 
 
 
@@ -75,8 +77,51 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
 
 
     }
-          fun deleteSelectedSong(position:Int):Boolean {
-              var removed: Boolean=false
+//    private fun popupMenu(position:Int,view: View){
+//
+//        val popupMenu= PopupMenu(this,view)
+//        popupMenu.inflate(R.menu.fav_option_menu)
+//        popupMenu.setOnMenuItemClickListener (object : PopupMenu.OnMenuItemClickListener{
+//            @SuppressLint("NotifyDataSetChanged")
+//            override fun onMenuItemClick(item: MenuItem?): Boolean {
+//                when(item?.itemId){
+//                    R.id.removeFromPlayList->{
+//                        //*****************
+//                        //function to remove item from database
+//                        val song= songList[position]
+//                        GlobalScope.launch(Dispatchers.IO) { musicServices!!.favMusicDa.deleteSong(song) }
+//                        removeSongFromFavorite(position)
+//                        favoriteList.remove(tempMusic)
+//
+//                        favAdapter.notifyDataSetChanged()
+//                        return   true
+//                    }
+//                    R.id.cancel_action ->{
+//                        popupMenu.dismiss()
+//                        return true
+//                    }
+//                    else ->
+//                        return false
+//                }
+//
+//            }
+//
+//        })
+//
+//        popupMenu.show()
+//    }
+
+
+
+
+
+
+
+
+
+
+    fun deleteSelectedSong(position:Int):Boolean {
+
               val song = songList[position]
               val dialog = AlertDialog.Builder(this)
               dialog.setTitle("Delete Song")
@@ -87,7 +132,8 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
               }
               dialog.setPositiveButton("Delete") { _: DialogInterface, i: Int ->
                   GlobalScope.launch(Dispatchers.IO) { musicServices!!.favMusicDa.deleteSong(song) }
-                  // songList.remove(song)
+                   //songList.remove(song)
+                     songRemoveFromView(position)
                   removed = true
               }
               dialog.create()
@@ -95,6 +141,12 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
 
               return removed
           }
+    fun songRemoveFromView(position: Int){
+        var element=songList[position]
+       // Toast.makeText(this,"song deleted ${element}",Toast.LENGTH_SHORT).show()
+        songList.remove(element)
+        songAdapter.notifyDataSetChanged()
+    }
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder= service as MusicServices.Mybinder
         musicServices=binder.currentService()

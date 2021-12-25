@@ -2,6 +2,7 @@ package com.practies.musicapp.notifications
 
 import android.content.*
 import android.os.IBinder
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.practies.musicapp.MainActivity
@@ -17,14 +18,16 @@ class NotificationReceiver:BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val notificationIntent = Intent(context, MusicServices::class.java)
-        notificationIntent.putExtra("Action", intent?.action)
+        notificationIntent.setAction( intent?.action)
+        Log.i("MSG",intent?.action?: "null")
 
-       peekService(context, notificationIntent)
+        context!!.startService(notificationIntent)
+      // peekService(context, notificationIntent)}
 
-        when (intent?.action) {
-            ApplicationClass.PLAY -> {
-                Toast.makeText(context, "preve button", Toast.LENGTH_SHORT).show()
-
+//        when (intent?.action) {
+//            ApplicationClass.PLAY -> {
+//                Toast.makeText(context, "preve button", Toast.LENGTH_SHORT).show()
+//
 
 //                if (services.isPlaying){
 //                    services. playPauseMusic(false)
@@ -33,7 +36,7 @@ class NotificationReceiver:BroadcastReceiver() {
     }
 
 
-}}}
+}
 
 
 //        when (intent?.action) {

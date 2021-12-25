@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import com.practies.musicapp.Constants
+
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.favorite
@@ -79,7 +80,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
        //  Notification bar play functions
 
-
+        Log.i("MSG",intent?.action?: "null")
 
           when(intent?.action){
 
@@ -201,6 +202,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
           initMediaPlayer()
           playSong()
 
+
       }
 
 
@@ -220,7 +222,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.start()
             isPlaying = true
 
-             songCurrentTitle=musiclistSe[currentIndex].title
+             lastPlayedSongId=musiclistSe[currentIndex].id
+
         } catch (e: Exception) {
             return
         }

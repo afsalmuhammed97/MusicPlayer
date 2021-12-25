@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
+import android.media.audiofx.AudioEffect
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.practies.musicapp.MainActivity.Companion.mainBinding
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.Music
@@ -23,6 +25,7 @@ import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.Exception
 import java.lang.Runnable
 
 //MediaPlayer.OnPreparedListener
@@ -65,7 +68,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
   @Subscribe(threadMode=  ThreadMode.MAIN)
     fun updateUi( music: Music){
         setPlayScreen(music)
-
+      //  mainBinding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title
         Log.i("MSG" +
                 "","event bus called")
 
@@ -142,11 +145,14 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
         musicServices!!.setListener(this)
-                updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
+                //*****************************************************************************************************************************************
+               //if music list is not empty
+                updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])      // try catch bloke needed
+
         seekBarSetUp()
         seekFunction()
                 //*********************************************************************
-       //  musicServices!!.showNotification(R.drawable.pause_bt_circle)
+        musicServices!!.showNotification(R.drawable.pause_bt_circle)
 
                 bindingPlayScreen.repeatBt.setOnClickListener {      if(  musicServices!!.repeat){
 
@@ -160,6 +166,17 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                     bindingPlayScreen.repeatBt.setImageResource(R.drawable.baseline_repeat_on)
                     musicServices!!.repeat=true
                 }
+                }
+                bindingPlayScreen.equalizerBt.setOnClickListener {
+
+                       try {
+                           val eqIntent=Intent(AudioEffect.ACTION_DISPLAY_AUDIO_EFFECT_CONTROL_PANEL)
+                           eqIntent.putExtra(AudioEffect.EXTRA_AUDIO_SESSION,musicServices!!.mediaPlayer.audioSessionId)
+                           eqIntent.putExtra(AudioEffect.EXTRA_PACKAGE_NAME,baseContext.packageName)
+                           eqIntent.putExtra(AudioEffect.EXTRA_CONTENT_TYPE,AudioEffect.CONTENT_TYPE_MUSIC)
+                           startActivityForResult(eqIntent,11)
+                       }catch (e:Exception){  Toast.makeText(this,"Equalizer feature not supported",Toast.LENGTH_SHORT).show()}
+
                 }
 
         Log.i("MSg","Serveise  connected with playScreen")
@@ -230,8 +247,8 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                               { musicServices!!.currentIndex= 0 }else{
 
                                   musicServices!!.currentIndex ++
-                                        updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
-                                      musicServices!!.playSong()
+                                  updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
+                                  musicServices!!.playSong()
                                   } }
 
 
@@ -271,6 +288,13 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
              bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
          }
 
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode==11 ||resultCode== RESULT_OK)
+
+            return
+
+    }
 
 
 
