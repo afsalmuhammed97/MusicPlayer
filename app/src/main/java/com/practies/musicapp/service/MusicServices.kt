@@ -16,13 +16,14 @@ import android.widget.SeekBar
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContentProviderCompat.requireContext
-import com.practies.musicapp.Constants
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import com.practies.musicapp.*
 
 import com.practies.musicapp.model.Music
-import com.practies.musicapp.R
-import com.practies.musicapp.favorite
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.lastPlayedSongId
+import com.practies.musicapp.model.musicServices
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.notifications.ApplicationClass
@@ -43,6 +44,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
 
+    var lastplayedSong:Music?=null
 
     var repeat:Boolean=false
     var currentIndex = 0
@@ -84,31 +86,40 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
           when(intent?.action){
 
-           ApplicationClass.PREVIOUS->{
-               //previous song
-               Log.i("MSG","previous button clicked")
-               Toast.makeText(baseContext,"preve button",Toast.LENGTH_SHORT).show()
-           }
+           ApplicationClass.PREVIOUS->{    nextPreviousSong(false) }
+
            ApplicationClass.PLAY ->{           //play or pause song
-               Toast.makeText(baseContext,"play button",Toast.LENGTH_SHORT).show()
-               Log.i("MSG","play button clicked")
 
-               if (mediaPlayer.isPlaying){
+               if (mediaPlayer.isPlaying){ playPauseMusic(false)
 
-                  playPauseMusic(false)
+                   val lastplayedSong=musiclistSe[currentIndex]
 
-               }else{
-                  playPauseMusic(true)
+                   Log.i("LastSong in serviese",lastplayedSong.toString())
+                  // Toast.makeText(baseContext, lastplayedSong.title,Toast.LENGTH_LONG).show()
+                   val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE).edit()
+                   editor.clear()
+                   editor.apply()
+                   val jSonString= GsonBuilder().create().toJson(lastplayedSong)
+                   editor.putString("LastPlayedSong",jSonString,)
+                   editor.apply()
 
-                  }
-
+               }
+               else{ playPauseMusic(true) }
            }
-           ApplicationClass.NEXT ->{          //next song
-               Toast.makeText(this,"Next button",Toast.LENGTH_SHORT).show()
-               Log.i("MSG","next button clicked")
 
+           ApplicationClass.NEXT ->{
+               //next song
+           nextPreviousSong(true)
            }
            ApplicationClass.EXit ->{        //Exit app   and notification
+
+
+
+
+               mediaPlayer.pause()
+               mediaPlayer.stop()
+               musicServices=null
+               stopForeground(true)
                exitProcess(1)
 
            }
@@ -120,6 +131,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     }
 
+
        //song complete
     fun setListener( onSongComplete: OnSongComplete){
         this.onSongComplete=onSongComplete
@@ -128,13 +140,29 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     override fun onCreate() {
         super.onCreate()
+        //initMediaPlayer
+        initMediaPlayer()
+
+
+        favMusicDa=MusicDatabase.getDatabase(this).musicDao()
+        GlobalScope.launch (Dispatchers.IO){
+            playList =favMusicDa.getAllPlayListName() as ArrayList<String>
+            Log.i("DB", playList.toString())
+
+
+        }
+
+
+
+
+
 
         mediaPlayer = MediaPlayer()
       seekBar = SeekBar(this)
 
         //////to  access  the database//*******************************************************
 
-      favMusicDa=MusicDatabase.getDatabase(this).musicDao()
+
     }
 
 
@@ -199,7 +227,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
           musiclistSe=songList
           currentIndex=songPosition
 
-          initMediaPlayer()
+        //  initMediaPlayer()
           playSong()
 
 
@@ -221,8 +249,10 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.prepare()
             mediaPlayer.start()
             isPlaying = true
-
+              lastplayedSong=musiclistSe[currentIndex]
              lastPlayedSongId=musiclistSe[currentIndex].id
+           showNotification(R.drawable.pause_bt_circle)
+
 
         } catch (e: Exception) {
             return
@@ -264,13 +294,14 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.start()
             progressRunner.run()
             isPlaying= true
-
+              showNotification(R.drawable.pause_bt_circle)
             //playSong()
 
         } else {
             mediaPlayer.pause()
             lastPlayedSongId= musiclistSe[currentIndex].id
             seekBar.removeCallbacks(progressRunner)
+            showNotification(R.drawable.play_bt_circle)
             isPlaying = false
         }
     }
@@ -322,21 +353,27 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
         val exitIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.EXit)
         val exitPendingIntent=PendingIntent.getBroadcast(baseContext,0,exitIntent,PendingIntent.FLAG_UPDATE_CURRENT)
 
+          val imgArt= getImageArt(musiclistSe[currentIndex].path)
 
-
+      val image=  if (imgArt != null){ BitmapFactory.decodeByteArray(imgArt,0,imgArt.size) }else{
+            BitmapFactory.decodeResource(resources,R.drawable.headphone)
+        }
 
         val notification = NotificationCompat.Builder(baseContext,ApplicationClass.CHANNEL_ID)
             .setContentTitle(musiclistSe[currentIndex].title)
             .setContentText(musiclistSe[currentIndex].artist)
             .setSmallIcon(R.mipmap.music_player_icon)
-            .setLargeIcon(BitmapFactory.decodeResource(resources,R.drawable.headphone))
+            .setLargeIcon(image)
             .setStyle(androidx.media.app.NotificationCompat.MediaStyle().setMediaSession(mediaSession.sessionToken))
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+//            .setColor(3900)
             .setOnlyAlertOnce(true)
 
             .addAction(R.drawable.previous_button,"Previous",prevPendingIntent)
-            .addAction(R.drawable.pause_bt_circle,"PlayPause",playPendingIntent)
+
+
+            .addAction(playPause,"PlayPause",playPendingIntent)
             .addAction(R.drawable.next_button,"Next",nextPendingIntent)
             .addAction(R.drawable.exit_icon,"Exit",exitPendingIntent)
             .build()
@@ -344,17 +381,23 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     }
 
-//     fun favoriteCheck(id:String):Boolean{
-//         isFavorite=false
-//         favoritelistSe.contains()
-//             if (id ==music.id){
-//                 isFavorite=true
-//                 return true
-//             }
-//         }
-//         return  false
-//     }
+    override fun onDestroy() {
+        super.onDestroy()
+//        Log.i("LastSong in serviese",lastplayedSong.toString())
+//        Toast.makeText(baseContext,lastplayedSong?.title ,Toast.LENGTH_LONG).show()
+//        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE).edit()
+//        editor.clear()
+//        editor.apply()
+//        val jSonString= GsonBuilder().create().toJson(lastplayedSong)
+//        editor.putString("LastPlayedSong",jSonString,)
+//        editor.apply()
 
+
+//        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE).edit()
+//         val jSonString= GsonBuilder().create().toJson(lastplayedSong)
+//           editor.putString("LastPlayedSong",jSonString,)
+//             editor.apply()
+    }
 
 
 }

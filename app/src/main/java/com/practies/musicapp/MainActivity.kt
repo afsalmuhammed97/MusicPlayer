@@ -10,6 +10,8 @@ import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -23,11 +25,10 @@ import com.practies.musicapp.service.MusicServices
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import androidx.viewpager.widget.ViewPager
-
-
-
-
-
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import org.greenrobot.eventbus.EventBus
 
 
 class MainActivity : AppCompatActivity(),ServiceConnection {
@@ -35,7 +36,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
      lateinit var mainBinding: ActivityMainBinding
     var musicServices:MusicServices?=null
       //private lateinit var searchAdapter: SearchAdapter
-
+     lateinit var  recentSong:Music
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -45,6 +46,17 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         val intent = Intent(this, MusicServices::class.java)
         bindService(intent,this, BIND_AUTO_CREATE)
         startService(intent)
+
+
+        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
+        val jSonString = editor.getString("LastPlayedSong",null)
+        val typeToken =object : TypeToken<Music>(){}.type
+
+        if (jSonString != null){
+          recentSong = GsonBuilder().create().fromJson(jSonString,typeToken)
+            Log.i("RecentSong:::",recentSong.title)
+        }
+
 
 
         val adapter=ViewPageAdapter(supportFragmentManager, lifecycle)
@@ -71,13 +83,23 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
     @Subscribe(threadMode=  ThreadMode.MAIN)
     fun updateUi( music: Music){
-        setPlayScreen(music)
+        setMiniPlayerScreen(music)
        //nBinding.songNameMini.text=musicServices //  mai!!.musiclistSe[musicServices!!.currentIndex].title
         Log.i("MSG" ,"event bus called")
 
     }
 
-    private fun setPlayScreen(music: Music) {
+    override fun onResume() {
+        super.onResume()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        EventBus.getDefault().unregister(this)
+    }
+
+    private fun setMiniPlayerScreen(music: Music) {
         mainBinding.songNameMini.text=music.title
 
     }
@@ -85,6 +107,10 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
+
+     //   musicServices.setSongList()
+
+        if (musicServices!!.musiclistSe.isNotEmpty()) updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
 
         mainBinding.searchBt.setOnClickListener {
               showSearch()
@@ -131,14 +157,16 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showSearch() {
+        val searchView:SearchView
        val alertDialog=AlertDialog.Builder(this)
         val customAlert=LayoutInflater.from(this).inflate(R.layout.search_list_view,mainBinding.root,false)
-//        val searchText=customAlert.findViewById<TextInputEditText>(R.id.searchText)
+        val searchText=customAlert.findViewById<TextInputEditText>(R.id.searchText)
 //        val searchRv= customAlert.findViewById<RecyclerView>
-        val fragment:AlSongsFragment=
-            supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0")   as AlSongsFragment
+        //val fragment:AlSongsFragment=
 
-                   //fragment no null
+            //fragment no null
+                  //  supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0")   as AlSongsFragment
+
 
 
 //        searchAdapter= SearchAdapter()
@@ -151,21 +179,44 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
      }
         alertDialog.create()
         alertDialog.show()
+    }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.search_view_menu,menu )
+           val searchView=menu?.findItem(R.id.search_view )?.actionView as SearchView
+           searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
 
+               override fun onQueryTextSubmit(query: String?): Boolean =true
 
+               override fun onQueryTextChange(newText: String?): Boolean {
+                Toast.makeText(this@MainActivity,newText.toString(),Toast.LENGTH_SHORT).show()
+                return  true
 
+               }
 
-
-
-
-
+           })
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
-        TODO("Not yet implemented")
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.i("IMp","OnDistroy called")
+        val lastplayedSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
+
+        Log.i("LastSong in serviese",lastplayedSong.toString())
+      //  Toast.makeText(baseContext, lastplayedSong.title,Toast.LENGTH_LONG).show()
+        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE).edit()
+        editor.clear()
+        editor.apply()
+        val jSonString= GsonBuilder().create().toJson(lastplayedSong)
+        editor.putString("LastPlayedSong",jSonString,)
+        editor.apply()
+
+
+    }
 
 
 

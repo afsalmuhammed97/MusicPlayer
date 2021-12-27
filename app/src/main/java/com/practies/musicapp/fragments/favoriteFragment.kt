@@ -42,23 +42,29 @@ var temp=ArrayList<Music>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-              val intent=Intent(context,MusicServices::class.java)
+        Log.i("Fav Frag", "favorite created")
+
+        val intent=Intent(context,MusicServices::class.java)
         requireActivity().bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
         requireActivity().startService(intent)
-             favMusicDao=getDatabase(requireActivity().application).musicDao()
+            // favMusicDao=getDatabase(requireActivity().application).musicDao()
 
+        favMusicDao= getDatabase(requireContext()).musicDao()
 
         GlobalScope.launch(Dispatchers.IO) {
+                       withContext(Dispatchers.IO){
+                           favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
+                          // favoriteList=favMusicDao.getPlayList(favorite) as ArrayList<Music>
+                           Log.i("Fav Frag", favoriteList.toString())
+                           }
 
-                favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
-
-            Log.i("Fav Frag", favoriteList.toString())
-
-        }
 
 
-///////////////////////////////////////////////////readAllFavoriteSong()
-    }
+}}
+
+
+
+
 
 
 
@@ -69,18 +75,10 @@ var temp=ArrayList<Music>()
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
 //        favMusicDao= FavoriteDataBase.getDatabase(requireActivity().application).musicDao()
+        binding= FragmentFavoriteBinding.inflate(inflater,container,false)
 
 
 
-
-
-
-
-
-
-            binding= FragmentFavoriteBinding.inflate(inflater,container,false)
-
-        // Log.i("In Favorite",favoriteList.toString())
 
        favAdapter= FavoriteAdapter (favoriteList)//(favoriteList )
         favAdapter.notifyDataSetChanged()
@@ -90,6 +88,14 @@ var temp=ArrayList<Music>()
        binding.favRecyclerView.adapter=favAdapter
 
         return binding.root
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onResume() {
+
+
+        favAdapter.notifyDataSetChanged()
+        super.onResume()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,6 +1,5 @@
 package com.practies.musicapp
 
-import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.Intent
 import android.content.ServiceConnection
@@ -11,22 +10,21 @@ import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import android.widget.SeekBar
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.practies.musicapp.MainActivity.Companion.mainBinding
 import com.practies.musicapp.databinding.ActivityPlayScreen2Binding
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.service.MusicServices
-import kotlinx.coroutines.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import java.lang.Exception
-import java.lang.Runnable
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
@@ -57,10 +55,6 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
        startService(intent)
 
 
-//  View Model of Database******************************************
-
-//       musicViewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(this.getApplication())).get(MusicViewModel::class.java)
-        //favMusicDao =FavoriteDataBase.getDatabase(this).musicDao()
 
 
     }
@@ -69,8 +63,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
     fun updateUi( music: Music){
         setPlayScreen(music)
       //  mainBinding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title
-        Log.i("MSG" +
-                "","event bus called")
+        Log.i("MSG" ,"event bus called")
 
     }
 
@@ -98,6 +91,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 
     override fun onStart() {
+
 
 
        // updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
@@ -145,14 +139,18 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
         musicServices!!.setListener(this)
+
+                if (musicServices!!.mediaPlayer.isPlaying){ bindingPlayScreen.playPauseButton.setImageResource(R.drawable.pause_bt_circle)
+                }else{ bindingPlayScreen.playPauseButton.setImageResource(R.drawable.play_bt_circle) }
+
                 //*****************************************************************************************************************************************
                //if music list is not empty
-                updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])      // try catch bloke needed
+                if (musicServices!!.musiclistSe .isNotEmpty()) updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])      // try catch bloke needed
 
-        seekBarSetUp()
-        seekFunction()
+                 seekBarSetUp()
+                 seekFunction()
                 //*********************************************************************
-        musicServices!!.showNotification(R.drawable.pause_bt_circle)
+      //  musicServices!!.showNotification(R.drawable.pause_bt_circle)
 
                 bindingPlayScreen.repeatBt.setOnClickListener {      if(  musicServices!!.repeat){
 
@@ -180,6 +178,9 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                 }
 
         Log.i("MSg","Serveise  connected with playScreen")
+
+
+
     }
 
 

@@ -1,5 +1,8 @@
 package com.practies.musicapp
 
+import android.media.MediaMetadata
+import android.media.MediaMetadataRetriever
+import android.provider.MediaStore
 import java.util.concurrent.TimeUnit
 
 //:Serializable
@@ -16,6 +19,11 @@ fun formatDuration(duration: Long):String {
 
 var playList=ArrayList<String>()
 
+    fun getImageArt(path:String): ByteArray? {
+        val retriever=MediaMetadataRetriever()
+        retriever.setDataSource(path)
+        return  retriever.embeddedPicture
+    }
 
 
 //var musicServices:WeakReference<MusicServices>?=null

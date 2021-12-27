@@ -77,6 +77,10 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
 
 
     }
+
+    override fun onResume() {
+        super.onResume()
+    }
 //    private fun popupMenu(position:Int,view: View){
 //
 //        val popupMenu= PopupMenu(this,view)
@@ -150,8 +154,9 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder= service as MusicServices.Mybinder
         musicServices=binder.currentService()
+        binding.songNameMini.text=songList[musicServices!!.currentIndex].title
 
-            binding.playPauseMiniBt.setOnClickListener {  if (musicServices!!.mediaPlayer.isPlaying){
+        binding.playPauseMiniBt.setOnClickListener {  if (musicServices!!.mediaPlayer.isPlaying){
 
                 musicServices!!.playPauseMusic(false)
                 binding.playPauseMiniBt.setImageResource(R.drawable.play_bt_circle)

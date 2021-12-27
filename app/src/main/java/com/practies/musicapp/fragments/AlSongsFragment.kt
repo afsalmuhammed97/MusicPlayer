@@ -53,6 +53,7 @@ lateinit var listAdapter:PlayListNameAdapter
 
            Log.i("Main","view model intialized")
          musiclist=getAllAudio()
+      //  Log.i("Sample",musiclist.toString())
         //to start service
         val intent =Intent(context, MusicServices::class.java)
 
@@ -74,7 +75,7 @@ lateinit var listAdapter:PlayListNameAdapter
     }
 
 
-    override fun onDestroy() { super.onDestroy() }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -85,6 +86,7 @@ lateinit var listAdapter:PlayListNameAdapter
         binding.musicRV.hasFixedSize()
         binding.musicRV.setItemViewCacheSize(13)
         binding.musicRV.adapter=  adapter
+
         return binding.root
     }
 
@@ -280,11 +282,11 @@ private fun  getAllAudio():ArrayList<Music>{
         Log.i("MSG","service connected")
 
              //to get allPlayList from db
-        GlobalScope.launch (Dispatchers.IO){
-            playList=musicServices!!.favMusicDa.getAllPlayListName() as ArrayList<String>
-
-         // Log.i("DB", playList.toString())
-        }
+//        GlobalScope.launch (Dispatchers.IO){
+//            playList=musicServices!!.favMusicDa.getAllPlayListName() as ArrayList<String>
+//            musicServices!!.favoritelistSe=musicServices!!.favMusicDa.readAllFavoriteSong() as ArrayList<Music>
+//         // Log.i("DB", playList.toString())
+//        }
 
 
 
