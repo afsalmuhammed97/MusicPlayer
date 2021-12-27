@@ -36,26 +36,29 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
      lateinit var mainBinding: ActivityMainBinding
     var musicServices:MusicServices?=null
       //private lateinit var searchAdapter: SearchAdapter
-     lateinit var  recentSong:Music
+   //  lateinit var  recentSong:Music
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
+
+//        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
+//        val jSonString = editor.getString("LastPlayedSong",null)
+//        val typeToken =object : TypeToken<Music>(){}.type
+//
+//        if (jSonString != null){
+//            recentSong = GsonBuilder().create().fromJson(jSonString,typeToken)
+//            Log.i("RecentSong:::",recentSong.title)
+//        }
+
         val intent = Intent(this, MusicServices::class.java)
         bindService(intent,this, BIND_AUTO_CREATE)
         startService(intent)
 
 
-        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
-        val jSonString = editor.getString("LastPlayedSong",null)
-        val typeToken =object : TypeToken<Music>(){}.type
 
-        if (jSonString != null){
-          recentSong = GsonBuilder().create().fromJson(jSonString,typeToken)
-            Log.i("RecentSong:::",recentSong.title)
-        }
 
 
 

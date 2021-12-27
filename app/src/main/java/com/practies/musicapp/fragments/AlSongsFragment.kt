@@ -53,7 +53,7 @@ lateinit var listAdapter:PlayListNameAdapter
 
            Log.i("Main","view model intialized")
          musiclist=getAllAudio()
-      //  Log.i("Sample",musiclist.toString())
+
         //to start service
         val intent =Intent(context, MusicServices::class.java)
 
@@ -69,7 +69,7 @@ lateinit var listAdapter:PlayListNameAdapter
 
 
 
-
+        Log.i("InAllSong","initialMethod called")
 
 
     }
@@ -86,7 +86,6 @@ lateinit var listAdapter:PlayListNameAdapter
         binding.musicRV.hasFixedSize()
         binding.musicRV.setItemViewCacheSize(13)
         binding.musicRV.adapter=  adapter
-
         return binding.root
     }
 
@@ -278,7 +277,7 @@ private fun  getAllAudio():ArrayList<Music>{
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
       val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-
+        musicServices!!.setInitialView(musiclist)
         Log.i("MSG","service connected")
 
              //to get allPlayList from db

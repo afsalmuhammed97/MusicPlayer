@@ -51,6 +51,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     val intervell = 1000
     var isPlaying = false
     var isPause=false
+    lateinit var recentSong:Music
     companion object{     var songCurrentTitle:String =""}
      lateinit var  favMusicDa:MusicDao
     lateinit var seekBar: SeekBar
@@ -103,6 +104,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
                    editor.putString("LastPlayedSong",jSonString,)
                    editor.apply()
 
+
+
+
                }
                else{ playPauseMusic(true) }
            }
@@ -140,25 +144,34 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     override fun onCreate() {
         super.onCreate()
-        //initMediaPlayer
-        initMediaPlayer()
+
+
+        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
+        val jSonString = editor.getString("LastPlayedSong",null)
+        val typeToken =object : TypeToken<Music>(){}.type
+
+        if (jSonString != null){
+            recentSong = GsonBuilder().create().fromJson(jSonString,typeToken)
+            Log.i("RecentSong:::",recentSong.title)
+        }
+
+
 
 
         favMusicDa=MusicDatabase.getDatabase(this).musicDao()
         GlobalScope.launch (Dispatchers.IO){
             playList =favMusicDa.getAllPlayListName() as ArrayList<String>
             Log.i("DB", playList.toString())
-
-
         }
+        // mediaPlayer = MediaPlayer()
+        seekBar = SeekBar(this)
+
+        initMediaPlayer()
 
 
 
 
 
-
-        mediaPlayer = MediaPlayer()
-      seekBar = SeekBar(this)
 
         //////to  access  the database//*******************************************************
 
@@ -219,7 +232,32 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
         }
 
     }
+    //to play from the lastPlayed song
+     fun setInitialView(list:ArrayList<Music>){
 
+            musiclistSe=list
+
+
+        try {
+            //   mediaPlayer=MediaPlayer()
+            EventBus.getDefault().post(recentSong)
+            mediaPlayer.reset()
+            mediaPlayer.setDataSource(recentSong.path)
+            Log.i("MusicInitial", " music list is ok")
+            mediaPlayer.prepare()
+
+
+//            lastplayedSong=musiclistSe[currentIndex]
+//            lastPlayedSongId=musiclistSe[currentIndex].id
+//            showNotification(R.drawable.pause_bt_circle)
+
+
+        } catch (e: Exception) {
+            return
+        }
+
+
+     }
 
 
 
@@ -227,7 +265,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
           musiclistSe=songList
           currentIndex=songPosition
 
-        //  initMediaPlayer()
+         // initMediaPlayer()
           playSong()
 
 
@@ -264,7 +302,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     fun initMediaPlayer() {
         Log.i("MSG", "init player invoked")
-        //  mediaPlayer= MediaPlayer()
+          mediaPlayer= MediaPlayer()
         mediaPlayer.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
         mediaPlayer.setOnCompletionListener(this)
