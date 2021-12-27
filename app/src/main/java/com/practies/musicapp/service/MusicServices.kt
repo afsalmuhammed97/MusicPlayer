@@ -22,6 +22,7 @@ import com.practies.musicapp.*
 
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.interfaces.OnSongComplete
+import com.practies.musicapp.model.LastPlayed
 import com.practies.musicapp.model.lastPlayedSongId
 import com.practies.musicapp.model.musicServices
 import com.practies.musicapp.musicDatabase.MusicDao
@@ -51,7 +52,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     val intervell = 1000
     var isPlaying = false
     var isPause=false
-    lateinit var recentSong:Music
+     var recentSong:Music?=null
+    lateinit var lastSong:LastPlayed
     companion object{     var songCurrentTitle:String =""}
      lateinit var  favMusicDa:MusicDao
     lateinit var seekBar: SeekBar
@@ -93,7 +95,15 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
                if (mediaPlayer.isPlaying){ playPauseMusic(false)
 
-                   val lastplayedSong=musiclistSe[currentIndex]
+                //   val lastplayedSong=  musiclistSe[currentIndex]
+
+                   val song =musiclistSe[currentIndex]
+
+                   val lastplayedSong: LastPlayed
+                   lastplayedSong= LastPlayed(timeStamp = song.timeStamp, id = song.id, title = song.title, artist = song.artist,
+                       album = song.album, duration = song.duration, path = song.path, artUri = song.artUri,
+                       play_list_name = song.play_list_name, songIndex = currentIndex)
+
 
                    Log.i("LastSong in serviese",lastplayedSong.toString())
                   // Toast.makeText(baseContext, lastplayedSong.title,Toast.LENGTH_LONG).show()
@@ -148,12 +158,15 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
         val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
         val jSonString = editor.getString("LastPlayedSong",null)
-        val typeToken =object : TypeToken<Music>(){}.type
+        val typeToken =object : TypeToken<LastPlayed>(){}.type
 
         if (jSonString != null){
-            recentSong = GsonBuilder().create().fromJson(jSonString,typeToken)
-            Log.i("RecentSong:::",recentSong.title)
+           // recentSong
+          lastSong  = GsonBuilder().create().fromJson(jSonString,typeToken)
+         //   Log.i("RecentSong:::",recentSong.title)
         }
+
+        currentIndex=lastSong.songIndex
 
 
 
@@ -234,15 +247,18 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
     //to play from the lastPlayed song
      fun setInitialView(list:ArrayList<Music>){
+        musiclistSe=list
+        recentSong=Music(timeStamp = lastSong.timeStamp, id = lastSong.id, title = lastSong.title, album = lastSong.album, artist = lastSong.artist
+        , duration = lastSong.duration, path = lastSong.path, artUri = lastSong.artUri, play_list_name = lastSong.play_list_name)
 
-            musiclistSe=list
+
 
 
         try {
             //   mediaPlayer=MediaPlayer()
             EventBus.getDefault().post(recentSong)
             mediaPlayer.reset()
-            mediaPlayer.setDataSource(recentSong.path)
+            mediaPlayer.setDataSource(recentSong!!.path)
             Log.i("MusicInitial", " music list is ok")
             mediaPlayer.prepare()
 

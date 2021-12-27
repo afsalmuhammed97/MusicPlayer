@@ -28,6 +28,7 @@ import androidx.viewpager.widget.ViewPager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.practies.musicapp.model.LastPlayed
 import org.greenrobot.eventbus.EventBus
 
 
@@ -207,7 +208,12 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
     override fun onDestroy() {
         super.onDestroy()
         Log.i("IMp","OnDistroy called")
-        val lastplayedSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
+        val song =musicServices!!.musiclistSe[musicServices!!.currentIndex]
+
+        val lastplayedSong:LastPlayed
+        lastplayedSong=LastPlayed(timeStamp = song.timeStamp, id = song.id, title = song.title, artist = song.artist,
+            album = song.album, duration = song.duration, path = song.path, artUri = song.artUri,
+            play_list_name = song.play_list_name, songIndex = musicServices!!.currentIndex)
 
         Log.i("LastSong in serviese",lastplayedSong.toString())
       //  Toast.makeText(baseContext, lastplayedSong.title,Toast.LENGTH_LONG).show()

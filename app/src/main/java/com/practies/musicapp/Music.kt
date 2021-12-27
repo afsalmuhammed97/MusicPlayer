@@ -3,6 +3,8 @@ package com.practies.musicapp
 import android.media.MediaMetadata
 import android.media.MediaMetadataRetriever
 import android.provider.MediaStore
+import androidx.room.ColumnInfo
+import java.io.Serializable
 import java.util.concurrent.TimeUnit
 
 //:Serializable
@@ -24,11 +26,6 @@ var playList=ArrayList<String>()
         retriever.setDataSource(path)
         return  retriever.embeddedPicture
     }
-
-
-//var musicServices:WeakReference<MusicServices>?=null
-
-    //(context)?.userDao()!!
 
 
 
