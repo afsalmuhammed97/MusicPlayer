@@ -27,6 +27,7 @@ import com.practies.musicapp.R
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.adapter.PlayListNameAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
+import com.practies.musicapp.model.mediaStatus
 import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
 import kotlinx.android.synthetic.*
@@ -277,7 +278,8 @@ private fun  getAllAudio():ArrayList<Music>{
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
       val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-        musicServices!!.setInitialView(musiclist)
+        if (! musicServices!!.mediaPlayer.isPlaying && ! mediaStatus){  musicServices!!.setInitialView(musiclist)  }
+
         Log.i("MSG","service connected")
 
              //to get allPlayList from db

@@ -14,4 +14,5 @@ data class LastPlayed(
     var play_list_name:String,
     val songIndex:Int): Serializable
 
+  var mediaStatus:Boolean=false
 

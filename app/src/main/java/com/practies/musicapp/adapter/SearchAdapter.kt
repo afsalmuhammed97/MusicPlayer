@@ -1,5 +1,6 @@
 package com.practies.musicapp.adapter
 
+import android.location.GnssAntennaInfo
 import android.view.LayoutInflater
 import android.view.TextureView
 import android.view.View
@@ -12,25 +13,40 @@ import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.R
 import com.practies.musicapp.model.Music
 
-class SearchAdapter (private val songList:ArrayList<Music>):RecyclerView.Adapter<SearchAdapter.MyHolder>(){
-    class MyHolder(itemView:View):RecyclerView.ViewHolder(itemView) {
+class SearchAdapter (private var songList:ArrayList<Music>):RecyclerView.Adapter<SearchAdapter.MyHolder>(){
+
+    private lateinit var Listener:MusicAdapter.onItemClickListener
+
+   fun setOnItemClickLisnter(listener:MusicAdapter.onItemClickListener){
+       Listener=listener
+   }
+
+
+
+    class MyHolder(itemView:View,listener: MusicAdapter.onItemClickListener):RecyclerView.ViewHolder(itemView) {
         val songName=itemView.findViewById<TextView>(R.id.songs_name)
         val songImage=itemView.findViewById<ImageView>(R.id.image)
+
+        init {
+            itemView.setOnClickListener {
+                listener.onItemClick(adapterPosition)
+            }
+        }
 
     }
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
-val itemView=LayoutInflater.from(parent.context).inflate(R.layout.search_list_view,parent,false)
-        return  MyHolder(itemView)
+val itemView=LayoutInflater.from(parent.context).inflate(R.layout.serch_item_view,parent,false)
+        return  MyHolder(itemView,Listener)
     }
 
     override fun onBindViewHolder(holder:MyHolder, position: Int) {
         val item= songList[position]
         holder.songName.text=item.title
-        Glide.with(holder.itemView.context).load(songList[position].artUri)
-            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
-            .into(holder.songImage)
+//        Glide.with(holder.itemView.context).load(songList[position].artUri)
+//            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
+//            .into(holder.songImage)
 
 
 

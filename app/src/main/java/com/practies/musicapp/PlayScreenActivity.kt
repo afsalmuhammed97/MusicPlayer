@@ -30,7 +30,7 @@ import org.greenrobot.eventbus.ThreadMode
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
 
     lateinit var seekBar: SeekBar
-
+      var active:Boolean=false
     companion object{
     var isFavorite:Boolean=false}
 
@@ -45,7 +45,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
         bindingPlayScreen= ActivityPlayScreen2Binding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)
         setContentView(bindingPlayScreen.root)
-
+           active=true
 
 
 
@@ -74,14 +74,14 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
     override fun onResume() {
 
         super.onResume()
-
+         active=true
       EventBus.getDefault().register(this)
 
     }
 
     override fun onPause() {
         super.onPause()
-
+         active=false
         EventBus.getDefault().unregister(this)
 
     }
@@ -219,13 +219,15 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
                       bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
                   }else{ bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border) }
 
-
-                Glide.with(this).load(music.artUri)
-                    .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
-                    .into(bindingPlayScreen.songImagePlay)
-                     bindingPlayScreen.songNamePlay.text= music.title
-                    bindingPlayScreen.songEnd.text=      formatDuration(music.duration)
-
+                     //try catch need for update playScreen for playList*****************************
+                     //***********************************************************************88
+                    if(active) {
+                        Glide.with(this).load(music.artUri)
+                            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
+                            .into(bindingPlayScreen.songImagePlay)
+                        bindingPlayScreen.songNamePlay.text = music.title
+                        bindingPlayScreen.songEnd.text = formatDuration(music.duration)
+                    }
 
             }
            //move this function to service
@@ -295,6 +297,11 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
             return
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        active=false
     }
 
 

@@ -8,12 +8,15 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.Menu
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.android.material.textfield.TextInputEditText
@@ -28,15 +31,22 @@ import androidx.viewpager.widget.ViewPager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import com.practies.musicapp.adapter.MusicAdapter
+import com.practies.musicapp.adapter.PlayListAdapter
+import com.practies.musicapp.adapter.SearchAdapter
 import com.practies.musicapp.model.LastPlayed
 import org.greenrobot.eventbus.EventBus
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(),ServiceConnection {
-
+    var fragment=AlSongsFragment()
+    val list= ArrayList<String>()
+    val searchList= arrayListOf<Music>()
      lateinit var mainBinding: ActivityMainBinding
     var musicServices:MusicServices?=null
-      //private lateinit var searchAdapter: SearchAdapter
+      private lateinit var searchAdapter: SearchAdapter
    //  lateinit var  recentSong:Music
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +70,14 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
 
 
+       list.add("song ")
+       list.add("song 2")
+       list.add("song 3")
+       list.add("song 4")
+       list.add("song 5")
+       list.add("song 6")
+       list.add("song 7")
+
 
 
 
@@ -81,7 +99,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
             }
         }.attach()
 
-
+       Log.i("testList",list.toString())
 
     }
 
@@ -111,13 +129,13 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-
+        //  musicServices!!.  initMediaPlayer()
      //   musicServices.setSongList()
 
         if (musicServices!!.musiclistSe.isNotEmpty()) updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
 
         mainBinding.searchBt.setOnClickListener {
-              showSearch()
+           //   showSearch()
           }
 
 
@@ -161,45 +179,68 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun showSearch() {
-        val searchView:SearchView
+      //  val searchView:SearchView
        val alertDialog=AlertDialog.Builder(this)
         val customAlert=LayoutInflater.from(this).inflate(R.layout.search_list_view,mainBinding.root,false)
         val searchText=customAlert.findViewById<TextInputEditText>(R.id.searchText)
-//        val searchRv= customAlert.findViewById<RecyclerView>
-        //val fragment:AlSongsFragment=
-
-            //fragment no null
-                  //  supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0")   as AlSongsFragment
+        val searchRv= customAlert.findViewById<RecyclerView>(R.id.searchListRv)
 
 
+//            val fragment:AlSongsFragment=
 
-//        searchAdapter= SearchAdapter()
-//        searchAdapter.notifyDataSetChanged()
-//        searchRv.layoutManager=LinearLayoutManager(this)
-//        searchRv.adapter=searchAdapter
+//            //fragment no null
+
+                          fragment =
+                              supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0") as AlSongsFragment
+
+           searchText.addTextChangedListener(object :TextWatcher{
+               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+               override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                 // Toast.makeText(this@MainActivity,s,Toast.LENGTH_SHORT).show()
+                 if(s != null){
+                     val userInput= s.toString().lowercase(Locale.getDefault())
+                     for (song  in fragment.musiclist){
+                         if (song.title.lowercase().contains(userInput)){
+                             searchList.add(song)
+
+                         }
+                     }
+                 }
+
+               }
+
+               override fun afterTextChanged(s: Editable?) {}
+
+           })
+
+
+        searchAdapter= SearchAdapter(searchList)
+        searchAdapter.notifyDataSetChanged()
+        searchRv.layoutManager= LinearLayoutManager(this)
+        searchRv.hasFixedSize()
+        searchRv.setItemViewCacheSize(8)
+        searchRv.adapter=searchAdapter
+
+        searchAdapter.setOnItemClickLisnter(object : MusicAdapter.onItemClickListener{
+            override fun onItemClick(position: Int) {
+                Toast.makeText(this@MainActivity,"${position} the song clicked",Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onOptionClick(position: Int) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+
+
     alertDialog.setView(customAlert)
      alertDialog.setNegativeButton("Cancel"){ dialogInterface:DialogInterface,i:Int ->
          dialogInterface.cancel()
      }
         alertDialog.create()
         alertDialog.show()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.search_view_menu,menu )
-           val searchView=menu?.findItem(R.id.search_view )?.actionView as SearchView
-           searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener{
-
-               override fun onQueryTextSubmit(query: String?): Boolean =true
-
-               override fun onQueryTextChange(newText: String?): Boolean {
-                Toast.makeText(this@MainActivity,newText.toString(),Toast.LENGTH_SHORT).show()
-                return  true
-
-               }
-
-           })
-        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onServiceDisconnected(name: ComponentName?) {
@@ -211,7 +252,8 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         val song =musicServices!!.musiclistSe[musicServices!!.currentIndex]
 
         val lastplayedSong:LastPlayed
-        lastplayedSong=LastPlayed(timeStamp = song.timeStamp, id = song.id, title = song.title, artist = song.artist,
+        lastplayedSong=
+            LastPlayed(timeStamp = song.timeStamp, id = song.id, title = song.title, artist = song.artist,
             album = song.album, duration = song.duration, path = song.path, artUri = song.artUri,
             play_list_name = song.play_list_name, songIndex = musicServices!!.currentIndex)
 

@@ -20,11 +20,8 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.practies.musicapp.*
 
-import com.practies.musicapp.model.Music
 import com.practies.musicapp.interfaces.OnSongComplete
-import com.practies.musicapp.model.LastPlayed
-import com.practies.musicapp.model.lastPlayedSongId
-import com.practies.musicapp.model.musicServices
+import com.practies.musicapp.model.*
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.notifications.ApplicationClass
@@ -154,6 +151,12 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
     override fun onCreate() {
         super.onCreate()
+        initMediaPlayer()
+
+        // mediaPlayer = MediaPlayer()
+        seekBar = SeekBar(this)
+
+
 
 
         val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
@@ -166,8 +169,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
          //   Log.i("RecentSong:::",recentSong.title)
         }
 
-        currentIndex=lastSong.songIndex
 
+
+           if (! mediaPlayer.isPlaying){    currentIndex=lastSong.songIndex  }
 
 
 
@@ -176,10 +180,6 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             playList =favMusicDa.getAllPlayListName() as ArrayList<String>
             Log.i("DB", playList.toString())
         }
-        // mediaPlayer = MediaPlayer()
-        seekBar = SeekBar(this)
-
-        initMediaPlayer()
 
 
 
@@ -247,6 +247,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
     //to play from the lastPlayed song
      fun setInitialView(list:ArrayList<Music>){
+        mediaStatus=true
         musiclistSe=list
         recentSong=Music(timeStamp = lastSong.timeStamp, id = lastSong.id, title = lastSong.title, album = lastSong.album, artist = lastSong.artist
         , duration = lastSong.duration, path = lastSong.path, artUri = lastSong.artUri, play_list_name = lastSong.play_list_name)
