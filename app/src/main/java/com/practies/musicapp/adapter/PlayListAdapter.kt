@@ -44,7 +44,7 @@ class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Ad
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListAdapter.PlayListHolder {
 
-        val itemview=LayoutInflater.from(parent.context).inflate(R.layout.play_list_view,parent,false)
+        val itemview=LayoutInflater.from(parent.context).inflate(R.layout.play_list_1,parent,false)
 
         return PlayListHolder(itemview,pListener)
     }

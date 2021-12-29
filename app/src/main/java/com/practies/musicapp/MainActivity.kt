@@ -70,13 +70,13 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
 
 
-       list.add("song ")
-       list.add("song 2")
-       list.add("song 3")
-       list.add("song 4")
-       list.add("song 5")
-       list.add("song 6")
-       list.add("song 7")
+//       list.add("song ")
+//       list.add("song 2")
+//       list.add("song 3")
+//       list.add("song 4")
+//       list.add("song 5")
+//       list.add("song 6")
+//       list.add("song 7")
 
 
 

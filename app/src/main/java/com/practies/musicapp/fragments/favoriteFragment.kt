@@ -44,23 +44,27 @@ var temp=ArrayList<Music>()
         super.onCreate(savedInstanceState)
         Log.i("Fav Frag", "favorite created")
 
-        val intent=Intent(context,MusicServices::class.java)
-        requireActivity().bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
-        requireActivity().startService(intent)
-            // favMusicDao=getDatabase(requireActivity().application).musicDao()
-
         favMusicDao= getDatabase(requireContext()).musicDao()
 
         GlobalScope.launch(Dispatchers.IO) {
-                       withContext(Dispatchers.IO){
-                           favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
-                          // favoriteList=favMusicDao.getPlayList(favorite) as ArrayList<Music>
-                           Log.i("Fav Frag", favoriteList.toString())
-                           }
+            withContext(Dispatchers.IO){
+                favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
+                // favoriteList=favMusicDao.getPlayList(favorite) as ArrayList<Music>
+                Log.i("Fav Frag", favoriteList.toString())
+            }
+        }
+
+        val intent=Intent(context,MusicServices::class.java)
+        requireActivity().bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
+        requireActivity().startService(intent)
+        // favMusicDao=getDatabase(requireActivity().application).musicDao()
 
 
 
-}}
+    }
+
+
+
 
 
 

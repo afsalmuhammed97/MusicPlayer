@@ -38,23 +38,6 @@
         app:layout_constraintStart_toEndOf="@+id/play_list_image"
         app:layout_constraintTop_toTopOf="parent" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/song_count"-->
-<!--        android:layout_width="159dp"-->
-<!--        android:layout_height="35dp"-->
-<!--        android:layout_marginStart="24dp"-->
-<!--        android:layout_marginTop="17dp"-->
-<!--        android:layout_marginEnd="87dp"-->
-<!--        android:singleLine="true"-->
-<!--        android:text="@string/songCount"-->
-<!--        android:textAlignment="gravity"-->
-<!--        android:textColor="@color/white"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toStartOf="@+id/delete_bt"-->
-<!--        app:layout_constraintHorizontal_bias="0.0"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/play_list_image"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/play_list_name"-->
-<!--        app:layout_constraintVertical_bias="0.0" />-->
 
     <ImageButton
         android:id="@+id/delete_bt"
