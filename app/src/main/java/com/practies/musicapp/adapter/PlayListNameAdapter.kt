@@ -26,7 +26,7 @@ class PlayListNameAdapter (private val playlistName:ArrayList<String>):RecyclerV
          val neme=view.findViewById<TextView>(R.id.list_name)
         init {
             view.setOnClickListener {
-                listener.onItemClick(adapterPosition)
+                listener.onItemClick(absoluteAdapterPosition)
             }
         }
     }

@@ -33,23 +33,23 @@ class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapte
 
         init {
             itemView.setOnClickListener {
-                listener.onOptionClick(adapterPosition)
+                listener.onOptionClick(absoluteAdapterPosition)
             }
             optionMenu.setOnClickListener {
-                listener.onItemClick(adapterPosition)
+                listener.onItemClick(absoluteAdapterPosition)
             }
         }
 
     }
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongListAdapter.SongHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):SongHolder {
        val view=LayoutInflater.from(parent.context).inflate(R.layout.music_view,parent,false)
            return SongHolder(view,sListenr)//sListenr
 
     }
 
-    override fun onBindViewHolder(holder: SongListAdapter.SongHolder, position: Int) {
+    override fun onBindViewHolder(holder:SongHolder, position: Int) {
        val item=songList[position]
         holder.songNeme.text=  item.title
         holder.albumName.text= item.album

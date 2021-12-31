@@ -20,7 +20,7 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
    // lateinit var  mListener:onItemClickListener
     interface onItemClickListener{
         fun onItemClick(position: Int)
-        fun onOptionClick(position: Int)
+        fun onOptionClick(position: Int, itemview: View)
     }
 
    fun setOnItemClickListener(listener:onItemClickListener){
@@ -38,10 +38,10 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
 
            init {
               itemView.setOnClickListener {
-                  listener.onItemClick(adapterPosition)
+                  listener.onItemClick(absoluteAdapterPosition)
               }
                optionMenu.setOnClickListener{
-                   listener.onOptionClick(adapterPosition)            //onItemClick(position)
+                   listener.onOptionClick(absoluteAdapterPosition,itemView)            //onItemClick(position)
                }
 
 
@@ -54,7 +54,7 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
 
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MusicAdapter.MyHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):MyHolder {
 
         val itemview=LayoutInflater.from(parent.context).inflate(R.layout.music_view,parent,false)
 

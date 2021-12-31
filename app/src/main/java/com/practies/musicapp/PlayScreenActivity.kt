@@ -35,7 +35,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
     var isFavorite:Boolean=false}
 
         var musicServices:MusicServices?=null
-    var  favoriteListPA= arrayListOf<Music>()
+    //var  favoriteListPA= arrayListOf<Music>()
 
          lateinit var seekbarRunnable: Runnable
 
@@ -51,7 +51,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
 
         val intent =Intent(this, MusicServices::class.java)
-       bindService(intent,this, AppCompatActivity.BIND_AUTO_CREATE)
+       bindService(intent,this, BIND_AUTO_CREATE)
        startService(intent)
 
 
@@ -258,7 +258,6 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
    @DelicateCoroutinesApi
    private fun currentSongAddToFavoriteList(){
 
-         var mPlaylist=ArrayList<Music>()
 
        val curretSong=musicServices!!.musiclistSe[musicServices!!.currentIndex]
        curretSong.play_list_name= favorite
@@ -271,7 +270,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
          //add to data base
        GlobalScope.launch (Dispatchers.IO){   musicServices!!.favMusicDa.addSong(favoriteMusic)         //.addSong(favoriteMusic)
            Log.i("Favourites", "Song added")
-          // mPlaylist=musicServices!!.favMusicDa.readAllSongs()  as ArrayList<Music>
+
 
           // Log.i("IMPo",mPlaylist.toString())
        }

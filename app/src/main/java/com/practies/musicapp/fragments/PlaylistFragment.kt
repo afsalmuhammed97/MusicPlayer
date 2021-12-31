@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practies.musicapp.R
 import com.practies.musicapp.SongListActivity2
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.adapter.PlayListAdapter
@@ -21,10 +20,7 @@ import com.practies.musicapp.model.Music
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.playList
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 class PlaylistFragment : Fragment() {
@@ -34,7 +30,7 @@ private lateinit var adapter:PlayListAdapter
     var songList=ArrayList<Music>()
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
        binding=FragmentPlaylistBinding.inflate(inflater,container,false)
 
@@ -57,8 +53,10 @@ private lateinit var adapter:PlayListAdapter
         adapter.notifyDataSetChanged()
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         adapter.setOnItemClickListner(object : MusicAdapter.onItemClickListener {
             override fun onItemClick(position: Int) {
                 val name= playList[position]
@@ -70,7 +68,7 @@ private lateinit var adapter:PlayListAdapter
 
             }
 
-            override fun onOptionClick(position: Int) {
+            override fun onOptionClick(position: Int, itemview: View) {
                      deletePlayList(position)
             }
 
@@ -78,7 +76,8 @@ private lateinit var adapter:PlayListAdapter
 
     }
         //to delete the selected list
-    fun deletePlayList(position:Int){
+
+        fun deletePlayList(position:Int){
             val alertDialog=AlertDialog.Builder(requireContext())
             alertDialog.setTitle("Delete PlayList")
             alertDialog.setMessage("Are you shure ,want to delete")
@@ -105,7 +104,8 @@ private lateinit var adapter:PlayListAdapter
     }
 
         //to get the selected song list
-    fun loadSongList(listName:String){
+
+        fun loadSongList(listName:String){
       //  var List=ArrayList<Music>()
 
         GlobalScope.launch (Dispatchers.IO){
@@ -132,13 +132,6 @@ private lateinit var adapter:PlayListAdapter
 
     }
 
-
-
-//    //    private lateinit var musicAdapter: MusicAdapter
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
 
 

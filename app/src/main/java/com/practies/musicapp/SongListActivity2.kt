@@ -2,17 +2,15 @@ package com.practies.musicapp
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.*
-import androidx.appcompat.app.AppCompatActivity
+import android.content.ComponentName
+import android.content.DialogInterface
+import android.content.Intent
+import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
-import android.view.MenuItem
-import android.view.View
-import android.widget.PopupMenu
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practies.musicapp.adapter.PlayListAdapter
 import com.practies.musicapp.adapter.SongListAdapter
 import com.practies.musicapp.databinding.ActivitySongList2Binding
 import com.practies.musicapp.model.Music
@@ -143,8 +141,9 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
 
               return removed
           }
+    @SuppressLint("NotifyDataSetChanged")
     fun songRemoveFromView(position: Int){
-        var element=songList[position]
+        val element=songList[position]
        // Toast.makeText(this,"song deleted ${element}",Toast.LENGTH_SHORT).show()
         songList.remove(element)
         songAdapter.notifyDataSetChanged()
@@ -157,11 +156,11 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
         binding.playPauseMiniBt.setOnClickListener {  if (musicServices!!.mediaPlayer.isPlaying){
 
                 musicServices!!.playPauseMusic(false)
-                binding.playPauseMiniBt.setImageResource(R.drawable.play_bt_circle)
+                binding.playPauseMiniBt.setImageResource(R.drawable.play_circle_mini)
 
             }else{
                 musicServices!!.playPauseMusic(true)
-                binding.playPauseMiniBt.setImageResource(R.drawable.pause_bt_circle)
+                binding.playPauseMiniBt.setImageResource(R.drawable.pause_circle_mini)
 
             } }
             binding.nextMiniBt.setOnClickListener {             musicServices!!.nextPreviousSong(true)

@@ -1,6 +1,6 @@
 package com.practies.musicapp.service
 
-import android.app.AlertDialog
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.Service
 import android.content.*
@@ -13,13 +13,10 @@ import android.os.PowerManager
 import android.support.v4.media.session.MediaSessionCompat
 import android.util.Log
 import android.widget.SeekBar
-import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.practies.musicapp.*
-
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.*
 import com.practies.musicapp.musicDatabase.MusicDao
@@ -28,9 +25,7 @@ import com.practies.musicapp.notifications.ApplicationClass
 import com.practies.musicapp.notifications.NotificationReceiver
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
-import java.lang.Runnable
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
 
@@ -48,19 +43,17 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     var currentIndex = 0
     val intervell = 1000
     var isPlaying = false
-    var isPause=false
      var recentSong:Music?=null
     lateinit var lastSong:LastPlayed
-    companion object{     var songCurrentTitle:String =""}
      lateinit var  favMusicDa:MusicDao
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
    lateinit  var mediaPlayer: MediaPlayer
     lateinit var mediaSession: MediaSessionCompat
-    lateinit var receiver: NotificationReceiver
+   // lateinit var receiver: NotificationReceiver
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()
-    var tempListSe= arrayListOf<Music>()
+
     var favoritelistSe= arrayListOf<Music>()
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -221,30 +214,30 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 ///////////To  remove or add the favorite song
 
-    private fun favoriteSongAddOrRemove(){
-        var songExist:Boolean
-        val currentSong=musiclistSe[currentIndex]
-               GlobalScope.launch (Dispatchers.IO){   songExist= favMusicDa.checkSongExist(currentSong.id, favorite)
-
-                   withContext(Dispatchers.IO){
-                        if (!songExist){
-                            currentSong.play_list_name= favorite
-                            currentSong.timeStamp=System.currentTimeMillis().toString()+currentSong.id
-                            val  favoriteMusic= Music(
-                                currentSong.timeStamp,
-                                currentSong.id,currentSong.title,currentSong.album,currentSong.artist,
-                                currentSong.duration,currentSong.path,currentSong.artUri,currentSong.play_list_name,
-                            )
-                            favMusicDa.addSong(favoriteMusic)
-                            Log.i("Favourite", "Song added")
-                        }else{
-                            favMusicDa.deleteSong(currentSong)
-                            Log.i("Favorite","song removed from fav")
-                   }
-               }
-        }
-
-    }
+//    private fun favoriteSongAddOrRemove(){
+//        var songExist:Boolean
+//        val currentSong=musiclistSe[currentIndex]
+//               GlobalScope.launch (Dispatchers.IO){   songExist= favMusicDa.checkSongExist(currentSong.id, favorite)
+//
+//                   withContext(Dispatchers.IO){
+//                        if (!songExist){
+//                            currentSong.play_list_name= favorite
+//                            currentSong.timeStamp=System.currentTimeMillis().toString()+currentSong.id
+//                            val  favoriteMusic= Music(
+//                                currentSong.timeStamp,
+//                                currentSong.id,currentSong.title,currentSong.album,currentSong.artist,
+//                                currentSong.duration,currentSong.path,currentSong.artUri,currentSong.play_list_name,
+//                            )
+//                            favMusicDa.addSong(favoriteMusic)
+//                            Log.i("Favourite", "Song added")
+//                        }else{
+//                            favMusicDa.deleteSong(currentSong)
+//                            Log.i("Favorite","song removed from fav")
+//                   }
+//               }
+//        }
+//
+//    }
     //to play from the lastPlayed song
      fun setInitialView(list:ArrayList<Music>){
         mediaStatus=true
@@ -264,9 +257,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.prepare()
 
 
-//            lastplayedSong=musiclistSe[currentIndex]
-//            lastPlayedSongId=musiclistSe[currentIndex].id
-//            showNotification(R.drawable.pause_bt_circle)
+
 
 
         } catch (e: Exception) {
@@ -394,6 +385,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     }
 
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun showNotification(playPause:Int){
 
         val prevIntent=Intent(baseContext,NotificationReceiver::class.java).setAction(ApplicationClass.PREVIOUS)

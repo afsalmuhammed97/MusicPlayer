@@ -85,32 +85,36 @@
                 <ImageButton
                     android:id="@+id/prev_mini_bt"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:layout_marginHorizontal="4dp"
                     android:background="@android:color/transparent"
-                    android:layout_marginTop="4dp"
+
                     android:contentDescription="@string/preve_bt"
-                    android:src="@drawable/previous_button" />
+                    android:src="@drawable/prevous_bt_mini" />
 
                 <ImageButton
                     android:id="@+id/play_pause_mini_bt"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="4dp"
+
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/puase_bt"
-                    android:src="@drawable/pause_bt_circle"
+                    android:src="@drawable/play_circle_mini"
                     tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
                 <ImageButton
                     android:id="@+id/next_mini_bt"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="4dp"
+
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/next_bt"
-                    android:src="@drawable/next_button"
+                    android:src="@drawable/nex_bt_mini"
                     tools:ignore="SpeakableTextPresentCheck" />
 
             </LinearLayout>

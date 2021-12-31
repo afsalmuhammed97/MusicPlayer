@@ -2,7 +2,6 @@ package com.practies.musicapp.fragments
 
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
@@ -30,24 +29,28 @@ import com.practies.musicapp.databinding.FragmentAlSongsBinding
 import com.practies.musicapp.model.mediaStatus
 import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
-import kotlinx.android.synthetic.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 
-//8888888888888888888888888888888888888888888888888888888888888888888888888888888888888
+
+
+
+
+
 
 class AlSongsFragment (): Fragment(),ServiceConnection{
-       var  musicServices: MusicServices?=null
+    var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
-
-      var existSong:Boolean=false
-
     private  lateinit var adapter:MusicAdapter
-lateinit var listAdapter:PlayListNameAdapter
-      var  musiclist= arrayListOf<Music>()
-     var play=ArrayList<Music>()
+   lateinit var listAdapter:PlayListNameAdapter
+   var  musiclist= arrayListOf<Music>()
+    var play=ArrayList<Music>()
+    var existSong:Boolean=false
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -106,15 +109,16 @@ lateinit var listAdapter:PlayListNameAdapter
 
             }
 
-            override fun onOptionClick(position: Int) {
-                       //  popupMenus(position)
-                customAlertDialog(position)
-                      // createDialog()
+            override fun onOptionClick(position: Int, itemview: View) {
+
+               customAlertDialog(position)
+                    //  createDialog()
             }
 
         })
 
     }
+
 
         fun createDialog() {
             val alertDialogBuilder = AlertDialog.Builder(requireContext())
@@ -148,6 +152,7 @@ fun customAlertDialog(position: Int) {
     val listRecycle = customDialog.findViewById<RecyclerView>(R.id.playListRv)
     val builder = MaterialAlertDialogBuilder(requireContext())
     builder.setView(customDialog  )
+         val finel=  builder.show()
 
     listAdapter = PlayListNameAdapter(playList)
     listAdapter.notifyDataSetChanged()
@@ -155,10 +160,9 @@ fun customAlertDialog(position: Int) {
     listRecycle.adapter = listAdapter
     createBt.setOnClickListener {
         createDialog()
-        // Toast.makeText(context,"crete bt clicked ",Toast.LENGTH_SHORT).show()
-
+        // to create new play list
     }
-
+    var songExist=false
 
     listAdapter.setOnItemClickListener(object : MusicAdapter.onItemClickListener {
 
@@ -166,62 +170,55 @@ fun customAlertDialog(position: Int) {
         override fun onItemClick(position: Int) {
             //*****************************************
             val tempPlayListName= playList[position]
+            Log.i("DB Check list Name",tempPlayListName)
             val song:Music
             song=musiclist[songPostion]
+            Log.i("D check selected song",song.toString())
 
-            if ( ! checkSongInPlayList(song,tempPlayListName)){
 
                 song.timeStamp=System.currentTimeMillis().toString()+song.id
                 song.play_list_name= tempPlayListName
                 GlobalScope.launch (Dispatchers.IO){
-                    musicServices!!.favMusicDa.addSong(song)
-                    play=musicServices!!.favMusicDa.getPlayList(tempPlayListName) as ArrayList<Music>
 
-                    Log.i("PLY List",play.toString())
-                }
-                Toast.makeText(context,"One song added to Playlist ",Toast.LENGTH_SHORT).show()
-            }else{
-                Toast.makeText(context,"This song already exist ",Toast.LENGTH_SHORT).show()
+                        songExist =
+                            musicServices!!.favMusicDa.checkSongExist(song.id, tempPlayListName)
+                        Log.i("Song Exist", if (songExist) "true" else "false")
+
+                        if (!songExist) {
+                            musicServices!!.favMusicDa.addSong(song)
+
+                            play =
+                                musicServices!!.favMusicDa.getPlayList(tempPlayListName) as ArrayList<Music>
+
+                        }
+
+
+                        //
+                  finel.dismiss()
+
+                        //   Log.i("PLY List",play.toString())
+
             }
+            if ( !songExist){ Toast.makeText(context,"One song added to playLis ",Toast.LENGTH_SHORT).show()   }
 
         }
 
-        override fun onOptionClick(position: Int) {
+
+
+        override fun onOptionClick(position: Int, itemview: View) {
             TODO("Not yet implemented")
         }
 
     })
 
 
-      builder.setPositiveButton("Ok") { dialog, _ ->
-           dialog.dismiss()
-       }
-     builder.setNegativeButton("Cancel") { dialog, _ ->
-           dialog.cancel()
-       }
-           builder.show()
-    }
 
-           //  to show the create playlist and ,  playlist names in a listView
 
-fun checkSongInPlayList(song:Music,playListName:String):Boolean{
-    existSong=false
-    var customPlaylist=ArrayList<Music>()
-    GlobalScope.launch (Dispatchers.IO) {
-        customPlaylist = musicServices!!.favMusicDa.getPlayList(playListName) as ArrayList<Music>
+
+
 
     }
-     customPlaylist.forEachIndexed{ _,mSong->
-         if (song.id== mSong.id){
-             existSong=true
-             return true
-         }
 
-     }
-
-        return false
-
-}
 
 
 
@@ -282,12 +279,7 @@ private fun  getAllAudio():ArrayList<Music>{
 
         Log.i("MSG","service connected")
 
-             //to get allPlayList from db
-//        GlobalScope.launch (Dispatchers.IO){
-//            playList=musicServices!!.favMusicDa.getAllPlayListName() as ArrayList<String>
-//            musicServices!!.favoritelistSe=musicServices!!.favMusicDa.readAllFavoriteSong() as ArrayList<Music>
-//         // Log.i("DB", playList.toString())
-//        }
+
 
 
 

@@ -18,9 +18,9 @@ class FavoriteAdapter(private val favoriteList:ArrayList<Music>):RecyclerView.Ad
 
   interface onItemClickListner{
        fun onItemClick(position: Int)
-      fun onOptionClick(position: Int)
+      fun onOptionClick(position: Int,view: View)
    }
-    fun setOnItemClickListner(listener:onItemClickListner){
+    fun setOnItemClickListner(listener:onItemClickListner,view: View){   //,view: View
         fListener=listener
     }
   //  ,listener:onItemClickListner itemView:View
@@ -30,11 +30,11 @@ class FavoriteAdapter(private val favoriteList:ArrayList<Music>):RecyclerView.Ad
         val options=itemView.findViewById<ImageButton>(R.id.option_icon_fav)
         init {
             itemView.setOnClickListener {
-             listener.onItemClick(adapterPosition)
+             listener.onItemClick(absoluteAdapterPosition)
             }
 
             options.setOnClickListener{
-                listener.onOptionClick(adapterPosition)
+                listener.onOptionClick(absoluteAdapterPosition,itemView)
             }
         }
 

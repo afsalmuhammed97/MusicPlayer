@@ -12,10 +12,10 @@ interface MusicDao {
 
     @Query("SELECT * FROM allMusics WHERE play_list_name = 'favorites'")
    fun readAllFavoriteSong():List<Music>
-
+    // to get the names of play list
      @Query("SELECT DISTINCT play_list_name FROM allMusics ")
      fun getAllPlayListName():List<String>
-// to get the names of play list
+//
      @Query("SELECT * FROM allMusics WHERE play_list_name LIKE :playName")
      fun getPlayList(playName:String):List<Music>
 

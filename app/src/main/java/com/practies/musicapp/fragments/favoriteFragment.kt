@@ -35,8 +35,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
     lateinit var binding: FragmentFavoriteBinding
     lateinit var favAdapter:FavoriteAdapter
     var  favoriteList= arrayListOf<Music>()
-    var isShuffle:Boolean=false
-var temp=ArrayList<Music>()
+
 
 
 
@@ -104,30 +103,29 @@ var temp=ArrayList<Music>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         favAdapter.setOnItemClickListner(object :FavoriteAdapter.onItemClickListner{
             override fun onItemClick(position: Int) { musicServices!!.setSongList(favoriteList,position)
 
              // Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
             }
 
-            override fun onOptionClick(position: Int) {
-                // to remove song from favorite list
-                popupMenu(position)
+            override fun onOptionClick(position: Int, view: View) {
+                popupMenu(position,view)
             }
-        })
-//        binding.shuffleBt.setOnClickListener{
-//
-//           //musicServices!!.musiclistSe.shuffle()
-//                favoriteList.shuffle()
-//               // isShuffle=true
-//                Toast.makeText(context,"shuffle on",Toast.LENGTH_SHORT).show()
-//        }
+
+
+               // to remove song from favorite list
+
+
+        },view)
+
 
     }
 
-    private fun popupMenu(position:Int){
+    private fun popupMenu(position:Int,view: View){
 
-        val popupMenu= PopupMenu(context,view)
+        val popupMenu= PopupMenu(requireContext(),view)
         popupMenu.inflate(R.menu.fav_option_menu)
         popupMenu.setOnMenuItemClickListener (object :PopupMenu.OnMenuItemClickListener{
             @SuppressLint("NotifyDataSetChanged")

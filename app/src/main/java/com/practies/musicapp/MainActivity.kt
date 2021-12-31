@@ -8,45 +8,28 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.tabs.TabLayoutMediator
-import com.google.android.material.textfield.TextInputEditText
+import com.google.gson.GsonBuilder
 import com.practies.musicapp.adapter.ViewPageAdapter
 import com.practies.musicapp.databinding.ActivityMainBinding
-import com.practies.musicapp.fragments.AlSongsFragment
+import com.practies.musicapp.model.LastPlayed
 import com.practies.musicapp.model.Music
 import com.practies.musicapp.service.MusicServices
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import androidx.viewpager.widget.ViewPager
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import com.practies.musicapp.adapter.MusicAdapter
-import com.practies.musicapp.adapter.PlayListAdapter
-import com.practies.musicapp.adapter.SearchAdapter
-import com.practies.musicapp.model.LastPlayed
-import org.greenrobot.eventbus.EventBus
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity(),ServiceConnection {
-    var fragment=AlSongsFragment()
     val list= ArrayList<String>()
-    val searchList= arrayListOf<Music>()
+    //val searchList= arrayListOf<Music>()
      lateinit var mainBinding: ActivityMainBinding
     var musicServices:MusicServices?=null
-      private lateinit var searchAdapter: SearchAdapter
+    //  private lateinit var searchAdapter: SearchAdapter
    //  lateinit var  recentSong:Music
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,28 +38,12 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         setContentView(mainBinding.root)
 
 
-//        val editor=getSharedPreferences("RESENT_SONG", MODE_PRIVATE)
-//        val jSonString = editor.getString("LastPlayedSong",null)
-//        val typeToken =object : TypeToken<Music>(){}.type
-//
-//        if (jSonString != null){
-//            recentSong = GsonBuilder().create().fromJson(jSonString,typeToken)
-//            Log.i("RecentSong:::",recentSong.title)
-//        }
+
 
         val intent = Intent(this, MusicServices::class.java)
         bindService(intent,this, BIND_AUTO_CREATE)
         startService(intent)
 
-
-
-//       list.add("song ")
-//       list.add("song 2")
-//       list.add("song 3")
-//       list.add("song 4")
-//       list.add("song 5")
-//       list.add("song 6")
-//       list.add("song 7")
 
 
 
@@ -106,8 +73,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
     @Subscribe(threadMode=  ThreadMode.MAIN)
     fun updateUi( music: Music){
         setMiniPlayerScreen(music)
-       //nBinding.songNameMini.text=musicServices //  mai!!.musiclistSe[musicServices!!.currentIndex].title
-        Log.i("MSG" ,"event bus called")
+              Log.i("MSG" ,"event bus called")
 
     }
 
@@ -135,7 +101,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         if (musicServices!!.musiclistSe.isNotEmpty()) updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
 
         mainBinding.searchBt.setOnClickListener {
-           //   showSearch()
+              showSearch()
           }
 
 
@@ -147,11 +113,11 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
             if (musicServices!!.mediaPlayer.isPlaying){
 
                 musicServices!!.playPauseMusic(false)
-                mainBinding.playPauseMiniBt.setImageResource(R.drawable.play_bt_circle)
+                mainBinding.playPauseMiniBt.setImageResource(R.drawable.play_circle_mini)
 
             }else{
                 musicServices!!.playPauseMusic(true)
-                mainBinding.playPauseMiniBt.setImageResource(R.drawable.pause_bt_circle)
+                mainBinding.playPauseMiniBt.setImageResource(R.drawable.pause_circle_mini)
 
             }
         }
@@ -182,56 +148,56 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
       //  val searchView:SearchView
        val alertDialog=AlertDialog.Builder(this)
         val customAlert=LayoutInflater.from(this).inflate(R.layout.search_list_view,mainBinding.root,false)
-        val searchText=customAlert.findViewById<TextInputEditText>(R.id.searchText)
-        val searchRv= customAlert.findViewById<RecyclerView>(R.id.searchListRv)
+        //val searchText=customAlert.findViewById<TextInputEditText>(R.id.searchText)
+       // val searchRv= customAlert.findViewById<RecyclerView>(R.id.searchListRv)
 
 
 //            val fragment:AlSongsFragment=
 
 //            //fragment no null
+//
+//                          fragment =
+//                              supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0") as AlSongsFragment
+//
+//           searchText.addTextChangedListener(object :TextWatcher{
+//               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+//
+//               override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+//                 // Toast.makeText(this@MainActivity,s,Toast.LENGTH_SHORT).show()
+//                 if(s != null){
+//                     val userInput= s.toString().lowercase(Locale.getDefault())
+//                     for (song  in fragment.musiclist){
+//                         if (song.title.lowercase().contains(userInput)){
+//                             searchList.add(song)
+//
+//                         }
+//                     }
+//                 }
+//
+//               }
+//
+//               override fun afterTextChanged(s: Editable?) {}
+//
+//           })
 
-                          fragment =
-                              supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0") as AlSongsFragment
 
-           searchText.addTextChangedListener(object :TextWatcher{
-               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-               override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                 // Toast.makeText(this@MainActivity,s,Toast.LENGTH_SHORT).show()
-                 if(s != null){
-                     val userInput= s.toString().lowercase(Locale.getDefault())
-                     for (song  in fragment.musiclist){
-                         if (song.title.lowercase().contains(userInput)){
-                             searchList.add(song)
-
-                         }
-                     }
-                 }
-
-               }
-
-               override fun afterTextChanged(s: Editable?) {}
-
-           })
-
-
-        searchAdapter= SearchAdapter(searchList)
-        searchAdapter.notifyDataSetChanged()
-        searchRv.layoutManager= LinearLayoutManager(this)
-        searchRv.hasFixedSize()
-        searchRv.setItemViewCacheSize(8)
-        searchRv.adapter=searchAdapter
-
-        searchAdapter.setOnItemClickLisnter(object : MusicAdapter.onItemClickListener{
-            override fun onItemClick(position: Int) {
-                Toast.makeText(this@MainActivity,"${position} the song clicked",Toast.LENGTH_SHORT).show()
-            }
-
-            override fun onOptionClick(position: Int) {
-                TODO("Not yet implemented")
-            }
-
-        })
+//        searchAdapter= SearchAdapter(searchList)
+//        searchAdapter.notifyDataSetChanged()
+//        searchRv.layoutManager= LinearLayoutManager(this)
+//        searchRv.hasFixedSize()
+//        searchRv.setItemViewCacheSize(8)
+//        searchRv.adapter=searchAdapter
+//
+//        searchAdapter.setOnItemClickLisnter(object : MusicAdapter.onItemClickListener{
+//            override fun onItemClick(position: Int) {
+//                Toast.makeText(this@MainActivity,"${position} the song clicked",Toast.LENGTH_SHORT).show()
+//            }
+//
+//            override fun onOptionClick(position: Int, itemview: View) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
 
 
 
