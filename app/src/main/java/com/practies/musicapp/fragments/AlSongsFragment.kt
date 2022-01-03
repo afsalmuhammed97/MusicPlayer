@@ -20,25 +20,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
-import com.practies.musicapp.model.Music
-import com.practies.musicapp.PlayScreenActivity
 import com.practies.musicapp.R
+import com.practies.musicapp.activities.PlayScreenActivity
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.adapter.PlayListNameAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
-import com.practies.musicapp.model.mediaStatus
+import com.practies.musicapp.model.model2.Music
+import com.practies.musicapp.model.model2.mediaStatus
 import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.io.File
-
-
-
-
-
 
 
 class AlSongsFragment (): Fragment(),ServiceConnection{
@@ -103,7 +97,7 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
 
 
                 musicServices!!.setSongList(musiclist,position)
-                val intent=Intent(context,PlayScreenActivity::class.java)
+                val intent=Intent(context, PlayScreenActivity::class.java)
                 intent.putExtra("music",musiclist[position])
                 startActivity(intent)
 
@@ -275,7 +269,7 @@ private fun  getAllAudio():ArrayList<Music>{
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
       val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-        if (! musicServices!!.mediaPlayer.isPlaying && ! mediaStatus){  musicServices!!.setInitialView(musiclist)  }
+        if (! musicServices!!.mediaPlayer.isPlaying && ! mediaStatus && musicServices!!.lastSong !=null){  musicServices!!.setInitialView(musiclist)  }
 
         Log.i("MSG","service connected")
 

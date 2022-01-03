@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken
 import com.practies.musicapp.*
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.*
+import com.practies.musicapp.model.model2.*
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.notifications.ApplicationClass
@@ -44,7 +45,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
     val intervell = 1000
     var isPlaying = false
      var recentSong:Music?=null
-    lateinit var lastSong:LastPlayed
+    var lastSong:LastPlayed?=null
      lateinit var  favMusicDa:MusicDao
     lateinit var seekBar: SeekBar
     lateinit var onSongComplete: OnSongComplete
@@ -79,7 +80,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
           when(intent?.action){
 
-           ApplicationClass.PREVIOUS->{    nextPreviousSong(false) }
+           ApplicationClass.PREVIOUS->{    nextPreviousSong(false)
+           }
 
            ApplicationClass.PLAY ->{           //play or pause song
 
@@ -164,7 +166,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
 
-           if (! mediaPlayer.isPlaying){    currentIndex=lastSong.songIndex  }
+           if (! mediaPlayer.isPlaying&&lastSong !=null){    currentIndex=lastSong!!.songIndex  }
 
 
 
@@ -242,8 +244,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
      fun setInitialView(list:ArrayList<Music>){
         mediaStatus=true
         musiclistSe=list
-        recentSong=Music(timeStamp = lastSong.timeStamp, id = lastSong.id, title = lastSong.title, album = lastSong.album, artist = lastSong.artist
-        , duration = lastSong.duration, path = lastSong.path, artUri = lastSong.artUri, play_list_name = lastSong.play_list_name)
+        recentSong=Music(timeStamp = lastSong!!.timeStamp, id = lastSong!!.id, title = lastSong!!.title, album = lastSong!!.album, artist = lastSong!!.artist
+        , duration = lastSong!!.duration, path = lastSong!!.path, artUri = lastSong!!.artUri, play_list_name = lastSong!!.play_list_name)
 
 
 
@@ -421,7 +423,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 
 
             .addAction(playPause,"PlayPause",playPendingIntent)
-            .addAction(R.drawable.next_button,"Next",nextPendingIntent)
+            .addAction(R.drawable.next_button, "Next",nextPendingIntent)
             .addAction(R.drawable.exit_icon,"Exit",exitPendingIntent)
             .build()
         startForeground(11,notification)

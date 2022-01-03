@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/back_ground"
     android:id="@+id/play_layout"
-    tools:context=".PlayScreenActivity">
+    tools:context=".activities.PlayScreenActivity">
 
     <!--        app:shapeAppearanceOverlay="@style/Rounded_corner" />-->
 <!--    android:src="@drawable/headphone"-->

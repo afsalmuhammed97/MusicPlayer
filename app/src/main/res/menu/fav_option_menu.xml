@@ -5,8 +5,5 @@
         android:title="@string/removeFromFavorite"
         />
 
-    <item
-    android:id="@+id/cancel_action"
-    android:title="@string/cancel"/>
 
 </menu>

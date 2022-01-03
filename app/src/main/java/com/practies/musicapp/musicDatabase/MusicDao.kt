@@ -1,7 +1,8 @@
 package com.practies.musicapp.musicDatabase
 
 import androidx.room.*
-import com.practies.musicapp.model.Music
+
+import com.practies.musicapp.model.model2.Music
 
 
 @Dao

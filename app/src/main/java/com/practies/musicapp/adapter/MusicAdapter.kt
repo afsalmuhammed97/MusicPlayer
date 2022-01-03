@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
+import com.practies.musicapp.model.model2.Music
 
 
 //private val context: Context    , private val intemOnclicked:(Music) ->Unit  ,var onSongSelect: onSongSelect

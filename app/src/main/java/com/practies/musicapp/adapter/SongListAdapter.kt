@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.R
-import com.practies.musicapp.model.Music
+import com.practies.musicapp.model.model2.Music
 
 class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapter<SongListAdapter.SongHolder>() {
        private lateinit var sListenr:onItemClickListener

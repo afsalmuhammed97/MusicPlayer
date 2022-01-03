@@ -1,6 +1,6 @@
 package com.practies.musicapp
 
-import com.practies.musicapp.model.Music
+import com.practies.musicapp.model.model2.Music
 import kotlin.properties.Delegates
 
 data class PlayList (

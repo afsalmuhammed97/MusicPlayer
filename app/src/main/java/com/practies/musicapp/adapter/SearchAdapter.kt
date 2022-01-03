@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.practies.musicapp.R
-import com.practies.musicapp.model.Music
+import com.practies.musicapp.model.model2.Music
 
 class SearchAdapter (private var songList:ArrayList<Music>):RecyclerView.Adapter<SearchAdapter.MyHolder>(){
 

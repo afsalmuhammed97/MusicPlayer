@@ -9,8 +9,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
+import com.practies.musicapp.model.model2.Music
 
 
 class FavoriteAdapter(private val favoriteList:ArrayList<Music>):RecyclerView.Adapter<FavoriteAdapter.FavHolder>(){

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".SongListActivity2">
+    tools:context=".activities.SongListActivity2">
     <TextView
         android:id="@+id/playListName"
         android:layout_width="match_parent"

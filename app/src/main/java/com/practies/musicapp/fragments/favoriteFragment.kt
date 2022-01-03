@@ -12,21 +12,20 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practies.musicapp.model.Music
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
-import com.practies.musicapp.favorite
+import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.musicDatabase.MusicDao
-import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.musicDatabase.MusicDatabase.Companion.getDatabase
 import com.practies.musicapp.service.MusicServices
-import kotlinx.coroutines.*
-import kotlinx.coroutines.DelicateCoroutinesApi as DelicateCoroutinesApi1
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class favoriteFragment : Fragment(),ServiceConnection {
@@ -75,7 +74,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // Inflate the layout for this fragment
 //        favMusicDao= FavoriteDataBase.getDatabase(requireActivity().application).musicDao()
         binding= FragmentFavoriteBinding.inflate(inflater,container,false)
@@ -140,10 +139,6 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
                         favAdapter.notifyDataSetChanged()
                      return   true
-                    }
-                    R.id.cancel_action ->{
-                        popupMenu.dismiss()
-                        return true
                     }
                     else ->
                         return false

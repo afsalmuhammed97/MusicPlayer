@@ -12,15 +12,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.practies.musicapp.SongListActivity2
+import com.practies.musicapp.activities.SongListActivity2
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.adapter.PlayListAdapter
 import com.practies.musicapp.databinding.FragmentPlaylistBinding
-import com.practies.musicapp.model.Music
+import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase
 import com.practies.musicapp.playList
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 class PlaylistFragment : Fragment() {
@@ -80,7 +83,7 @@ private lateinit var adapter:PlayListAdapter
         fun deletePlayList(position:Int){
             val alertDialog=AlertDialog.Builder(requireContext())
             alertDialog.setTitle("Delete PlayList")
-            alertDialog.setMessage("Are you shure ,want to delete")
+            alertDialog.setMessage("Are you sure want to delete")
             alertDialog.setNegativeButton("No"){ dialogInterface: DialogInterface, i: Int ->
                 dialogInterface.cancel()
             }
@@ -117,7 +120,7 @@ private lateinit var adapter:PlayListAdapter
 
 
                     Log.i("SongList in view",songList.toString())
-                    val intent=Intent(context,SongListActivity2::class.java)
+                    val intent=Intent(context, SongListActivity2::class.java)
                     intent.putExtra("songs",songList)
                     intent.putExtra("listName",listName)
                     Log.i("Test", playList.toString())

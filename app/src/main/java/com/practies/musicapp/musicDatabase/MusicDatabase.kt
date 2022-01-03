@@ -1,15 +1,10 @@
 package com.practies.musicapp.musicDatabase
 
 import android.content.Context
-import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.practies.musicapp.model.Music
-
-
+import com.practies.musicapp.model.model2.Music
 @Database(entities = [Music::class], version = 2, exportSchema = true)
  abstract class MusicDatabase :RoomDatabase() {
 
