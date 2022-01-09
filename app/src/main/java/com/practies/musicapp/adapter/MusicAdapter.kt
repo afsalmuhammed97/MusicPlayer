@@ -6,18 +6,21 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.R
+import com.practies.musicapp.databinding.MusicViewBinding
 import com.practies.musicapp.model.model2.Music
 
-
+//  private val musicList: ArrayList<Music>
 //private val context: Context    , private val intemOnclicked:(Music) ->Unit  ,var onSongSelect: onSongSelect
-class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapter<MusicAdapter.MyHolder>() {
+class MusicAdapter() :RecyclerView.Adapter<MusicAdapter.MyHolder>() {
 
     private lateinit var mListenr:onItemClickListener
-   // lateinit var  mListener:onItemClickListener
+
     interface onItemClickListener{
         fun onItemClick(position: Int)
         fun onOptionClick(position: Int, itemview: View)
@@ -27,57 +30,58 @@ class MusicAdapter(private val musicList: ArrayList<Music>) :RecyclerView.Adapte
                 mListenr=listener
    }
 
-    class MyHolder(itemView:View ,listener: onItemClickListener):RecyclerView.ViewHolder(itemView)
+    class MyHolder(val binding: MusicViewBinding ,listener: onItemClickListener):RecyclerView.ViewHolder(binding.root)
     {
-        val title= itemView.findViewById<TextView>(R.id.songs_nameMv)
 
-       // val duration=itemView.findViewById<TextView>(R.id.song_duration)
-        val albumName=itemView.findViewById<TextView>(R.id.song_album)
-        val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
-        val optionMenu=itemView.findViewById<ImageButton>(R.id.option_icon)
+           init { itemView.setOnClickListener {
+                  listener.onItemClick(absoluteAdapterPosition) }
 
-           init {
-              itemView.setOnClickListener {
-                  listener.onItemClick(absoluteAdapterPosition)
-              }
-               optionMenu.setOnClickListener{
-                   listener.onOptionClick(absoluteAdapterPosition,itemView)            //onItemClick(position)
-               }
+
+               binding.optionIcon.setOnClickListener{
+                   listener.onOptionClick(absoluteAdapterPosition,itemView)          }
 
 
            }
+    }
 
+    private val diffCallback=object :DiffUtil.ItemCallback<Music>(){
+        override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
 
+            return oldItem.id==newItem.id
+        }
 
+        override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean {
+           return newItem==oldItem
+        }
 
     }
+    val differ=AsyncListDiffer(this,diffCallback)
 
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):MyHolder {
 
-        val itemview=LayoutInflater.from(parent.context).inflate(R.layout.music_view,parent,false)
 
-             return MyHolder(itemview,mListenr)//,mListenr
+             return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(parent.context),parent,false),mListenr)//,mListenr
     }
+
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-       val item=musicList [position]
-        holder.title.text=item.title
-        holder.albumName.text=item.album
-        //holder.duration.text= formatDuration(item.duration)
+       val item=differ.currentList[position]
+          holder.binding.apply {
+              songsNameMv.text=item.title
+              songAlbum.text=item.album
+          }
 
-        Glide.with(holder.itemView.context).load(musicList[position].artUri)
+        Glide.with(holder.itemView.context).load(item.artUri)
             .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
-            .into(holder.songImage)
+            .into(holder.binding.imageMv)
 
 
     }
 
 
-    override fun getItemCount(): Int {
-      return musicList.size
-    }
+    override fun getItemCount()=differ.currentList.size
 
 
 

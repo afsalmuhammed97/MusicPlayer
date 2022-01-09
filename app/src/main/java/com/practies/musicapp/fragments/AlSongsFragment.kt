@@ -75,11 +75,15 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
 
 
 
+    @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
+
+
         binding= FragmentAlSongsBinding.inflate(inflater,container,false)
-         adapter = MusicAdapter(musiclist)
+         adapter = MusicAdapter()
+        adapter.differ.submitList(musiclist)
+        adapter.notifyDataSetChanged()
         binding.musicRV.layoutManager=LinearLayoutManager(context)
         binding.musicRV.hasFixedSize()
         binding.musicRV.setItemViewCacheSize(13)
@@ -160,34 +164,40 @@ fun customAlertDialog(position: Int) {
 
     listAdapter.setOnItemClickListener(object : MusicAdapter.onItemClickListener {
 
-
+//   to add selected song into playlist
         override fun onItemClick(position: Int) {
-            //*****************************************
+
             val tempPlayListName= playList[position]
-            Log.i("DB Check list Name",tempPlayListName)
+
+            //Log.i("DB Check list Name",tempPlayListName)
+
             val song:Music
             song=musiclist[songPostion]
-            Log.i("D check selected song",song.toString())
+
+
+           // Log.i("D check selected song",song.toString())
 
 
                 song.timeStamp=System.currentTimeMillis().toString()+song.id
+
                 song.play_list_name= tempPlayListName
+
                 GlobalScope.launch (Dispatchers.IO){
 
-                        songExist =
-                            musicServices!!.favMusicDa.checkSongExist(song.id, tempPlayListName)
+                        songExist = musicServices!!.favMusicDa.checkSongExist(song.id, tempPlayListName)
+
+
                         Log.i("Song Exist", if (songExist) "true" else "false")
 
                         if (!songExist) {
                             musicServices!!.favMusicDa.addSong(song)
 
-                            play =
-                                musicServices!!.favMusicDa.getPlayList(tempPlayListName) as ArrayList<Music>
+                            play = musicServices!!.favMusicDa.getPlayList(tempPlayListName) as ArrayList<Music>
 
                         }
 
 
-                        //
+
                   finel.dismiss()
 
                         //   Log.i("PLY List",play.toString())
@@ -217,7 +227,7 @@ fun customAlertDialog(position: Int) {
 
 
 
-////   val cursor:Cursor?=requireActivity().contentResolver.query(
+
 @SuppressLint("Recycle", "Range")
 private fun  getAllAudio():ArrayList<Music>{
     val tempList=ArrayList<Music>()
@@ -227,12 +237,14 @@ private fun  getAllAudio():ArrayList<Music>{
         MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE,
         MediaStore.Audio.Media.ALBUM, MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DURATION,
         MediaStore.Audio.Media.DATE_ADDED, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_ID)
-  //  requireActivity()
 
 
+    //MediaStore.Audio.Media.DATE_ADDED +" DESC"
         val cursor:Cursor?=activity?.contentResolver?.query(
-        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,selection,null,
-        MediaStore.Audio.Media.DATE_ADDED +" DESC",null)
+        MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,projection,
+            selection,null,
+            MediaStore.Audio.Media.DURATION + ">= 60000",null
+        )
     if (cursor != null) {
         if (cursor.moveToFirst())
             do {
