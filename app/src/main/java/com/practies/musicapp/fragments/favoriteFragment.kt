@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
+import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
 import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.musicDatabase.MusicDao
@@ -32,7 +33,8 @@ class favoriteFragment : Fragment(),ServiceConnection {
     lateinit var favMusicDao: MusicDao
      var musicServices:MusicServices?=null
     lateinit var binding: FragmentFavoriteBinding
-    lateinit var favAdapter:FavoriteAdapter
+   // lateinit var favoriteAdapter:MusicAdapter
+        lateinit var favAdapter:FavoriteAdapter
     var  favoriteList= arrayListOf<Music>()
 
 
@@ -45,9 +47,9 @@ class favoriteFragment : Fragment(),ServiceConnection {
         favMusicDao= getDatabase(requireContext()).musicDao()
 
         GlobalScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.IO){
-                favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
-                // favoriteList=favMusicDao.getPlayList(favorite) as ArrayList<Music>
+            withContext(Dispatchers.IO) {
+                favoriteList = favMusicDao.readAllFavoriteSong() as ArrayList<Music>
+
                 Log.i("Fav Frag", favoriteList.toString())
             }
         }
@@ -75,28 +77,25 @@ class favoriteFragment : Fragment(),ServiceConnection {
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        // Inflate the layout for this fragment
-//        favMusicDao= FavoriteDataBase.getDatabase(requireActivity().application).musicDao()
+
         binding= FragmentFavoriteBinding.inflate(inflater,container,false)
 
-
-
-
-       favAdapter= FavoriteAdapter (favoriteList)//(favoriteList )
-        favAdapter.notifyDataSetChanged()
-        binding.favRecyclerView.layoutManager= LinearLayoutManager(context)
-        binding.favRecyclerView.hasFixedSize()
-        binding.favRecyclerView.setItemViewCacheSize(13)
-       binding.favRecyclerView.adapter=favAdapter
-
+         setFavoriteView()
         return binding.root
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
+        GlobalScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
+                favoriteList = favMusicDao.readAllFavoriteSong() as ArrayList<Music>
+
+                Log.i("Fav Frag", favoriteList.toString())
+            }
+        }
 
 
-        favAdapter.notifyDataSetChanged()
+       favAdapter.notifyDataSetChanged()
         super.onResume()
     }
 
@@ -106,7 +105,6 @@ class favoriteFragment : Fragment(),ServiceConnection {
         favAdapter.setOnItemClickListner(object :FavoriteAdapter.onItemClickListner{
             override fun onItemClick(position: Int) { musicServices!!.setSongList(favoriteList,position)
 
-             // Toast.makeText(context,"item ${position} clicked",Toast.LENGTH_SHORT).show()
             }
 
             override fun onOptionClick(position: Int, view: View) {
@@ -121,6 +119,36 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
 
     }
+
+   @SuppressLint("NotifyDataSetChanged")
+   fun setFavoriteView(){
+       favAdapter= FavoriteAdapter()
+//       GlobalScope.launch(Dispatchers.IO) {
+//           withContext(Dispatchers.IO){
+//               favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
+//
+//
+//               Log.i("Fav Frag", favoriteList.toString())
+//           }
+//       }
+
+       favAdapter.differ.submitList(favoriteList)
+       favAdapter.notifyDataSetChanged()
+
+
+       binding.favRecyclerView.apply {
+           adapter=favAdapter
+           favAdapter.notifyDataSetChanged()
+
+           layoutManager= LinearLayoutManager(context)
+           hasFixedSize()
+           setItemViewCacheSize(13)
+
+       }
+
+
+   }
+
 
     private fun popupMenu(position:Int,view: View){
 
@@ -137,7 +165,7 @@ class favoriteFragment : Fragment(),ServiceConnection {
                               removeSongFromFavorite(position)
                         favoriteList.remove(tempMusic)
 
-                        favAdapter.notifyDataSetChanged()
+                       favAdapter.notifyDataSetChanged()
                      return   true
                     }
                     else ->

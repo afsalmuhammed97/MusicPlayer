@@ -7,33 +7,37 @@
     android:orientation="vertical"
     android:background="@color/black"
     tools:context=".activities.MainActivity">
-    <LinearLayout
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingVertical="10dp">-->
+
+<!--        <ImageButton-->
+<!--            android:id="@+id/search_bt"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:layout_marginTop="4dp"-->
+<!--            android:background="@android:color/transparent"-->
+<!--            android:contentDescription="@string/next_bt"-->
+<!--            android:minWidth="48dp"-->
+<!--            android:minHeight="48dp"-->
+<!--            android:src="@drawable/search_icon"-->
+<!--            tools:ignore="SpeakableTextPresentCheck" />-->
+
+
+<!--    </LinearLayout>-->
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingVertical="10dp">
-        <ImageButton
-            android:id="@+id/search_bt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="4dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/next_bt"
-            android:src="@drawable/search_icon"
-            tools:ignore="SpeakableTextPresentCheck" />
-
-
-    </LinearLayout>
-
-
-   <com.google.android.material.tabs.TabLayout
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-           app:tabTextColor="@color/white"
-       app:tabSelectedTextColor="@color/red"
+        android:layout_height="80dp"
+        android:background="@color/black"
+        app:tabSelectedTextColor="@color/red"
         app:tabTextAppearance="@style/CustomTextAppearance"
-       android:id="@+id/tabLayout"
-       android:background="@color/black"/>
+        app:tabTextColor="@color/white"
+        tools:ignore="SpeakableTextPresentCheck" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -86,12 +90,13 @@
                     android:id="@+id/prev_mini_bt"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_marginHorizontal="4dp"
+                    android:layout_weight="1"
                     android:background="@android:color/transparent"
 
                     android:contentDescription="@string/preve_bt"
-                    android:src="@drawable/prevous_bt_mini" />
+                    android:src="@drawable/prevous_bt_mini"
+                    tools:ignore="TouchTargetSizeCheck" />
 
                 <ImageButton
                     android:id="@+id/play_pause_mini_bt"
@@ -103,19 +108,19 @@
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/puase_bt"
                     android:src="@drawable/play_circle_mini"
-                    tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
+                    tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck,TouchTargetSizeCheck" />
 
                 <ImageButton
                     android:id="@+id/next_mini_bt"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_marginHorizontal="4dp"
+                    android:layout_weight="1"
 
                     android:background="@android:color/transparent"
                     android:contentDescription="@string/next_bt"
                     android:src="@drawable/nex_bt_mini"
-                    tools:ignore="SpeakableTextPresentCheck" />
+                    tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
             </LinearLayout>
 

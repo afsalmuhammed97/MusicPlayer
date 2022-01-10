@@ -7,6 +7,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.practies.musicapp.R
+import com.practies.musicapp.databinding.PlayList1Binding
 
 class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Adapter<PlayListAdapter.PlayListHolder>() {
 
@@ -20,18 +21,18 @@ class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Ad
 
 
 
-    class PlayListHolder(itemview: View,listener: MusicAdapter.onItemClickListener):RecyclerView.ViewHolder(itemview) {
-        val playlistName=itemview.findViewById<TextView>(R.id.play_list_name_1)
-     //  val playListImage=itemview.findViewById<ImageView>(R.id.play_list_image_1)
-        val deleteBt=itemview.findViewById<ImageButton>(R.id.delete_bt_1)
+    class PlayListHolder(val binding: PlayList1Binding,listener: MusicAdapter.onItemClickListener):RecyclerView.ViewHolder(binding.root) {
+//        val playlistName=itemview.findViewById<TextView>(R.id.play_list_name_1)
+//
+//        val deleteBt=itemview.findViewById<ImageButton>(R.id.delete_bt_1)
         init {
 
-            itemview.setOnClickListener {
+            binding.root.setOnClickListener {
                 listener.onItemClick(absoluteAdapterPosition)
             }
 
-            deleteBt.setOnClickListener{
-                listener.onOptionClick(absoluteAdapterPosition,itemview)
+            binding.deleteBt1.setOnClickListener{
+                listener.onOptionClick(absoluteAdapterPosition,binding.root)
             }
         }
 
@@ -39,15 +40,15 @@ class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Ad
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListHolder {
 
-        val itemview=LayoutInflater.from(parent.context).inflate(R.layout.play_list_1,parent,false)
+       // val itemview=LayoutInflater.from(parent.context).inflate(R.layout.play_list_1,parent,false)
 
-        return PlayListHolder(itemview,pListener)
+        return PlayListHolder(PlayList1Binding.inflate(LayoutInflater.from(parent.context),parent,false),pListener)
     }
 
     override fun onBindViewHolder(holder: PlayListHolder, position: Int) {
           val item=playList[position]
-        holder.playlistName.text=item
 
+          holder.binding.playListName1.text=item
 
 
 

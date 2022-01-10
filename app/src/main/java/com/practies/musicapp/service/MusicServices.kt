@@ -27,6 +27,7 @@ import com.practies.musicapp.notifications.NotificationReceiver
 import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
 
@@ -54,7 +55,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
    // lateinit var receiver: NotificationReceiver
     private var mybinder = Mybinder()
     var musiclistSe = arrayListOf<Music>()
-
+    var searchList= arrayListOf<Music>()
     var favoritelistSe= arrayListOf<Music>()
     override fun onBind(intent: Intent?): IBinder {
         mediaSession = MediaSessionCompat(baseContext, "My Music")
@@ -174,6 +175,9 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
         GlobalScope.launch (Dispatchers.IO){
             playList =favMusicDa.getAllPlayListName() as ArrayList<String>
             Log.i("DB", playList.toString())
+
+           favoritelistSe=  favMusicDa.readAllFavoriteSong()  as ArrayList<Music>
+
         }
 
 
@@ -242,13 +246,27 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 //    }
     //to play from the lastPlayed song
      fun setInitialView(list:ArrayList<Music>){
+
         mediaStatus=true
         musiclistSe=list
-        recentSong=Music(timeStamp = lastSong!!.timeStamp, id = lastSong!!.id, title = lastSong!!.title, album = lastSong!!.album, artist = lastSong!!.artist
-        , duration = lastSong!!.duration, path = lastSong!!.path, artUri = lastSong!!.artUri, play_list_name = lastSong!!.play_list_name)
+
+    if(lastSong ==null) {
+        recentSong =musiclistSe[0]
+    }else {
 
 
-
+        recentSong = Music(
+            timeStamp = lastSong!!.timeStamp,
+            id = lastSong!!.id,
+            title = lastSong!!.title,
+            album = lastSong!!.album,
+            artist = lastSong!!.artist,
+            duration = lastSong!!.duration,
+            path = lastSong!!.path,
+            artUri = lastSong!!.artUri,
+            play_list_name = lastSong!!.play_list_name
+        )
+    }
 
         try {
             //   mediaPlayer=MediaPlayer()

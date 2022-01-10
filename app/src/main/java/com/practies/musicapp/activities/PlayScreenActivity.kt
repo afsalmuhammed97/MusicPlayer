@@ -21,13 +21,11 @@ import com.practies.musicapp.formatDuration
 import com.practies.musicapp.interfaces.OnSongComplete
 import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.service.MusicServices
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import java.lang.Runnable
 
 //MediaPlayer.OnPreparedListener
 class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplete  {//,MediaPlayer.OnPreparedListener{
@@ -223,10 +221,27 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
                  //for setting the current song image  and tittle
             fun setPlayScreen(music: Music){
+                  var fav:Boolean=false
+                     GlobalScope.launch (Dispatchers.IO){
+                         if(musicServices!!.favMusicDa.checkSongExist(music.id, favorite) ){
+                             fav=true
+                         }else{
+                             fav=false
+                         }
+
+                         withContext(Dispatchers.Main){
+
+                       if (fav)  {
+                             bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+
+                         }else{ bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
+
+                         }}
+                     }
 //
-                     if (checkTheSongIsInFavourites(music.id)){
-                      bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
-                  }else{ bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border) }
+//                     if (checkTheSongIsInFavourites(music.id)){
+//                      bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+//                  }else{ bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border) }
 
                      //try catch need for update playScreen for playList*****************************
                      //***********************************************************************88
@@ -241,6 +256,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
             }
            //move this function to service
     private fun checkTheSongIsInFavourites(id:String): Boolean {
+
                     isFavorite =false
                 musicServices!!.favoritelistSe.forEachIndexed { index, favoriteMusic ->
 

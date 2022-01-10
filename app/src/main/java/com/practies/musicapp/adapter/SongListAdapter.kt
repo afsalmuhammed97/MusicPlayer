@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.R
+import com.practies.musicapp.databinding.MusicViewInListBinding
 import com.practies.musicapp.model.model2.Music
 
 class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapter<SongListAdapter.SongHolder>() {
@@ -23,19 +24,14 @@ class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapte
         sListenr=listener
     }
 
-    class SongHolder(itemView:View, listener: onItemClickListener):RecyclerView.ViewHolder(itemView) {
+    class SongHolder(val binding: MusicViewInListBinding, listener: onItemClickListener): RecyclerView.ViewHolder(binding.root) {
 
-        val songNeme = itemView.findViewById<TextView>(R.id.songs_nameMv)
-        // val duration=itemView.findViewById<TextView>(R.id.song_duration)
-        val albumName=itemView.findViewById<TextView>(R.id.song_album)
-        val songImage= itemView.findViewById<ImageView>(R.id.imageMv)
-        val optionMenu=itemView.findViewById<ImageButton>(R.id.option_icon)
 
         init {
             itemView.setOnClickListener {
                 listener.onOptionClick(absoluteAdapterPosition)
             }
-            optionMenu.setOnClickListener {
+           binding.deleteBt.setOnClickListener {
                 listener.onItemClick(absoluteAdapterPosition)
             }
         }
@@ -44,25 +40,24 @@ class SongListAdapter(private val songList:ArrayList<Music>):RecyclerView.Adapte
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):SongHolder {
-       val view=LayoutInflater.from(parent.context).inflate(R.layout.music_view,parent,false)
-           return SongHolder(view,sListenr)//sListenr
+
+           return SongHolder(MusicViewInListBinding.inflate(LayoutInflater.from(parent.context)
+               ,parent,false),sListenr)
 
     }
 
     override fun onBindViewHolder(holder:SongHolder, position: Int) {
        val item=songList[position]
-        holder.songNeme.text=  item.title
-        holder.albumName.text= item.album
-        Glide.with(holder.itemView.context).load(songList[position].artUri)
+        holder.binding.songsNameMv.text=  item.title
+        holder.binding.songAlbum.text= item.album
+        Glide.with(holder.itemView.context).load(item.artUri)
             .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
-            .into(holder.songImage)
+            .into(holder.binding.imageMv)
 
 
 
     }
 
-    override fun getItemCount(): Int {
-       return songList.size
-    }
+    override fun getItemCount()=songList.size
    // ,listener:MusicAdapter.onItemClickListener
 }

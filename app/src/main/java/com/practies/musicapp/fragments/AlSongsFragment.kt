@@ -2,6 +2,7 @@ package com.practies.musicapp.fragments
 
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.*
 import android.database.Cursor
 import android.net.Uri
@@ -25,24 +26,25 @@ import com.practies.musicapp.activities.PlayScreenActivity
 import com.practies.musicapp.adapter.MusicAdapter
 import com.practies.musicapp.adapter.PlayListNameAdapter
 import com.practies.musicapp.databinding.FragmentAlSongsBinding
+
 import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.model.model2.mediaStatus
 import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 
 
 class AlSongsFragment (): Fragment(),ServiceConnection{
     var  musicServices: MusicServices?=null
     lateinit var binding: FragmentAlSongsBinding
-    private  lateinit var adapter:MusicAdapter
+    private  lateinit var musicAdapter:MusicAdapter
    lateinit var listAdapter:PlayListNameAdapter
    var  musiclist= arrayListOf<Music>()
+
     var play=ArrayList<Music>()
-    var existSong:Boolean=false
+   // var existSong:Boolean=false
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +53,9 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
 
            Log.i("Main","view model intialized")
          musiclist=getAllAudio()
+
+
+
 
         //to start service
         val intent =Intent(context, MusicServices::class.java)
@@ -77,26 +82,39 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
 
 
         binding= FragmentAlSongsBinding.inflate(inflater,container,false)
-         adapter = MusicAdapter()
-        adapter.differ.submitList(musiclist)
-        adapter.notifyDataSetChanged()
-        binding.musicRV.layoutManager=LinearLayoutManager(context)
-        binding.musicRV.hasFixedSize()
-        binding.musicRV.setItemViewCacheSize(13)
-        binding.musicRV.adapter=  adapter
+        musicAdapter = MusicAdapter()
+        musicAdapter.differ.submitList(musiclist)
+        musicAdapter.notifyDataSetChanged()
+
+
+
+        binding.musicRV.apply {
+             adapter=musicAdapter
+            hasFixedSize()
+            setItemViewCacheSize(13)
+            layoutManager=LinearLayoutManager(context)
+        }
+
+         // if (musicServices !=null){
+//              musicServices!!.searchList=musiclist
+
+
+
+
         return binding.root
     }
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+
+         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+             super.onViewCreated(view, savedInstanceState)
 
 
-        adapter.setOnItemClickListener( object :MusicAdapter.onItemClickListener{
+        musicAdapter.setOnItemClickListener( object :MusicAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
 
 
@@ -140,10 +158,11 @@ class AlSongsFragment (): Fragment(),ServiceConnection{
 
 
 //  to show the popup window
+@DelicateCoroutinesApi
 @SuppressLint("NotifyDataSetChanged")
-fun customAlertDialog(position: Int) {
+private  fun customAlertDialog(position: Int) {
 //position for operation with database
-        var songPostion=position
+        val songPostion=position
 
     val customDialog = LayoutInflater.from(context).inflate(R.layout.play_list_menu, binding.root, false)
     val createBt = customDialog.findViewById<Button>(R.id.create_bt)
@@ -151,6 +170,8 @@ fun customAlertDialog(position: Int) {
     val builder = MaterialAlertDialogBuilder(requireContext())
     builder.setView(customDialog  )
          val finel=  builder.show()
+
+
 
     listAdapter = PlayListNameAdapter(playList)
     listAdapter.notifyDataSetChanged()
@@ -203,7 +224,7 @@ fun customAlertDialog(position: Int) {
                         //   Log.i("PLY List",play.toString())
 
             }
-            if ( !songExist){ Toast.makeText(context,"One song added to playLis ",Toast.LENGTH_SHORT).show()   }
+            if ( !songExist){ Toast.makeText(context,"One song added to playList ",Toast.LENGTH_SHORT).show()   }
 
         }
 
@@ -281,11 +302,18 @@ private fun  getAllAudio():ArrayList<Music>{
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
       val binder=service as MusicServices.Mybinder
         musicServices=binder.currentService()
-        if (! musicServices!!.mediaPlayer.isPlaying && ! mediaStatus && musicServices!!.lastSong !=null){  musicServices!!.setInitialView(musiclist)  }
+
+        //&& musicServices!!.lastSong !=null
+        if (! musicServices!!.mediaPlayer.isPlaying && ! mediaStatus  )
+        {
+            musicServices!!.setInitialView(musiclist)
+        }
+
 
         Log.i("MSG","service connected")
 
 
+        musicServices!!.searchList=musiclist
 
 
 

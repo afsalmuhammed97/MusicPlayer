@@ -52,18 +52,22 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         val adapter=ViewPageAdapter(supportFragmentManager, lifecycle)
         mainBinding.viewPager2.adapter = adapter
 
+
         TabLayoutMediator( mainBinding.tabLayout,mainBinding.viewPager2 ) { tab, position ->
 
             when (position) {
-                0 -> {
-                    tab.text = "songs"
+                0 -> { tab.text="Songs"
+
+
                 }
                 1 -> {
-                    tab.text = "favourite"
+                    tab.text =  "favourite"
                 }
                 2 -> {
-                    tab.text = "Playlist"
+                    tab.text ="Playlist"
                 }
+
+
             }
         }.attach()
 
@@ -101,9 +105,7 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
         if (musicServices!!.musiclistSe.isNotEmpty()) updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
 
-        mainBinding.searchBt.setOnClickListener {
-              //showSearch()
-          }
+
 
 
         mainBinding.nextMiniBt.setOnClickListener{
@@ -155,14 +157,14 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         val customAlert=LayoutInflater.from(this).inflate(R.layout.search_list_view,mainBinding.root,false)
         //val searchText=customAlert.findViewById<TextInputEditText>(R.id.searchText)
        // val searchRv= customAlert.findViewById<RecyclerView>(R.id.searchListRv)
-
-
-//            val fragment:AlSongsFragment=
-
+//
+//
+//
 //            //fragment no null
 //
 //                          fragment =
 //                              supportFragmentManager.findFragmentByTag("android:switcher:" + R.id.view_pager2.toString() + ":0") as AlSongsFragment
+//        val fragment:AlSongsFragment=
 //
 //           searchText.addTextChangedListener(object :TextWatcher{
 //               override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -242,9 +244,18 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
     }
 
+//    override fun sendData(message: String?) {
+//      val tag="android:switcher:" +R.id.view_pager2.toString() +":"+0
+//        val frag=supportFragmentManager.findFragmentByTag(tag) as SearchFragment?
+//        if (frag != null) {
+//            frag.displayReceivedData(message!!)
+//        }
 
+      //  val currentItem=getItem(1 )
 
+        //view_pager2.currentItem=currentItem
 
+  //  fun getItem(i:Int)=view_pager2.currentItem+i
 
 }
 
