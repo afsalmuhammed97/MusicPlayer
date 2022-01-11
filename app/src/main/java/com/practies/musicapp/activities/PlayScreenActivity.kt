@@ -38,7 +38,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
          lateinit var seekbarRunnable: Runnable
 
-        lateinit var bindingPlayScreen: ActivityPlayScreen2Binding
+      private  lateinit var bindingPlayScreen: ActivityPlayScreen2Binding
     override fun onCreate(savedInstanceState: Bundle?) {
 
         bindingPlayScreen= ActivityPlayScreen2Binding.inflate(layoutInflater)
@@ -297,7 +297,8 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
              val  favoriteMusic= Music( curretSong.timeStamp,
                  curretSong.id,curretSong.title,curretSong.album,curretSong.artist,
                  curretSong.duration,curretSong.path,curretSong.artUri,curretSong.play_list_name)
-             GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic) }
+             GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(favoriteMusic)
+             Log.i("Remooved",favoriteMusic.title)}
 
              bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
          }

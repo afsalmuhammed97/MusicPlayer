@@ -12,6 +12,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.gson.GsonBuilder
 import com.practies.musicapp.R
@@ -86,8 +88,16 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
         super.onResume()
         EventBus.getDefault().register(this)
 
+
         if (musicServices !=null &&    musicServices!!.isPlaying) {
             mainBinding.playPauseMiniBt.setImageResource(R.drawable.pause_circle_mini)
+            val music= musicServices!!.musiclistSe[musicServices!!.currentIndex]
+            
+            Glide.with(this).load(music.artUri)
+                .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
+                .into(mainBinding.imageMini)
+
+
 
         }else{
             mainBinding.playPauseMiniBt.setImageResource(R.drawable.play_circle_mini)
@@ -103,6 +113,11 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
 
     private fun setMiniPlayerScreen(music: Music) {
         mainBinding.songNameMini.text=music.title
+
+        Glide.with(this).load(music.artUri)
+            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
+            .into(mainBinding.imageMini)
+
 
     }
 

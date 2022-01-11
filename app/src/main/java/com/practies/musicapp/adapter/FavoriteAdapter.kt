@@ -22,7 +22,18 @@ class FavoriteAdapter(private val favoriteList:ArrayList<Music>):RecyclerView.Ad
        fun onItemClick(position: Int)
       fun onOptionClick(position: Int,view: View)
    }
-    
+//    private val diffCallback=object :DiffUtil.ItemCallback<Music>(){
+//        override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
+//            TODO("Not yet implemented")
+//        }
+//
+//        override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean {
+//            TODO("Not yet implemented")
+//        }
+//
+//    }
+
+
     fun setOnItemClickListner(listener:onItemClickListner,view: View) { fListener=listener }
 
     class FavHolder(val binding: FavoriteViewBinding,listener:onItemClickListner):RecyclerView.ViewHolder(binding.root) {

@@ -273,9 +273,7 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             EventBus.getDefault().post(recentSong)
             mediaPlayer.reset()
             mediaPlayer.setDataSource(recentSong!!.path)
-            Log.i("MusicInitial", " music list is ok")
             mediaPlayer.prepare()
-
 
 
 
@@ -467,6 +465,11 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
 //             editor.apply()
     }
 
+
+}
+
+private fun MediaPlayer.setOnPreparedListener(mPalyr:MediaPlayer) {
+    mPalyr.start()
 
 }
 

@@ -13,7 +13,7 @@
         android:id="@+id/imageMv"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginStart="5dp"
+        android:layout_marginStart="10dp"
 
         app:shapeAppearanceOverlay="@style/Rounded_corner" />
 <!--    android:src="@mipmap/music_player_icon"-->

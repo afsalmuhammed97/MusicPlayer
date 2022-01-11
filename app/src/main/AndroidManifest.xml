@@ -11,6 +11,7 @@
         tools:ignore="ScopedStorage" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:name=".notifications.ApplicationClass"
         android:allowBackup="true"
         android:icon="@mipmap/music_player_icon"
