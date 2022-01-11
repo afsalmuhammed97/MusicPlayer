@@ -22,9 +22,9 @@ class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Ad
 
 
     class PlayListHolder(val binding: PlayList1Binding,listener: MusicAdapter.onItemClickListener):RecyclerView.ViewHolder(binding.root) {
-//        val playlistName=itemview.findViewById<TextView>(R.id.play_list_name_1)
+
 //
-//        val deleteBt=itemview.findViewById<ImageButton>(R.id.delete_bt_1)
+
         init {
 
             binding.root.setOnClickListener {
@@ -40,7 +40,6 @@ class PlayListAdapter (private val playList: ArrayList<String>) :RecyclerView.Ad
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PlayListHolder {
 
-       // val itemview=LayoutInflater.from(parent.context).inflate(R.layout.play_list_1,parent,false)
 
         return PlayListHolder(PlayList1Binding.inflate(LayoutInflater.from(parent.context),parent,false),pListener)
     }

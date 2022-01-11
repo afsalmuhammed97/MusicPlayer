@@ -48,7 +48,7 @@
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_favourite.xml" value="0.25" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_library.xml" value="0.1" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_mini_player.xml" value="0.2" />
-        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.1" />
+        <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_playlist.xml" value="0.15" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_search.xml" value="0.19911504424778761" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_sogn_list.xml" value="0.2" />
         <entry key="..\:/MusicApp/app/src/main/res/layout/fragment_song_list.xml" value="0.2" />
@@ -80,7 +80,6 @@
   <component name="ProjectPlainTextFileTypeManager">
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/adapter/SearchAdapter.kt" />
     <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/fragments/SearchFragment.kt" />
-    <file url="file://$PROJECT_DIR$/app/src/main/java/com/practies/musicapp/interfaces/sendMessage.kt" />
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />

@@ -15,22 +15,18 @@ import com.practies.musicapp.R
 import com.practies.musicapp.databinding.FavoriteViewBinding
 import com.practies.musicapp.model.model2.Music
 
-//private val favoriteList:ArrayList<Music>
-class FavoriteAdapter():RecyclerView.Adapter<FavoriteAdapter.FavHolder>(){
+class FavoriteAdapter(private val favoriteList:ArrayList<Music>):RecyclerView.Adapter<FavoriteAdapter.FavHolder>(){
     lateinit var fListener:onItemClickListner
 
   interface onItemClickListner{
        fun onItemClick(position: Int)
       fun onOptionClick(position: Int,view: View)
    }
-    fun setOnItemClickListner(listener:onItemClickListner,view: View){   //,view: View
-        fListener=listener
-    }
-  //  ,listener:onItemClickListner itemView:View
+    
+    fun setOnItemClickListner(listener:onItemClickListner,view: View) { fListener=listener }
+
     class FavHolder(val binding: FavoriteViewBinding,listener:onItemClickListner):RecyclerView.ViewHolder(binding.root) {
-//           val title=itemView.findViewById<TextView>(R.id.songs_name_fav)
-//        val songImag=itemView.findViewById<ImageView>(R.id.imageMvFav)
-//        val options=itemView.findViewById<ImageButton>(R.id.option_icon_fav)
+
         init {
             itemView.setOnClickListener {
              listener.onItemClick(absoluteAdapterPosition)
@@ -43,27 +39,14 @@ class FavoriteAdapter():RecyclerView.Adapter<FavoriteAdapter.FavHolder>(){
 
     }
 
-    private val diffCallBack=object :DiffUtil.ItemCallback<Music>(){
-        override fun areItemsTheSame(oldItem: Music, newItem: Music): Boolean {
-            return oldItem.id==newItem.id
-        }
 
-        override fun areContentsTheSame(oldItem: Music, newItem: Music): Boolean {
-           return newItem==oldItem
-        }
-
-
-
-    }
-    val differ=AsyncListDiffer(this,diffCallBack)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavHolder {
-       // val itemView=LayoutInflater.from(parent.context).inflate(R.layout.favorite_view,parent,false)
         return  FavHolder(FavoriteViewBinding.inflate(LayoutInflater.from(parent.context),parent,false),fListener)//,fListener)
     }
 
     override fun onBindViewHolder(holder: FavHolder, position: Int) {
-        val item= differ.currentList[position]
+        val item= favoriteList[position]
         holder.binding.songsNameFav.text=item.title
 
        Glide.with(holder.itemView.context).load(item.artUri)
@@ -73,6 +56,6 @@ class FavoriteAdapter():RecyclerView.Adapter<FavoriteAdapter.FavHolder>(){
 
     }
 
-    override fun getItemCount()=differ.currentList.size
+    override fun getItemCount()=favoriteList.size
 
 }

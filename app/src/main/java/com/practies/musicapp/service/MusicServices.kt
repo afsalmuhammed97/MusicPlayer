@@ -313,7 +313,8 @@ class MusicServices :Service(),MediaPlayer.OnCompletionListener  {
             mediaPlayer.setDataSource(musiclistSe[currentIndex].path)
             Log.i("Music", " music list is ok")
             mediaPlayer.prepare()
-            mediaPlayer.start()
+              mediaPlayer.start()
+
             isPlaying = true
               lastplayedSong=musiclistSe[currentIndex]
              lastPlayedSongId=musiclistSe[currentIndex].id

@@ -32,11 +32,9 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
     lateinit var seekBar: SeekBar
       var active:Boolean=false
-    companion object{
-    var isFavorite:Boolean=false}
+   var isFavorite: Boolean=false
+    var musicServices:MusicServices?=null
 
-        var musicServices:MusicServices?=null
-    //var  favoriteListPA= arrayListOf<Music>()
 
          lateinit var seekbarRunnable: Runnable
 
@@ -102,9 +100,11 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
            if (isFavorite){
                bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
                removeSongFromFavorite()
+               isFavorite=false
            }else{
                bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
                currentSongAddToFavoriteList()
+               isFavorite=true
            }
         }
 
@@ -223,19 +223,17 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
             fun setPlayScreen(music: Music){
                   var fav:Boolean=false
                      GlobalScope.launch (Dispatchers.IO){
-                         if(musicServices!!.favMusicDa.checkSongExist(music.id, favorite) ){
-                             fav=true
-                         }else{
-                             fav=false
-                         }
+                         if(musicServices!!.favMusicDa.checkSongExist(music.id, favorite) ) fav=true else fav=false
+
 
                          withContext(Dispatchers.Main){
 
                        if (fav)  {
                              bindingPlayScreen.favButton.setImageResource(R.drawable.favorite_fill)
+                           isFavorite=true
 
                          }else{ bindingPlayScreen.favButton.setImageResource(R.drawable._favorite_border)
-
+                         isFavorite=false
                          }}
                      }
 //
@@ -255,19 +253,7 @@ class PlayScreenActivity : AppCompatActivity() ,ServiceConnection ,OnSongComplet
 
             }
            //move this function to service
-    private fun checkTheSongIsInFavourites(id:String): Boolean {
 
-                    isFavorite =false
-                musicServices!!.favoritelistSe.forEachIndexed { index, favoriteMusic ->
-
-                    if (id==favoriteMusic.id){
-                        isFavorite =true
-                        return true
-                    }
-                }
-
-        return false
-    }
 
                         override fun onSongComplete() {
                               if (musicServices!!.currentIndex == musicServices!!.musiclistSe.size-1)

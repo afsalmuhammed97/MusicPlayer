@@ -145,7 +145,7 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
     @SuppressLint("NotifyDataSetChanged")
     fun songRemoveFromView(position: Int){
         val element=songList[position]
-       // Toast.makeText(this,"song deleted ${element}",Toast.LENGTH_SHORT).show()
+
         songList.remove(element)
         songAdapter.notifyDataSetChanged()
     }

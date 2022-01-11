@@ -17,6 +17,7 @@ import com.google.gson.GsonBuilder
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.ViewPageAdapter
 import com.practies.musicapp.databinding.ActivityMainBinding
+
 import com.practies.musicapp.model.model2.LastPlayed
 import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.service.MusicServices
@@ -27,8 +28,7 @@ import org.greenrobot.eventbus.ThreadMode
 
 class MainActivity : AppCompatActivity(),ServiceConnection {
     val list= ArrayList<String>()
-    //val searchList= arrayListOf<Music>()
-     lateinit var mainBinding: ActivityMainBinding
+    private lateinit var mainBinding:ActivityMainBinding
     var musicServices:MusicServices?=null
     //  private lateinit var searchAdapter: SearchAdapter
    //  lateinit var  recentSong:Music
@@ -85,6 +85,15 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
     override fun onResume() {
         super.onResume()
         EventBus.getDefault().register(this)
+
+        if (musicServices !=null &&    musicServices!!.isPlaying) {
+            mainBinding.playPauseMiniBt.setImageResource(R.drawable.pause_circle_mini)
+
+        }else{
+            mainBinding.playPauseMiniBt.setImageResource(R.drawable.play_circle_mini)
+
+        }
+
     }
 
     override fun onPause() {
@@ -104,7 +113,6 @@ class MainActivity : AppCompatActivity(),ServiceConnection {
      //   musicServices.setSongList()
 
         if (musicServices!!.musiclistSe.isNotEmpty()) updateUi(musicServices!!.musiclistSe[musicServices!!.currentIndex])
-
 
 
 

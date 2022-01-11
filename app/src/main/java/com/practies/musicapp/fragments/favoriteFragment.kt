@@ -18,10 +18,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.FavoriteAdapter
 import com.practies.musicapp.adapter.MusicAdapter
+import com.practies.musicapp.adapter.PlayListAdapter
 import com.practies.musicapp.databinding.FragmentFavoriteBinding
 import com.practies.musicapp.model.model2.Music
 import com.practies.musicapp.musicDatabase.MusicDao
 import com.practies.musicapp.musicDatabase.MusicDatabase.Companion.getDatabase
+import com.practies.musicapp.playList
 import com.practies.musicapp.service.MusicServices
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -86,18 +88,25 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
     @SuppressLint("NotifyDataSetChanged")
     override fun onResume() {
-        GlobalScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.IO) {
-                favoriteList = favMusicDao.readAllFavoriteSong() as ArrayList<Music>
-
-                Log.i("Fav Frag", favoriteList.toString())
-            }
-        }
+        favAdapter.notifyDataSetChanged()
 
 
-       favAdapter.notifyDataSetChanged()
+  // favAdapter= FavoriteAdapter(favoriteList)
+
         super.onResume()
     }
+
+    @SuppressLint("NotifyDataSetChanged")
+    override fun onPause() {
+        super.onPause()
+
+
+        favAdapter.notifyDataSetChanged()
+}
+
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -122,32 +131,18 @@ class favoriteFragment : Fragment(),ServiceConnection {
 
    @SuppressLint("NotifyDataSetChanged")
    fun setFavoriteView(){
-       favAdapter= FavoriteAdapter()
-//       GlobalScope.launch(Dispatchers.IO) {
-//           withContext(Dispatchers.IO){
-//               favoriteList=favMusicDao.readAllFavoriteSong()  as ArrayList<Music>
-//
-//
-//               Log.i("Fav Frag", favoriteList.toString())
-//           }
-//       }
-
-       favAdapter.differ.submitList(favoriteList)
+       favAdapter= FavoriteAdapter(favoriteList)
        favAdapter.notifyDataSetChanged()
+       binding.favRecyclerView.layoutManager=LinearLayoutManager(context)
+       binding.favRecyclerView.hasFixedSize()
+       binding.favRecyclerView.setItemViewCacheSize(13)
+       binding.favRecyclerView.adapter=favAdapter
 
-
-       binding.favRecyclerView.apply {
-           adapter=favAdapter
-           favAdapter.notifyDataSetChanged()
-
-           layoutManager= LinearLayoutManager(context)
-           hasFixedSize()
-           setItemViewCacheSize(13)
 
        }
 
 
-   }
+
 
 
     private fun popupMenu(position:Int,view: View){
@@ -155,17 +150,17 @@ class favoriteFragment : Fragment(),ServiceConnection {
         val popupMenu= PopupMenu(requireContext(),view)
         popupMenu.inflate(R.menu.fav_option_menu)
         popupMenu.setOnMenuItemClickListener (object :PopupMenu.OnMenuItemClickListener{
+
             @SuppressLint("NotifyDataSetChanged")
             override fun onMenuItemClick(item: MenuItem?): Boolean {
                 when(item?.itemId){
                     R.id.removeFromPlayList->{
-                        //*****************
-                        //function to remove item from database
-                          val tempMusic= favoriteList[position]
-                              removeSongFromFavorite(position)
-                        favoriteList.remove(tempMusic)
 
-                       favAdapter.notifyDataSetChanged()
+                        removeSongFromFavorite(position)
+                        favoriteList.remove(favoriteList[position])
+                        favAdapter.notifyDataSetChanged()
+
+
                      return   true
                     }
                     else ->
@@ -179,14 +174,20 @@ class favoriteFragment : Fragment(),ServiceConnection {
         popupMenu.show()
     }
 
+
     private fun removeSongFromFavorite(position: Int){
 
         val selectedSong=favoriteList[position]
 
-
         GlobalScope.launch (Dispatchers.IO){ musicServices!!.favMusicDa.deleteSong(selectedSong) }
 
     }
+//    fun songRemoveFromView(position: Int){
+//        val element=songList[position]
+//        // Toast.makeText(this,"song deleted ${element}",Toast.LENGTH_SHORT).show()
+//        songList.remove(element)
+//        songAdapter.notifyDataSetChanged()
+//    }
 
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
         val binder=service as MusicServices.Mybinder
