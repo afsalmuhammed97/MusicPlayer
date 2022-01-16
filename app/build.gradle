@@ -65,10 +65,10 @@ dependencies {
 
 
     // Room components
-    implementation "androidx.room:room-runtime:2.4.0"
-    kapt "androidx.room:room-compiler:2.4.0"
-    implementation "androidx.room:room-ktx:2.4.0"
-    androidTestImplementation "androidx.room:room-testing:2.4.0"
+    implementation "androidx.room:room-runtime:2.4.1"
+    kapt "androidx.room:room-compiler:2.4.1"
+    implementation "androidx.room:room-ktx:2.4.1"
+    androidTestImplementation "androidx.room:room-testing:2.4.1"
 
     // Lifecycle components
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
@@ -76,7 +76,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
 
     // Kotlin components
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.6.10"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
 

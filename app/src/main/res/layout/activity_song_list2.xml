@@ -38,32 +38,44 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/mini_player_layout"
-           android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight=".25"
         android:background="@color/black"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/songListRv"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageMini"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginBottom="11dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/Rounded_corner" />
 
         <TextView
             android:id="@+id/song_name_mini"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
             android:paddingVertical="5dp"
-            android:text="@string/song_name"
-            android:textColor="@color/white"
+            android:paddingStart="25dp"
             android:singleLine="true"
+            android:textColor="@color/white"
             android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/mini_player"
+            app:layout_constraintStart_toEndOf="@+id/imageMini"
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry" />
 
         <LinearLayout
             android:id="@+id/mini_player"
@@ -80,39 +92,121 @@
                 android:id="@+id/prev_mini_bt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
                 android:background="@android:color/transparent"
+
                 android:contentDescription="@string/preve_bt"
-                android:src="@drawable/prevous_bt_mini" />
+                android:src="@drawable/prevous_bt_mini"
+                tools:ignore="TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/play_pause_mini_bt"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
 
+                android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/puase_bt"
-                        android:src="@drawable/play_circle_mini"
-                tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
+                android:src="@drawable/play_circle_mini"
+                tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck,TouchTargetSizeCheck" />
 
             <ImageButton
                 android:id="@+id/next_mini_bt"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:layout_marginHorizontal="4dp"
-
+                android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:contentDescription="@string/next_bt"
                 android:src="@drawable/nex_bt_mini"
-                tools:ignore="SpeakableTextPresentCheck" />
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
 
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:id="@+id/mini_player_layout"-->
+<!--           android:layout_marginTop="10dp"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:layout_weight=".25"-->
+<!--        android:background="@color/black"-->
+<!--        android:orientation="horizontal"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/songListRv"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent">-->
+<!--        -->
+<!--        -->
+
+
+<!--        <TextView-->
+<!--            android:id="@+id/song_name_mini"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="15dp"-->
+<!--            android:paddingVertical="5dp"-->
+<!--            android:text="@string/song_name"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:singleLine="true"-->
+<!--            android:textSize="16sp"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/mini_player"-->
+
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/mini_player"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="8dp"-->
+<!--            android:orientation="horizontal"-->
+<!--            android:weightSum="3"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/prev_mini_bt"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_marginHorizontal="4dp"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:contentDescription="@string/preve_bt"-->
+<!--                android:src="@drawable/prevous_bt_mini" />-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/play_pause_mini_bt"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_marginHorizontal="4dp"-->
+
+<!--                android:background="@android:color/transparent"-->
+<!--                android:contentDescription="@string/puase_bt"-->
+<!--                        android:src="@drawable/play_circle_mini"-->
+<!--                tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />-->
+
+<!--            <ImageButton-->
+<!--                android:id="@+id/next_mini_bt"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_weight="1"-->
+<!--                android:layout_marginHorizontal="4dp"-->
+
+<!--                android:background="@android:color/transparent"-->
+<!--                android:contentDescription="@string/next_bt"-->
+<!--                android:src="@drawable/nex_bt_mini"-->
+<!--                tools:ignore="SpeakableTextPresentCheck" />-->
+
+<!--        </LinearLayout>-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

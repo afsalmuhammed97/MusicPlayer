@@ -11,6 +11,8 @@ import android.os.IBinder
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.practies.musicapp.R
 import com.practies.musicapp.adapter.SongListAdapter
 import com.practies.musicapp.databinding.ActivitySongList2Binding
@@ -153,6 +155,12 @@ class SongListActivity2 : AppCompatActivity(),ServiceConnection {
         val binder= service as MusicServices.Mybinder
         musicServices=binder.currentService()
         binding.songNameMini.text=musicServices!!.musiclistSe[musicServices!!.currentIndex].title
+
+        Glide.with(this).load(musicServices!!.musiclistSe[musicServices!!.currentIndex].artUri)
+            .apply(RequestOptions.placeholderOf(R.drawable.headphone).centerCrop())
+            .into(binding.imageMini)
+
+
 
         if (  musicServices!!.isPlaying)   binding.playPauseMiniBt.setImageResource(R.drawable.pause_circle_mini)
 
